@@ -1,0 +1,35 @@
+services:
+  - type: web
+    name: psycalm
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: CALCOM_API_KEY
+        sync: false
+      - key: CALCOM_EVENT_TYPE_ID
+        sync: false
+      - key: CALCOM_USERNAME
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_PUBLISHABLE_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: WHATSAPP_API_VERSION
+        value: v18.0
+      - key: WHATSAPP_PHONE_NUMBER_ID
+        sync: false
+      - key: WHATSAPP_ACCESS_TOKEN
+        sync: false
+      - key: WHATSAPP_VERIFY_TOKEN
+        generateValue: true
+      - key: FRONTEND_URL
+        value: https://psycalm.onrender.com
