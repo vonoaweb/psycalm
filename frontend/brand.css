@@ -1,0 +1,110 @@
+/* ============================================
+   APARTA — Brand Override
+   Injected after the main build to apply
+   Aparta colors without rebuilding React.
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Aparta Palette Overrides */
+  --background: #F4EBDD !important;
+  --foreground: #2A1F1A !important;
+  --card: #FFFFFF !important;
+  --card-foreground: #2A1F1A !important;
+  --popover: #FFFFFF !important;
+  --popover-foreground: #2A1F1A !important;
+  --primary: #C8553D !important;
+  --primary-foreground: #FFFFFF !important;
+  --secondary: #F1D5C7 !important;
+  --secondary-foreground: #A53E2A !important;
+  --muted: #F4EBDD !important;
+  --muted-foreground: #6B5E54 !important;
+  --accent: #7B9E7E !important;
+  --accent-foreground: #FFFFFF !important;
+  --destructive: #A53E2A !important;
+  --destructive-foreground: #FFFFFF !important;
+  --border: #E8DDD0 !important;
+  --input: #E8DDD0 !important;
+  --ring: #C8553D !important;
+  --radius: 0.75rem !important;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif !important;
+  background-color: #F4EBDD !important;
+}
+
+h1, h2, h3, h4, h5, h6,
+.font-heading,
+[class*="font-sora"],
+[class*="font-display"] {
+  font-family: 'Sora', sans-serif !important;
+}
+
+/* Override primary color usages */
+[class*="bg-primary"],
+[class*="bg-[#E07050]"],
+[class*="bg-[#e07050]"],
+[class*="bg-[#C55A3A]"] {
+  background-color: #C8553D !important;
+}
+
+[class*="text-primary"],
+[class*="text-[#E07050]"],
+[class*="text-[#e07050]"] {
+  color: #C8553D !important;
+}
+
+[class*="border-primary"] {
+  border-color: #C8553D !important;
+}
+
+/* Override accent/green to Sage */
+[class*="bg-green-500"],
+[class*="bg-[#10B981]"],
+[class*="bg-emerald-500"] {
+  background-color: #7B9E7E !important;
+}
+
+[class*="text-green-500"],
+[class*="text-[#10B981]"] {
+  color: #7B9E7E !important;
+}
+
+/* Override yellow/amber accents to Clay-soft */
+[class*="bg-yellow-500"],
+[class*="bg-[#F59E0B]"],
+[class*="bg-amber-500"] {
+  background-color: #C8553D !important;
+}
+
+/* Override slate backgrounds to Cream */
+[class*="bg-slate-50"],
+[class*="bg-slate-100"],
+[class*="bg-gray-50"],
+[class*="bg-gray-100"],
+[class*="bg-[#F1F5F9]"],
+[class*="bg-[#F8F9FA]"] {
+  background-color: #F4EBDD !important;
+}
+
+/* Override slate text to Ink */
+[class*="text-slate-900"],
+[class*="text-gray-900"],
+[class*="text-[#1E293B]"],
+[class*="text-[#0F172A]"] {
+  color: #2A1F1A !important;
+}
+
+[class*="text-slate-500"],
+[class*="text-gray-500"],
+[class*="text-[#64748B]"] {
+  color: #6B5E54 !important;
+}
+
+/* Chat widget specific overrides */
+[class*="chat-widget"],
+[class*="chat-container"] {
+  font-family: 'DM Sans', sans-serif !important;
+}

@@ -1,168 +1,17 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Aparta — Aparta tu cita. Cobra al instante.</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo">Aparta</div>
-        <nav>
-            <a href="#dashboard" class="active">Dashboard</a>
-            <a href="#citas">Citas</a>
-            <a href="#pacientes">Pacientes</a>
-            <a href="#pagos">Pagos</a>
-        </nav>
-    </header>
-
-    <!-- Dashboard -->
-    <main class="main">
-        <section id="dashboard" class="section active">
-            <h1>Dashboard</h1>
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon">📅</div>
-                    <div class="stat-value" id="stat-today">0</div>
-                    <div class="stat-label">Citas hoy</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">👥</div>
-                    <div class="stat-value" id="stat-patients">0</div>
-                    <div class="stat-label">Pacientes</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">⏳</div>
-                    <div class="stat-value" id="stat-pending">0</div>
-                    <div class="stat-label">Pendientes</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">💰</div>
-                    <div class="stat-value" id="stat-revenue">$0</div>
-                    <div class="stat-label">Ingresos mes</div>
-                </div>
-            </div>
-
-            <h2>Próximas citas</h2>
-            <div class="table-container">
-                <table id="upcoming-table">
-                    <thead>
-                        <tr>
-                            <th>Fecha</th>
-                            <th>Hora</th>
-                            <th>Paciente</th>
-                            <th>Tipo</th>
-                            <th>Estado</th>
-                            <th>Precio</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </section>
-
-        <section id="citas" class="section">
-            <h1>Citas</h1>
-            <div class="filters">
-                <input type="date" id="filter-date-from" placeholder="Desde">
-                <input type="date" id="filter-date-to" placeholder="Hasta">
-                <select id="filter-status">
-                    <option value="">Todos</option>
-                    <option value="pending">Pendiente</option>
-                    <option value="confirmed">Confirmada</option>
-                    <option value="paid">Pagada</option>
-                    <option value="completed">Completada</option>
-                    <option value="cancelled">Cancelada</option>
-                </select>
-                <button onclick="loadAppointments()">Filtrar</button>
-            </div>
-            <div class="table-container">
-                <table id="appointments-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Fecha</th>
-                            <th>Hora</th>
-                            <th>Paciente</th>
-                            <th>Tipo</th>
-                            <th>Estado</th>
-                            <th>Precio</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </section>
-
-        <section id="pacientes" class="section">
-            <h1>Pacientes</h1>
-            <div class="filters">
-                <input type="text" id="patient-search" placeholder="Buscar por nombre, email o teléfono...">
-                <button onclick="loadPatients()">Buscar</button>
-            </div>
-            <div class="table-container">
-                <table id="patients-table">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Email</th>
-                            <th>Teléfono</th>
-                            <th>Notas</th>
-                            <th>Registro</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </section>
-
-        <section id="pagos" class="section">
-            <h1>Pagos</h1>
-            <div class="table-container">
-                <table id="payments-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Paciente</th>
-                            <th>Cita</th>
-                            <th>Monto</th>
-                            <th>Tipo</th>
-                            <th>Estado</th>
-                            <th>Fecha</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </section>
-    </main>
-
-    <!-- Chat Widget -->
-    <div id="chat-widget">
-        <button id="chat-toggle" onclick="toggleChat()">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        </button>
-        <div id="chat-container" class="hidden">
-            <div id="chat-header">
-                <span>💬 Aparta · asistente</span>
-                <button onclick="toggleChat()">✕</button>
-            </div>
-            <div id="chat-messages"></div>
-            <div id="chat-buttons"></div>
-            <div id="chat-input-area">
-                <input type="text" id="chat-input" placeholder="Escribe un mensaje…" onkeypress="handleKeyPress(event)">
-                <button onclick="sendMessage()">➤</button>
-            </div>
-        </div>
-    </div>
-
-    <script src="js/chat-widget.js"></script>
-    <script src="js/dashboard.js"></script>
-</body>
+    <script type="module" crossorigin src="./assets/index-BTRDF6fF.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-By5J_Csb.css">
+    <link rel="stylesheet" href="./brand.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
 </html>
