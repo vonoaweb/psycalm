@@ -27,7 +27,7 @@ async function init() {
       type TEXT UNIQUE NOT NULL, label TEXT NOT NULL,
       fee DECIMAL(10,2) NOT NULL DEFAULT 0,
       deposit_percent INTEGER DEFAULT 20,
-      duration INTEGER DEFAULT 60, color TEXT DEFAULT '#E07050',
+      duration INTEGER DEFAULT 60, color TEXT DEFAULT '#2D8B6F',
       active BOOLEAN DEFAULT TRUE, created_at TIMESTAMPTZ DEFAULT NOW()
     );
   `);
@@ -101,7 +101,7 @@ async function init() {
 
   await client.query(`
     INSERT INTO fee_types (type, label, fee, deposit_percent, duration, color) VALUES
-      ('primera_consulta', 'Primera consulta', 800, 20, 60, '#E07050'),
+      ('primera_consulta', 'Primera consulta', 800, 20, 60, '#2D8B6F'),
       ('sesion_regular', 'Sesion regular', 600, 20, 50, '#3B82F6'),
       ('sesion_online', 'Sesion online', 500, 15, 45, '#10B981')
     ON CONFLICT (type) DO NOTHING;
