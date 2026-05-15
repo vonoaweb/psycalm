@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aparta — Agenda tu cita</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./brand.css">
+  <style>
+    :root {
+      --clay: #C8553D;
+      --clay-deep: #A53E2A;
+      --clay-soft: #F1D5C7;
+      --cream: #F4EBDD;
+      --sage: #7B9E7E;
+      --ink: #2A1F1A;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, var(--clay) 0%, var(--clay-deep) 100%);
+      color: white;
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+
+    .hero .logo {
+      font-family: 'Sora', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .hero .logo::before {
+      content: '';
+      width: 32px;
+      height: 32px;
+      background: white;
+      border-radius: 8px 8px 8px 2px;
+      display: inline-block;
+    }
+
+    .hero h1 {
+      font-family: 'Sora', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+
+    .hero p {
+      font-size: 1.125rem;
+      opacity: 0.9;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .chat-section {
+      max-width: 480px;
+      margin: -3rem auto 2rem;
+      padding: 0 1rem;
+    }
+
+    .chat-card {
+      background: white;
+      border-radius: 1.25rem;
+      box-shadow: 0 8px 32px rgba(42, 31, 26, 0.12);
+      border: 1px solid #E8DDD0;
+      overflow: hidden;
+    }
+
+    .chat-header {
+      background: var(--ink);
+      color: var(--cream);
+      padding: 1rem 1.25rem;
+      font-family: 'Sora', sans-serif;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .chat-header .status {
+      width: 8px;
+      height: 8px;
+      background: var(--sage);
+      border-radius: 50%;
+      margin-left: auto;
+    }
+
+    #chat-messages {
+      height: 400px;
+      overflow-y: auto;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      background: var(--cream);
+    }
+
+    .message {
+      max-width: 85%;
+      padding: 0.875rem 1rem;
+      border-radius: 1rem;
+      font-size: 0.875rem;
+      line-height: 1.6;
+    }
+
+    .message.bot {
+      background: white;
+      color: var(--ink);
+      align-self: flex-start;
+      border-bottom-left-radius: 0.25rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      border: 1px solid #E8DDD0;
+    }
+
+    .message.user {
+      background: var(--clay);
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 0.25rem;
+    }
+
+    .message strong { font-weight: 600; color: var(--clay); }
+    .message.bot strong { color: var(--clay); }
+
+    #chat-buttons {
+      padding: 0.5rem 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      background: white;
+      border-top: 1px solid #E8DDD0;
+    }
+
+    #chat-buttons button {
+      padding: 0.5rem 1rem;
+      background: white;
+      color: var(--clay);
+      border: 1.5px solid var(--clay-soft);
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      font-family: 'Sora', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    #chat-buttons button:hover {
+      background: var(--clay);
+      color: white;
+      border-color: var(--clay);
+    }
+
+    .chat-input-area {
+      display: flex;
+      padding: 0.75rem;
+      border-top: 1px solid #E8DDD0;
+      gap: 0.5rem;
+      background: white;
+    }
+
+    .chat-input-area input {
+      flex: 1;
+      padding: 0.625rem 0.875rem;
+      border: 1.5px solid #E8DDD0;
+      border-radius: 0.75rem;
+      font-size: 0.875rem;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      outline: none;
+    }
+
+    .chat-input-area input:focus { border-color: var(--clay); }
+
+    .chat-input-area button {
+      padding: 0.5rem 1.25rem;
+      background: var(--clay);
+      color: white;
+      border: none;
+      border-radius: 0.75rem;
+      cursor: pointer;
+      font-weight: 600;
+      font-family: 'Sora', sans-serif;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 2rem;
+      color: #9E9186;
+      font-size: 0.8rem;
+    }
+
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 1.75rem; }
+      .chat-section { margin-top: -2rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <div class="logo">Aparta</div>
+    <h1>Aparta tu cita.<br>Cobra al instante.</h1>
+    <p>Chatbot con pasarela de pago integrada. Agenda tu consulta en menos de 1 minuto.</p>
+  </div>
+
+  <div class="chat-section">
+    <div class="chat-card">
+      <div class="chat-header">
+        💬 Aparta · asistente
+        <span class="status"></span>
+      </div>
+      <div id="chat-messages"></div>
+      <div id="chat-buttons"></div>
+      <div class="chat-input-area">
+        <input type="text" id="chat-input" placeholder="Escribe un mensaje…" onkeypress="handleKeyPress(event)">
+        <button onclick="sendMessage()">➤</button>
+      </div>
+    </div>
+  </div>
+
+  <p class="footer">Pagos protegidos por Stripe · Hecho con Aparta</p>
+
+  <script>
+    let chatState = { chatId: null, messages: [], isOpen: true };
+    const API_URL = '';
+
+    async function startSession() {
+      try {
+        const res = await fetch(`${API_URL}/api/chat/session`);
+        const data = await res.json();
+        chatState.chatId = data.sessionId;
+        clearMessages();
+        addMessage(data.message, 'bot');
+        showButtons(data.quickReplies || []);
+      } catch (err) {
+        addMessage('⚠️ Error de conexión. Intentá de nuevo.', 'bot');
+      }
+    }
+
+    function addMessage(text, sender) {
+      const messagesDiv = document.getElementById('chat-messages');
+      const msgDiv = document.createElement('div');
+      msgDiv.className = `message ${sender}`;
+      msgDiv.innerHTML = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+      messagesDiv.appendChild(msgDiv);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    function showButtons(buttons) {
+      const buttonsDiv = document.getElementById('chat-buttons');
+      buttonsDiv.innerHTML = '';
+      buttons.forEach(btn => {
+        const button = document.createElement('button');
+        button.textContent = btn.label;
+        button.onclick = () => { addMessage(btn.label, 'user'); sendChatMessage(null, btn.id); };
+        buttonsDiv.appendChild(button);
+      });
+    }
+
+    function clearMessages() { document.getElementById('chat-messages').innerHTML = ''; }
+
+    async function sendChatMessage(message, quickReplyId) {
+      try {
+        const response = await fetch(`${API_URL}/api/chat/message`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sessionId: chatState.chatId, message: message || '', quickReplyId: quickReplyId || null })
+        });
+        const result = await response.json();
+        if (result.message) addMessage(result.message, 'bot');
+        showButtons(result.quickReplies || []);
+      } catch (err) {
+        addMessage('⚠️ Error de conexión. Intentá de nuevo.', 'bot');
+      }
+    }
+
+    function sendMessage() {
+      const input = document.getElementById('chat-input');
+      const text = input.value.trim();
+      if (!text) return;
+      addMessage(text, 'user');
+      input.value = '';
+      sendChatMessage(text, null);
+    }
+
+    function handleKeyPress(e) { if (e.key === 'Enter') sendMessage(); }
+
+    startSession();
+  </script>
+</body>
+</html>

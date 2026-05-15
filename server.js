@@ -59,6 +59,11 @@ app.get('/login', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend', 'login.html'));
 });
 
+// Public chat page for patients
+app.get('/chat', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend', 'public.html'));
+});
+
 // Serve static assets (public — needed for login page css/js if any)
 app.use('/brand.css', express.static(path.join(__dirname, 'frontend', 'brand.css')));
 app.use('/assets', express.static(path.join(__dirname, 'frontend', 'assets')));
