@@ -50,7 +50,7 @@ Respondé en formato JSON con esta estructura EXACTA:
 async function callKimi(messages) {
   const apiKey = process.env.KIMI_API_KEY;
   if (!apiKey) {
-    return { response: 'El asistente de IA no está configurado. Por favor contactá al administrador.', action: 'none', buttons: [] };
+    return { response: null, action: 'none', buttons: [] };
   }
 
   try {
@@ -90,7 +90,7 @@ async function callKimi(messages) {
     return { response: content, action: 'none', buttons: [] };
   } catch (err) {
     console.error('Kimi API error:', err.message);
-    return { response: 'Ups, estoy teniendo problemas técnicos. Intentá de nuevo en un momento.', action: 'none', buttons: [{ id: 'retry', label: '🔄 Reintentar' }] };
+    return { response: null, action: 'none', buttons: [] };
   }
 }
 
@@ -183,9 +183,28 @@ router.post('/message', async (req, res) => {
 
     const aiResult = await callKimi(messages);
 
+    // Fallback if Kimi fails
+    let responseText = aiResult.response;
+    if (!responseText) {
+      const lowerInput = input.toLowerCase();
+      if (lowerInput.includes('hola') || lowerInput.includes('buen') || lowerInput === 'hi') {
+        responseText = `¡Hola! 👋 ¿En qué puedo ayudarte hoy?`;
+      } else if (lowerInput.includes('precio') || lowerInput.includes('costo') || lowerInput.includes('cuánto')) {
+        responseText = `Te muestro los precios enseguida. ¿Querés verlos?`;
+      } else if (lowerInput.includes('agendar') || lowerInput.includes('cita') || lowerInput.includes('turno')) {
+        responseText = `¡Perfecto! Te ayudo a agendar. Elegí una opción:`;
+      } else if (lowerInput.includes('cancel')) {
+        responseText = `¿Querés cancelar una cita? Te muestro tus citas.`;
+      } else if (lowerInput.includes('cita') || lowerInput.includes('tengo')) {
+        responseText = `¿Querés ver tus citas agendadas?`;
+      } else {
+        responseText = `Entiendo. ¿Te gustaría agendar una cita o consultar precios?`;
+      }
+    }
+
     // Update session history
     sess.messages.push({ role: 'user', content: input });
-    sess.messages.push({ role: 'assistant', content: aiResult.response });
+    sess.messages.push({ role: 'assistant', content: responseText });
     setSession(sess.id, sess);
 
     // Build quick replies based on AI action + defaults
@@ -212,7 +231,7 @@ router.post('/message', async (req, res) => {
 
     res.json({
       success: true,
-      message: aiResult.response,
+      message: responseText,
       quickReplies: quickReplies.slice(0, 4)
     });
 
