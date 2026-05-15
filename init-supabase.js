@@ -11,7 +11,8 @@ async function init() {
 
   const client = new Client({
     connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false }
+    ssl: { rejectUnauthorized: false },
+    family: 4 // Force IPv4
   });
   
   await client.connect();

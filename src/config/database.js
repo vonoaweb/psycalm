@@ -10,7 +10,8 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false // Required for Supabase
-  }
+  },
+  family: 4 // Force IPv4 — Render has issues with IPv6 to Supabase
 });
 
 // Connection test (non-fatal)
