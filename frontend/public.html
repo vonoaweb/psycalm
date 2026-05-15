@@ -198,7 +198,45 @@
       cursor: pointer;
       font-weight: 600;
       font-family: 'Sora', sans-serif;
+      transition: background 0.2s;
     }
+    .chat-input-area button:hover { background: var(--clay-deep); }
+    .chat-input-area button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Typing indicator */
+    .typing {
+      display: none;
+      align-self: flex-start;
+      background: white;
+      border: 1px solid #E8DDD0;
+      border-radius: 1rem;
+      border-bottom-left-radius: 0.25rem;
+      padding: 0.75rem 1rem;
+      margin-bottom: 0.5rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .typing.show { display: flex; }
+    .typing-dot {
+      width: 7px;
+      height: 7px;
+      background: #C8553D;
+      border-radius: 50%;
+      margin: 0 2px;
+      animation: typingBounce 1.4s infinite ease-in-out both;
+    }
+    .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+    .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+    @keyframes typingBounce {
+      0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+      40% { transform: scale(1); opacity: 1; }
+    }
+
+    /* Message animations */
+    @keyframes msgIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .message { animation: msgIn 0.25s ease; }
 
     .footer {
       text-align: center;
@@ -226,7 +264,13 @@
         💬 Aparta · asistente
         <span class="status"></span>
       </div>
-      <div id="chat-messages"></div>
+      <div id="chat-messages">
+        <div class="typing" id="typing-indicator">
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+        </div>
+      </div>
       <div id="chat-buttons"></div>
       <div class="chat-input-area">
         <input type="text" id="chat-input" placeholder="Escribe un mensaje…" onkeypress="handleKeyPress(event)">
@@ -256,11 +300,30 @@
 
     function addMessage(text, sender) {
       const messagesDiv = document.getElementById('chat-messages');
+      const typing = document.getElementById('typing-indicator');
       const msgDiv = document.createElement('div');
       msgDiv.className = `message ${sender}`;
       msgDiv.innerHTML = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
-      messagesDiv.appendChild(msgDiv);
-      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      messagesDiv.insertBefore(msgDiv, typing);
+      smoothScroll(messagesDiv);
+    }
+
+    function smoothScroll(el) {
+      el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
+    }
+
+    function showTyping(show) {
+      const typing = document.getElementById('typing-indicator');
+      if (show) typing.classList.add('show');
+      else typing.classList.remove('show');
+    }
+
+    function setInputEnabled(enabled) {
+      const input = document.getElementById('chat-input');
+      const btn = input.nextElementSibling;
+      input.disabled = !enabled;
+      btn.disabled = !enabled;
+      if (enabled) input.focus();
     }
 
     function showButtons(buttons) {
@@ -285,9 +348,16 @@
       });
     }
 
-    function clearMessages() { document.getElementById('chat-messages').innerHTML = ''; }
+    function clearMessages() {
+      const messagesDiv = document.getElementById('chat-messages');
+      const typing = document.getElementById('typing-indicator');
+      messagesDiv.innerHTML = '';
+      messagesDiv.appendChild(typing);
+    }
 
     async function sendChatMessage(message, quickReplyId) {
+      showTyping(true);
+      setInputEnabled(false);
       try {
         const response = await fetch(`${API_URL}/api/chat/message`, {
           method: 'POST',
@@ -298,7 +368,11 @@
         if (result.message) addMessage(result.message, 'bot');
         showButtons(result.quickReplies || []);
       } catch (err) {
-        addMessage('⚠️ Error de conexión. Intentá de nuevo.', 'bot');
+        addMessage('⚠️ Error de conexión. Intentá de nuevo en un momento.', 'bot');
+        showButtons([{ id: 'retry', label: '🔄 Reintentar' }]);
+      } finally {
+        showTyping(false);
+        setInputEnabled(true);
       }
     }
 
