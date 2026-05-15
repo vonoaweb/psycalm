@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pago cancelado — Aparta</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --clay: #C8553D;
+      --clay-deep: #A53E2A;
+      --cream: #F4EBDD;
+      --ink: #2A1F1A;
+      --border: #E8DDD0;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .card {
+      background: #fff;
+      border-radius: 1.25rem;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 480px;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(42,31,26,0.1);
+      border: 1px solid var(--border);
+    }
+    .icon {
+      width: 72px;
+      height: 72px;
+      background: #FEF2F2;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+    }
+    .icon i { font-size: 2rem; color: #991B1B; }
+    h1 {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    p { color: #6B5E54; margin-bottom: 1.5rem; line-height: 1.5; }
+    .actions { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      display: inline-block;
+      padding: 0.875rem 1.5rem;
+      border-radius: 0.75rem;
+      text-decoration: none;
+      font-weight: 600;
+      font-family: 'Sora', sans-serif;
+      transition: background 0.2s;
+    }
+    .btn-primary { background: var(--clay); color: white; }
+    .btn-primary:hover { background: var(--clay-deep); }
+    .btn-secondary { background: var(--cream); color: var(--ink); border: 1px solid var(--border); }
+    .btn-secondary:hover { background: var(--border); }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon"><i class="fas fa-times"></i></div>
+    <h1>Pago cancelado</h1>
+    <p>No te preocupés. Tu cita no quedó confirmada porque el anticipo no se completó. Podés intentarlo de nuevo cuando quieras.</p>
+    <div class="actions">
+      <a href="/agendar" class="btn btn-primary">Volver a agendar</a>
+      <a href="/chat" class="btn btn-secondary">¿Dudas? Chateá con nosotros</a>
+    </div>
+  </div>
+</body>
+</html>

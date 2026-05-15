@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agendar cita — Aparta</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --clay: #C8553D;
+      --clay-deep: #A53E2A;
+      --clay-soft: #F1D5C7;
+      --cream: #F4EBDD;
+      --sage: #7B9E7E;
+      --sage-deep: #5E7A60;
+      --ink: #2A1F1A;
+      --ink-light: #4A3F3A;
+      --border: #E8DDD0;
+      --white: #FFFFFF;
+      --radius: 0.875rem;
+      --radius-sm: 0.5rem;
+      --shadow: 0 2px 8px rgba(42,31,26,0.08);
+      --shadow-lg: 0 8px 32px rgba(42,31,26,0.12);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    /* Header */
+    .header {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .header-inner {
+      max-width: 720px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--clay);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+    }
+    .logo::before {
+      content: '';
+      width: 22px; height: 22px;
+      background: var(--clay);
+      border-radius: 6px 6px 6px 2px;
+      display: inline-block;
+    }
+    .header-actions { display: flex; gap: 0.5rem; }
+    .header-btn {
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .header-btn.primary { background: var(--clay); color: white; }
+    .header-btn.secondary { background: var(--cream); color: var(--ink); border: 1px solid var(--border); }
+
+    /* Main */
+    .main { max-width: 720px; margin: 0 auto; padding: 1.5rem; }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 2rem 0 1.5rem;
+    }
+    .hero-avatar {
+      width: 80px; height: 80px;
+      background: var(--clay-soft);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      font-size: 2rem;
+      color: var(--clay);
+    }
+    .hero h1 {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    .hero p { color: #6B5E54; font-size: 0.95rem; }
+
+    /* Steps */
+    .steps {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #9E9186;
+    }
+    .step-dot {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      color: var(--ink-light);
+    }
+    .step.active .step-dot { background: var(--clay); color: white; }
+    .step.active { color: var(--clay-deep); }
+    .step.done .step-dot { background: var(--sage); color: white; }
+    .step-line {
+      width: 24px; height: 2px;
+      background: var(--border);
+    }
+
+    /* Cards */
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .card-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    /* Session types */
+    .type-grid {
+      display: grid;
+      gap: 0.75rem;
+    }
+    .type-card {
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1rem;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.875rem;
+    }
+    .type-card:hover { border-color: var(--clay-soft); }
+    .type-card.selected { border-color: var(--clay); background: #FEF6F4; }
+    .type-icon {
+      width: 40px; height: 40px;
+      background: var(--cream);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--clay);
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .type-card.selected .type-icon { background: var(--clay-soft); }
+    .type-info { flex: 1; }
+    .type-name { font-weight: 600; font-size: 0.95rem; }
+    .type-desc { font-size: 0.8rem; color: #6B5E54; margin-top: 0.15rem; }
+    .type-price { font-family: 'Sora', sans-serif; font-weight: 700; color: var(--clay); white-space: nowrap; }
+
+    /* Calendar */
+    .days-scroll {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1rem;
+      scrollbar-width: none;
+    }
+    .days-scroll::-webkit-scrollbar { display: none; }
+    .day-btn {
+      flex-shrink: 0;
+      width: 64px;
+      padding: 0.75rem 0.5rem;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--white);
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s;
+    }
+    .day-btn:hover { border-color: var(--clay-soft); }
+    .day-btn.selected { border-color: var(--clay); background: #FEF6F4; }
+    .day-btn.disabled { opacity: 0.4; cursor: not-allowed; }
+    .day-label { font-size: 0.7rem; text-transform: uppercase; color: #9E9186; font-weight: 600; }
+    .day-num { font-family: 'Sora', sans-serif; font-size: 1.1rem; font-weight: 700; }
+    .day-month { font-size: 0.7rem; color: #9E9186; }
+
+    .slots-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 0.5rem;
+    }
+    .slot-btn {
+      padding: 0.6rem;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--white);
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all 0.15s;
+    }
+    .slot-btn:hover { border-color: var(--clay-soft); }
+    .slot-btn.selected { border-color: var(--clay); background: #FEF6F4; color: var(--clay-deep); font-weight: 600; }
+
+    /* Form */
+    .form-group { margin-bottom: 1rem; }
+    .form-label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #6B5E54;
+      margin-bottom: 0.35rem;
+    }
+    .form-input {
+      width: 100%;
+      padding: 0.6rem 0.875rem;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      color: var(--ink);
+      background: var(--white);
+      outline: none;
+    }
+    .form-input:focus { border-color: var(--clay); }
+
+    /* Summary */
+    .summary-box {
+      background: var(--cream);
+      border-radius: var(--radius-sm);
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.4rem 0;
+      font-size: 0.9rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .summary-row:last-child { border-bottom: none; }
+    .summary-row.total { font-weight: 700; font-size: 1rem; }
+    .summary-row.total .price { color: var(--clay); font-family: 'Sora', sans-serif; }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      width: 100%;
+      padding: 0.875rem;
+      border-radius: var(--radius-sm);
+      font-family: 'Sora', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s;
+    }
+    .btn-primary { background: var(--clay); color: white; }
+    .btn-primary:hover { background: var(--clay-deep); }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-secondary { background: var(--cream); color: var(--ink); border: 1px solid var(--border); }
+    .btn-secondary:hover { background: var(--border); }
+
+    /* Info section */
+    .info-section {
+      text-align: center;
+      padding: 2rem 0;
+    }
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .info-item {
+      padding: 1rem;
+    }
+    .info-item i {
+      font-size: 1.5rem;
+      color: var(--sage);
+      margin-bottom: 0.5rem;
+    }
+    .info-item h3 {
+      font-family: 'Sora', sans-serif;
+      font-size: 0.9rem;
+      margin-bottom: 0.25rem;
+    }
+    .info-item p { font-size: 0.85rem; color: #6B5E54; }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      font-size: 0.8rem;
+      color: #9E9186;
+    }
+
+    /* Loading */
+    .loading { text-align: center; padding: 2rem; color: #9E9186; }
+    .spinner {
+      display: inline-block;
+      width: 20px; height: 20px;
+      border: 2px solid var(--border);
+      border-top-color: var(--clay);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Hidden sections */
+    .step-section { display: none; }
+    .step-section.active { display: block; }
+
+    /* Chat widget */
+    .chat-widget {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 100;
+    }
+    .chat-btn {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: var(--clay);
+      color: white;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: var(--shadow-lg);
+      transition: transform 0.2s;
+    }
+    .chat-btn:hover { transform: scale(1.05); }
+    .chat-panel {
+      position: absolute;
+      bottom: 70px;
+      right: 0;
+      width: 340px;
+      height: 460px;
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      display: none;
+      flex-direction: column;
+    }
+    .chat-panel.open { display: flex; }
+    .chat-header {
+      padding: 0.875rem 1rem;
+      background: var(--clay);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .chat-header h4 { font-family: 'Sora', sans-serif; font-size: 0.9rem; }
+    .chat-close { background: none; border: none; color: white; font-size: 1.1rem; cursor: pointer; }
+    .chat-iframe { flex: 1; border: none; width: 100%; }
+
+    @media (max-width: 480px) {
+      .chat-panel { width: calc(100vw - 2rem); height: 60vh; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="/agendar" class="logo">Aparta</a>
+      <div class="header-actions">
+        <a href="/chat" class="header-btn secondary">Chat</a>
+        <a href="/login" class="header-btn primary">Admin</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-avatar"><i class="fas fa-user-md"></i></div>
+      <h1>Reservá tu cita</h1>
+      <p>Seleccioná el tipo de sesión, fecha y hora. Pagá el anticipo y listo.</p>
+    </div>
+
+    <!-- Steps indicator -->
+    <div class="steps">
+      <div class="step active" id="step-ind-1">
+        <div class="step-dot">1</div>
+        <span>Tipo</span>
+      </div>
+      <div class="step-line"></div>
+      <div class="step" id="step-ind-2">
+        <div class="step-dot">2</div>
+        <span>Fecha</span>
+      </div>
+      <div class="step-line"></div>
+      <div class="step" id="step-ind-3">
+        <div class="step-dot">3</div>
+        <span>Datos</span>
+      </div>
+    </div>
+
+    <!-- Step 1: Session type -->
+    <div class="step-section active" id="step-1">
+      <div class="card">
+        <div class="card-title">¿Qué tipo de sesión necesitás?</div>
+        <div class="type-grid" id="typeGrid">
+          <div class="loading"><div class="spinner"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Date & time -->
+    <div class="step-section" id="step-2">
+      <div class="card">
+        <div class="card-title">Elegí fecha y hora</div>
+        <div id="calendarLoading" class="loading"><div class="spinner"></div> Cargando disponibilidad...</div>
+        <div id="calendarContent" style="display:none;">
+          <div class="days-scroll" id="daysScroll"></div>
+          <div id="slotsContainer"></div>
+        </div>
+        <div style="margin-top:1rem;">
+          <button class="btn btn-secondary" onclick="goToStep(1)"><i class="fas fa-arrow-left"></i> Volver</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Patient data & payment -->
+    <div class="step-section" id="step-3">
+      <div class="card">
+        <div class="card-title">Tus datos</div>
+        <div class="form-group">
+          <label class="form-label">Nombre completo</label>
+          <input type="text" class="form-input" id="patName" placeholder="Ej: María González" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Teléfono (WhatsApp)</label>
+          <input type="tel" class="form-input" id="patPhone" placeholder="Ej: 5512345678" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-input" id="patEmail" placeholder="Ej: maria@email.com">
+        </div>
+
+        <div class="summary-box" id="summaryBox"></div>
+
+        <button class="btn btn-primary" id="payBtn" onclick="submitBooking()">
+          <i class="fas fa-lock"></i> Pagar anticipo y confirmar
+        </button>
+        <div style="margin-top:0.75rem;">
+          <button class="btn btn-secondary" onclick="goToStep(2)"><i class="fas fa-arrow-left"></i> Volver</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info -->
+    <div class="info-section">
+      <h2 style="font-family:'Sora',sans-serif;font-size:1.1rem;">¿Por qué elegirnos?</h2>
+      <div class="info-grid">
+        <div class="info-item">
+          <i class="fas fa-shield-alt"></i>
+          <h3>Pagos seguros</h3>
+          <p>Protegidos por Stripe con encriptación SSL.</p>
+        </div>
+        <div class="info-item">
+          <i class="fas fa-calendar-check"></i>
+          <h3>Confirmación instantánea</h3>
+          <p>Tu cita queda reservada al instante.</p>
+        </div>
+        <div class="info-item">
+          <i class="fas fa-redo"></i>
+          <h3>Reagendá cuando quieras</h3>
+          <p>Podés modificar tu cita con anticipación.</p>
+        </div>
+        <div class="info-item">
+          <i class="fas fa-headset"></i>
+          <h3>¿Dudas? Chateá</h3>
+          <p>Nuestro asistente te ayuda 24/7.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>© Aparta — Aparta tu cita. Cobra al instante.</p>
+    <p style="margin-top:0.25rem;">Pagos protegidos por Stripe</p>
+  </footer>
+
+  <!-- Chat widget -->
+  <div class="chat-widget">
+    <div class="chat-panel" id="chatPanel">
+      <div class="chat-header">
+        <h4><i class="fas fa-comments" style="margin-right:0.4rem;"></i>¿Dudas?</h4>
+        <button class="chat-close" onclick="toggleChat()"><i class="fas fa-times"></i></button>
+      </div>
+      <iframe class="chat-iframe" src="/chat" id="chatFrame"></iframe>
+    </div>
+    <button class="chat-btn" onclick="toggleChat()" id="chatBtn"><i class="fas fa-comment-dots"></i></button>
+  </div>
+
+  <script>
+    // ========================
+    // STATE
+    // ========================
+    let currentStep = 1;
+    let selectedType = null;
+    let selectedDate = null;
+    let selectedTime = null;
+    let availabilityData = [];
+
+    // Fee types (loaded from API or fallback)
+    const feeTypesFallback = [
+      { id: 1, label: 'Primera consulta', type: 'Primera consulta', fee: 1200, deposit_percent: 20, duration: 60, description: 'Evaluación inicial y plan de tratamiento', icon: 'fa-user-md' },
+      { id: 2, label: 'Sesión regular', type: 'Sesión regular', fee: 900, deposit_percent: 20, duration: 50, description: 'Seguimiento terapéutico habitual', icon: 'fa-heart' },
+      { id: 3, label: 'Terapia de pareja', type: 'Terapia de pareja', fee: 1500, deposit_percent: 20, duration: 80, description: 'Sesión conjunta para parejas', icon: 'fa-users' },
+      { id: 4, label: 'Consulta online', type: 'Consulta online', fee: 800, deposit_percent: 20, duration: 50, description: 'Videollamada desde tu hogar', icon: 'fa-video' }
+    ];
+
+    // ========================
+    // INIT
+    // ========================
+    async function init() {
+      await loadFeeTypes();
+    }
+
+    async function loadFeeTypes() {
+      const grid = document.getElementById('typeGrid');
+      try {
+        const res = await fetch('/api/settings');
+        const json = await res.json();
+        // If fee_types exist in settings, use them; otherwise fallback
+        let types = feeTypesFallback;
+        // Try to get fee_types from a future endpoint or use fallback
+        renderTypes(types);
+      } catch (e) {
+        renderTypes(feeTypesFallback);
+      }
+    }
+
+    function renderTypes(types) {
+      const grid = document.getElementById('typeGrid');
+      grid.innerHTML = types.map(t => `
+        <div class="type-card" onclick="selectType(${t.id}, this)" data-type='${JSON.stringify(t).replace(/'/g,"&#39;")}'>
+          <div class="type-icon"><i class="fas ${t.icon || 'fa-calendar'}"></i></div>
+          <div class="type-info">
+            <div class="type-name">${t.label}</div>
+            <div class="type-desc">${t.description} · ${t.duration} min</div>
+          </div>
+          <div class="type-price">$${t.fee.toLocaleString()}</div>
+        </div>
+      `).join('');
+    }
+
+    function selectType(id, el) {
+      document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedType = JSON.parse(el.dataset.type.replace(/&#39;/g, "'"));
+      goToStep(2);
+      loadAvailability();
+    }
+
+    // ========================
+    // STEP NAVIGATION
+    // ========================
+    function goToStep(n) {
+      currentStep = n;
+      document.querySelectorAll('.step-section').forEach(s => s.classList.remove('active'));
+      document.getElementById('step-' + n).classList.add('active');
+
+      document.querySelectorAll('.step').forEach((s, i) => {
+        s.classList.remove('active', 'done');
+        if (i + 1 < n) s.classList.add('done');
+        if (i + 1 === n) s.classList.add('active');
+      });
+    }
+
+    // ========================
+    // AVAILABILITY
+    // ========================
+    async function loadAvailability() {
+      const loading = document.getElementById('calendarLoading');
+      const content = document.getElementById('calendarContent');
+      loading.style.display = 'block';
+      content.style.display = 'none';
+
+      try {
+        const res = await fetch('/api/availability');
+        const json = await res.json();
+        availabilityData = json.data || [];
+        renderCalendar();
+        loading.style.display = 'none';
+        content.style.display = 'block';
+      } catch (e) {
+        loading.innerHTML = '<div>Error al cargar disponibilidad. Intentá de nuevo.</div>';
+      }
+    }
+
+    function renderCalendar() {
+      const scroll = document.getElementById('daysScroll');
+      if (!availabilityData.length) {
+        scroll.innerHTML = '<div style="color:#9E9186;font-size:0.9rem;">No hay disponibilidad por el momento.</div>';
+        return;
+      }
+
+      const dias = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+      scroll.innerHTML = availabilityData.map(day => {
+        const d = new Date(day.date + 'T00:00:00');
+        return `
+          <div class="day-btn ${day.slots.length ? '' : 'disabled'}" data-date="${day.date}" onclick="selectDate('${day.date}', this)">
+            <div class="day-label">${dias[d.getDay()]}</div>
+            <div class="day-num">${d.getDate()}</div>
+            <div class="day-month">${d.toLocaleDateString('es-MX',{month:'short'})}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function selectDate(date, el) {
+      if (el.classList.contains('disabled')) return;
+      document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedDate = date;
+      renderSlots(date);
+    }
+
+    function renderSlots(date) {
+      const day = availabilityData.find(d => d.date === date);
+      const container = document.getElementById('slotsContainer');
+      if (!day || !day.slots.length) {
+        container.innerHTML = '<div style="color:#9E9186;font-size:0.85rem;margin-top:0.5rem;">No hay horarios disponibles este día.</div>';
+        return;
+      }
+      container.innerHTML = `
+        <div style="font-size:0.8rem;font-weight:600;color:#6B5E54;margin-bottom:0.5rem;">Horarios disponibles</div>
+        <div class="slots-grid">
+          ${day.slots.map(time => `
+            <button class="slot-btn" onclick="selectTime('${time}', this)">${time.substring(0,5)}</button>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function selectTime(time, el) {
+      document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedTime = time;
+      setTimeout(() => goToStep(3), 200);
+      renderSummary();
+    }
+
+    // ========================
+    // SUMMARY & PAYMENT
+    // ========================
+    function renderSummary() {
+      if (!selectedType || !selectedDate || !selectedTime) return;
+      const deposit = Math.round(selectedType.fee * selectedType.deposit_percent / 100);
+      const [y, m, d] = selectedDate.split('-');
+      document.getElementById('summaryBox').innerHTML = `
+        <div class="summary-row"><span>Tipo de sesión</span><span>${selectedType.label}</span></div>
+        <div class="summary-row"><span>Fecha</span><span>${d}/${m}/${y}</span></div>
+        <div class="summary-row"><span>Hora</span><span>${selectedTime.substring(0,5)}</span></div>
+        <div class="summary-row"><span>Duración</span><span>${selectedType.duration} min</span></div>
+        <div class="summary-row"><span>Tarifa total</span><span>$${selectedType.fee.toLocaleString()}</span></div>
+        <div class="summary-row total"><span>Anticipo a pagar (${selectedType.deposit_percent}%)</span><span class="price">$${deposit.toLocaleString()}</span></div>
+      `;
+    }
+
+    async function submitBooking() {
+      const name = document.getElementById('patName').value.trim();
+      const phone = document.getElementById('patPhone').value.trim();
+      const email = document.getElementById('patEmail').value.trim();
+      const btn = document.getElementById('payBtn');
+
+      if (!name || !phone) {
+        alert('Por favor completá tu nombre y teléfono.');
+        return;
+      }
+      if (!selectedType || !selectedDate || !selectedTime) {
+        alert('Error: faltan datos de la cita. Volvé a empezar.');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<div class="spinner" style="border-color:rgba(255,255,255,0.3);border-top-color:#fff;"></div> Procesando...';
+
+      try {
+        const res = await fetch('/api/bookings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            patient_name: name,
+            patient_phone: phone,
+            patient_email: email,
+            date: selectedDate,
+            time: selectedTime,
+            type: selectedType.type,
+            fee: selectedType.fee,
+            deposit_percent: selectedType.deposit_percent,
+            duration: selectedType.duration,
+            notes: ''
+          })
+        });
+
+        const json = await res.json();
+        if (json.success && json.checkout_url) {
+          window.location.href = json.checkout_url;
+        } else if (json.success) {
+          alert('Cita creada. Te contactaremos para el pago.');
+          window.location.href = '/agendar';
+        } else {
+          alert(json.error || 'Error al crear la cita. Intentá de nuevo.');
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fas fa-lock"></i> Pagar anticipo y confirmar';
+        }
+      } catch (e) {
+        alert('Error de conexión. Intentá de nuevo.');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-lock"></i> Pagar anticipo y confirmar';
+      }
+    }
+
+    // ========================
+    // CHAT WIDGET
+    // ========================
+    function toggleChat() {
+      document.getElementById('chatPanel').classList.toggle('open');
+      const btn = document.getElementById('chatBtn');
+      btn.innerHTML = document.getElementById('chatPanel').classList.contains('open')
+        ? '<i class="fas fa-times"></i>'
+        : '<i class="fas fa-comment-dots"></i>';
+    }
+
+    init();
+  </script>
+</body>
+</html>

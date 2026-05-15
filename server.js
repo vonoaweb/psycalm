@@ -8,6 +8,10 @@ const app = express();
 const PORT = process.env.PORT || 10000;
 
 app.use(cors());
+
+// Stripe webhook MUST be before express.json() to receive raw body
+app.post('/webhook/stripe', express.raw({ type: 'application/json' }), require('./src/routes/webhook-stripe'));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -23,6 +27,11 @@ app.use('/api/patients', require('./src/routes/patients'));
 app.use('/api/payments', require('./src/routes/payments'));
 app.use('/api/settings', require('./src/routes/settings'));
 app.use('/api/dashboard', require('./src/routes/dashboard'));
+
+// Public booking & payment APIs
+app.use('/api/availability', require('./src/routes/availability'));
+app.use('/api/bookings', require('./src/routes/bookings'));
+app.use('/api/checkout', require('./src/routes/checkout'));
 
 // Init database — call once after deploy
 async function initHandler(req, res) {
@@ -62,6 +71,19 @@ app.get('/login', (req, res) => {
 // Public chat page for patients
 app.get('/chat', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend', 'public.html'));
+});
+
+// Public booking page for patients
+app.get('/agendar', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend', 'agendar.html'));
+});
+
+// Payment result pages
+app.get('/pago-exitoso', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend', 'pago-exitoso.html'));
+});
+app.get('/pago-cancelado', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend', 'pago-cancelado.html'));
 });
 
 // Serve static assets (public — needed for login page css/js if any)

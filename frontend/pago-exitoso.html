@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pago confirmado — Aparta</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --clay: #C8553D;
+      --clay-deep: #A53E2A;
+      --cream: #F4EBDD;
+      --sage: #7B9E7E;
+      --ink: #2A1F1A;
+      --border: #E8DDD0;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .card {
+      background: #fff;
+      border-radius: 1.25rem;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 480px;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(42,31,26,0.1);
+      border: 1px solid var(--border);
+    }
+    .icon {
+      width: 72px;
+      height: 72px;
+      background: #D1FAE5;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+    }
+    .icon i { font-size: 2rem; color: #065F46; }
+    h1 {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    p { color: #6B5E54; margin-bottom: 1.5rem; line-height: 1.5; }
+    .details {
+      background: var(--cream);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      text-align: left;
+      margin-bottom: 1.5rem;
+    }
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+    .detail-row:last-child { border-bottom: none; }
+    .detail-label { color: #6B5E54; }
+    .detail-value { font-weight: 600; }
+    .btn {
+      display: inline-block;
+      padding: 0.875rem 1.5rem;
+      background: var(--clay);
+      color: white;
+      border-radius: 0.75rem;
+      text-decoration: none;
+      font-weight: 600;
+      font-family: 'Sora', sans-serif;
+      transition: background 0.2s;
+    }
+    .btn:hover { background: var(--clay-deep); }
+    .loading { color: #9E9186; font-size: 0.9rem; }
+    .spinner {
+      display: inline-block;
+      width: 20px; height: 20px;
+      border: 2px solid var(--border);
+      border-top-color: var(--clay);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-right: 0.5rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon"><i class="fas fa-check"></i></div>
+    <h1>¡Pago confirmado!</h1>
+    <p>Tu cita está reservada. Te enviaremos un recordatorio antes de la fecha.</p>
+
+    <div class="details" id="details">
+      <div class="loading"><div class="spinner"></div> Cargando detalles...</div>
+    </div>
+
+    <a href="/agendar" class="btn">Agendar otra cita</a>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get('session_id');
+    const appointmentId = params.get('appointment');
+
+    async function loadDetails() {
+      const detailsEl = document.getElementById('details');
+      try {
+        // Poll for appointment confirmation (webhook may still be processing)
+        let apt = null;
+        for (let i = 0; i < 10; i++) {
+          const res = await fetch(`/api/appointments/${appointmentId}`);
+          const json = await res.json();
+          if (json.success && json.data) {
+            apt = json.data;
+            if (apt.status === 'confirmed') break;
+          }
+          await new Promise(r => setTimeout(r, 1500));
+        }
+
+        if (!apt) {
+          detailsEl.innerHTML = '<div class="loading">No se pudieron cargar los detalles. Tu cita está siendo procesada.</div>';
+          return;
+        }
+
+        const fmtDate = (d) => {
+          if (!d) return '—';
+          const [y, m, day] = d.split('-');
+          return `${day}/${m}/${y}`;
+        };
+
+        detailsEl.innerHTML = `
+          <div class="detail-row"><span class="detail-label">Paciente</span><span class="detail-value">${apt.patient_name}</span></div>
+          <div class="detail-row"><span class="detail-label">Fecha</span><span class="detail-value">${fmtDate(apt.date)}</span></div>
+          <div class="detail-row"><span class="detail-label">Hora</span><span class="detail-value">${apt.time?.substring(0,5) || apt.time}</span></div>
+          <div class="detail-row"><span class="detail-label">Tipo</span><span class="detail-value">${apt.type}</span></div>
+          <div class="detail-row"><span class="detail-label">Anticipo pagado</span><span class="detail-value">$${Number(apt.deposit_amount).toLocaleString()}</span></div>
+          <div class="detail-row"><span class="detail-label">Estado</span><span class="detail-value" style="color:${apt.status==='confirmed'?'#065F46':'#92400E'}">${apt.status==='confirmed'?'Confirmada':'Pendiente'}</span></div>
+        `;
+      } catch (e) {
+        detailsEl.innerHTML = '<div class="loading">Tu cita está siendo procesada. Recibirás confirmación por email o WhatsApp.</div>';
+      }
+    }
+
+    loadDetails();
+  </script>
+</body>
+</html>
