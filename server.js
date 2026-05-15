@@ -40,5 +40,5 @@ app.get('*', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 PsyCalm running on port ${PORT}`);
+  console.log(`🚀 Aparta running on port ${PORT}`);
 });
