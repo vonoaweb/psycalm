@@ -13,16 +13,14 @@ const pool = new Pool({
   }
 });
 
-// Test connection on startup
+// Connection test (non-fatal)
 pool.connect()
   .then(client => {
-    console.log('✅ PostgreSQL connected to Supabase');
+    console.log('✅ PostgreSQL connected');
     client.release();
   })
   .catch(err => {
-    console.error('❌ PostgreSQL connection failed:', err.message);
-    console.error('   Check DATABASE_URL in .env file');
-    process.exit(1);
+    console.error('⚠️  PostgreSQL not connected:', err.message);
   });
 
 // Query helper

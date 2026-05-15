@@ -7,10 +7,6 @@ const app = express();
 const PORT = process.env.PORT || 10000;
 
 app.use(cors());
-
-// Stripe webhook MUST be BEFORE express.json() - needs raw body
-app.use('/webhook/stripe', require('./src/routes/webhook-stripe'));
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -20,9 +16,6 @@ app.use('/api/payments', require('./src/routes/payments'));
 app.use('/api/settings', require('./src/routes/settings'));
 app.use('/api/dashboard', require('./src/routes/dashboard'));
 app.use('/api/chat', require('./src/routes/chat'));
-
-// WhatsApp webhook
-app.use('/webhook/whatsapp', require('./src/routes/webhook-whatsapp'));
 
 // Init database — call once after deploy
 app.post('/api/init', async (req, res) => {
