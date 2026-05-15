@@ -947,7 +947,7 @@
           <td>${p.phone || '—'}</td>
           <td>${p.email || '—'}</td>
           <td>${badge(p.status)}</td>
-          <td>${p.notes ? '<i class="fas fa-sticky-note" title="' + p.notes.replace(/"/g,'&quot;') + '"></i>' : '—'}</td>
+          <td>${p.notes ? '<i class="fas fa-sticky-note" title="' + p.notes.replace(/"/g,'&quot;').replace(/'/g,"&#39;") + '"></i>' : '—'}</td>
           <td>
             <div class="actions">
               <button class="btn btn-secondary btn-sm" onclick='editPatient(${JSON.stringify(p).replace(/'/g,"&#39;")})'><i class="fas fa-edit"></i></button>
@@ -1056,11 +1056,12 @@
         }
         container.innerHTML = keys.map(k => {
           const val = currentSettings[k];
-          const isNum = !isNaN(val) && val !== '';
+          const sval = String(val || '');
+          const isNum = !isNaN(sval) && sval !== '' && !isNaN(parseFloat(sval));
           return `
-            <div class="form-group ${val.length > 50 ? 'full' : ''}">
+            <div class="form-group ${sval.length > 50 ? 'full' : ''}">
               <label class="form-label">${k.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</label>
-              <input type="${isNum ? 'number' : 'text'}" class="form-input" id="set-${k}" value="${val}">
+              <input type="${isNum ? 'number' : 'text'}" class="form-input" id="set-${k}" value="${sval.replace(/"/g,'&quot;')}">
             </div>
           `;
         }).join('');
