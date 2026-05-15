@@ -1,110 +1,291 @@
 /* ============================================
-   APARTA — Brand Override
-   Injected after the main build to apply
-   Aparta colors without rebuilding React.
+   APARTA — Design System Override v2
+   Correcciones UX/UI: contraste, espaciado,
+   jerarquía visual, legibilidad.
    ============================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap');
 
+/* ========== PALETA AJUSTADA PARA CONTRASTE ========== */
 :root {
-  /* Aparta Palette Overrides */
-  --background: #F4EBDD !important;
-  --foreground: #2A1F1A !important;
+  /* Colores base ajustados */
+  --aparta-clay: #C8553D;
+  --aparta-clay-deep: #A53E2A;
+  --aparta-clay-soft: #F5DDD4;
+  --aparta-cream: #FAF6F0;
+  --aparta-sage: #5A8F5E;
+  --aparta-sage-soft: #E2F0E3;
+  --aparta-ink: #1A120B;
+  --aparta-ink-light: #4A3F35;
+  --aparta-ink-muted: #8A7D6F;
+  --aparta-border: #DDD5C8;
+  --aparta-card: #FFFFFF;
+  --aparta-shadow: 0 1px 3px rgba(26, 18, 11, 0.08), 0 4px 12px rgba(26, 18, 11, 0.06);
+  --aparta-shadow-lg: 0 4px 6px rgba(26, 18, 11, 0.05), 0 10px 30px rgba(26, 18, 11, 0.1);
+
+  /* Overrides de Shadcn */
+  --background: #FAF6F0 !important;
+  --foreground: #1A120B !important;
   --card: #FFFFFF !important;
-  --card-foreground: #2A1F1A !important;
+  --card-foreground: #1A120B !important;
   --popover: #FFFFFF !important;
-  --popover-foreground: #2A1F1A !important;
+  --popover-foreground: #1A120B !important;
   --primary: #C8553D !important;
   --primary-foreground: #FFFFFF !important;
-  --secondary: #F1D5C7 !important;
+  --secondary: #F5DDD4 !important;
   --secondary-foreground: #A53E2A !important;
-  --muted: #F4EBDD !important;
-  --muted-foreground: #6B5E54 !important;
-  --accent: #7B9E7E !important;
+  --muted: #F0EBE3 !important;
+  --muted-foreground: #6B5E52 !important;
+  --accent: #5A8F5E !important;
   --accent-foreground: #FFFFFF !important;
-  --destructive: #A53E2A !important;
+  --destructive: #B93836 !important;
   --destructive-foreground: #FFFFFF !important;
-  --border: #E8DDD0 !important;
-  --input: #E8DDD0 !important;
+  --border: #DDD5C8 !important;
+  --input: #DDD5C8 !important;
   --ring: #C8553D !important;
   --radius: 0.75rem !important;
 }
 
-body {
-  font-family: 'DM Sans', sans-serif !important;
-  background-color: #F4EBDD !important;
+/* ========== TIPOGRAFÍA ========== */
+html, body, [class*="font-sans"] {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  color: var(--aparta-ink) !important;
+  background-color: var(--aparta-cream) !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 h1, h2, h3, h4, h5, h6,
-.font-heading,
+[class*="font-heading"],
 [class*="font-sora"],
 [class*="font-display"] {
   font-family: 'Sora', sans-serif !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.02em !important;
+  line-height: 1.3 !important;
+  color: var(--aparta-ink) !important;
 }
 
-/* Override primary color usages */
-[class*="bg-primary"],
-[class*="bg-[#E07050]"],
-[class*="bg-[#e07050]"],
-[class*="bg-[#C55A3A]"] {
-  background-color: #C8553D !important;
+/* ========== SIDEBAR — fondo cálido en vez de azul frío ========== */
+aside, [class*="sidebar"], nav[class*="sidebar"],
+[class*="w-64"], [class*="w-[260px]"],
+[class*="bg-slate-900"], [class*="bg-[#0F172A]"],
+[class*="bg-gray-900"], [class*="bg-zinc-900"] {
+  background-color: var(--aparta-ink) !important;
+  background-image: linear-gradient(180deg, #2A1F1A 0%, #1A120B 100%) !important;
+  border-right: 1px solid rgba(255,255,255,0.06) !important;
 }
 
-[class*="text-primary"],
-[class*="text-[#E07050]"],
-[class*="text-[#e07050]"] {
-  color: #C8553D !important;
+/* Texto en sidebar */
+aside *, [class*="sidebar"] * {
+  color: #C8BEB4 !important;
 }
 
-[class*="border-primary"] {
-  border-color: #C8553D !important;
+aside [class*="active"], aside [class*="selected"],
+[class*="sidebar"] [class*="active"], nav [class*="active"] {
+  background-color: rgba(200, 85, 61, 0.15) !important;
+  color: #FFFFFF !important;
+  border-left: 3px solid var(--aparta-clay) !important;
 }
 
-/* Override accent/green to Sage */
-[class*="bg-green-500"],
-[class*="bg-[#10B981]"],
-[class*="bg-emerald-500"] {
-  background-color: #7B9E7E !important;
+/* ========== CARDS — más aire y sombra ========== */
+[class*="bg-card"], [class*="rounded-xl"], [class*="rounded-lg"],
+[class*="shadow-sm"], [class*="border"] {
+  background-color: var(--aparta-card) !important;
+  border: 1px solid var(--aparta-border) !important;
+  box-shadow: var(--aparta-shadow) !important;
+  border-radius: 0.875rem !important;
 }
 
-[class*="text-green-500"],
-[class*="text-[#10B981]"] {
-  color: #7B9E7E !important;
+[class*="bg-card"]:hover, [class*="rounded-xl"]:hover {
+  box-shadow: var(--aparta-shadow-lg) !important;
 }
 
-/* Override yellow/amber accents to Clay-soft */
-[class*="bg-yellow-500"],
-[class*="bg-[#F59E0B]"],
-[class*="bg-amber-500"] {
-  background-color: #C8553D !important;
+/* ========== BOTONES PRIMARIOS ========== */
+button[class*="bg-primary"],
+[class*="bg-[#E07050]"], [class*="bg-[#e07050]"],
+[class*="bg-[#C55A3A]"], [class*="bg-clay"],
+[class*="btn-primary"] {
+  background-color: var(--aparta-clay) !important;
+  color: #FFFFFF !important;
+  font-family: 'Sora', sans-serif !important;
+  font-weight: 600 !important;
+  border-radius: 0.625rem !important;
+  padding: 0.625rem 1.25rem !important;
+  transition: all 0.2s ease !important;
+  border: none !important;
 }
 
-/* Override slate backgrounds to Cream */
-[class*="bg-slate-50"],
-[class*="bg-slate-100"],
-[class*="bg-gray-50"],
-[class*="bg-gray-100"],
-[class*="bg-[#F1F5F9]"],
-[class*="bg-[#F8F9FA]"] {
-  background-color: #F4EBDD !important;
+button[class*="bg-primary"]:hover,
+[class*="bg-[#E07050]"]:hover {
+  background-color: var(--aparta-clay-deep) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(200, 85, 61, 0.3) !important;
 }
 
-/* Override slate text to Ink */
-[class*="text-slate-900"],
-[class*="text-gray-900"],
-[class*="text-[#1E293B]"],
-[class*="text-[#0F172A]"] {
-  color: #2A1F1A !important;
+/* ========== BOTONES SECUNDARIOS / GHOST ========== */
+button[class*="bg-secondary"],
+button[class*="variant-ghost"],
+button[class*="outline"] {
+  background-color: transparent !important;
+  color: var(--aparta-ink-light) !important;
+  border: 1.5px solid var(--aparta-border) !important;
+  font-weight: 500 !important;
 }
 
-[class*="text-slate-500"],
-[class*="text-gray-500"],
-[class*="text-[#64748B]"] {
-  color: #6B5E54 !important;
+button[class*="bg-secondary"]:hover,
+button[class*="variant-ghost"]:hover {
+  background-color: var(--aparta-clay-soft) !important;
+  border-color: var(--aparta-clay) !important;
+  color: var(--aparta-clay-deep) !important;
 }
 
-/* Chat widget specific overrides */
-[class*="chat-widget"],
-[class*="chat-container"] {
+/* ========== TOGGLES / SWITCHES ========== */
+[data-state="checked"], [class*="SwitchThumb"],
+[class*="checked"][class*="bg-green"],
+[class*="checked"][class*="bg-primary"] {
+  background-color: var(--aparta-clay) !important;
+}
+
+/* ========== INPUTS ========== */
+input, textarea, select,
+[class*="input"], [class*="Input"] {
+  background-color: var(--aparta-cream) !important;
+  border: 1.5px solid var(--aparta-border) !important;
+  border-radius: 0.625rem !important;
+  padding: 0.625rem 0.875rem !important;
+  font-size: 0.9375rem !important;
+  color: var(--aparta-ink) !important;
+  transition: border-color 0.2s, box-shadow 0.2s !important;
+}
+
+input:focus, textarea:focus, select:focus,
+[class*="input"]:focus {
+  border-color: var(--aparta-clay) !important;
+  box-shadow: 0 0 0 3px rgba(200, 85, 61, 0.12) !important;
+  outline: none !important;
+}
+
+/* ========== TABLAS ========== */
+table, [class*="Table"] {
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+}
+
+th, [class*="table-header"] {
+  background-color: var(--aparta-cream) !important;
+  color: var(--aparta-ink-muted) !important;
+  font-family: 'Sora', sans-serif !important;
+  font-size: 0.6875rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  padding: 0.875rem 1rem !important;
+  border-bottom: 1.5px solid var(--aparta-border) !important;
+}
+
+td, [class*="table-cell"] {
+  padding: 1rem !important;
+  border-bottom: 1px solid var(--aparta-border) !important;
+  color: var(--aparta-ink-light) !important;
+  font-size: 0.875rem !important;
+}
+
+tr:hover td, [class*="table-row"]:hover [class*="table-cell"] {
+  background-color: rgba(200, 85, 61, 0.03) !important;
+}
+
+/* ========== BADGES / ETIQUETAS ========== */
+[class*="badge"], [class*="Badge"] {
+  font-family: 'Sora', sans-serif !important;
+  font-size: 0.6875rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.03em !important;
+  padding: 0.25rem 0.625rem !important;
+  border-radius: 9999px !important;
+}
+
+/* Confirmado / Éxito */
+[class*="bg-green-100"], [class*="bg-emerald-100"],
+[class*="text-green-700"], [class*="text-emerald-700"] {
+  background-color: var(--aparta-sage-soft) !important;
+  color: #3A6B3E !important;
+}
+
+/* Pendiente */
+[class*="bg-yellow-100"], [class*="bg-amber-100"],
+[class*="text-yellow-700"], [class*="text-amber-700"] {
+  background-color: #FEF3C7 !important;
+  color: #92400E !important;
+}
+
+/* Cancelado */
+[class*="bg-red-100"], [class*="bg-rose-100"],
+[class*="text-red-700"], [class*="text-rose-700"] {
+  background-color: #FEE2E2 !important;
+  color: #991B1B !important;
+}
+
+/* ========== SEPARADORES ========== */
+hr, [class*="separator"], [class*="Separator"] {
+  border-color: var(--aparta-border) !important;
+  opacity: 1 !important;
+}
+
+/* ========== TABS / NAV ========== */
+[class*="tabs"], [class*="Tabs"] {
+  background-color: var(--aparta-cream) !important;
+  border-radius: 0.75rem !important;
+  padding: 0.25rem !important;
+}
+
+[class*="tabs"] [class*="active"],
+[class*="Tabs"] [class*="active"] {
+  background-color: var(--aparta-card) !important;
+  color: var(--aparta-clay) !important;
+  font-weight: 600 !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important;
+}
+
+/* ========== SCROLLBAR ========== */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #C8BEB4; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #A89E94; }
+
+/* ========== MODALES / DIALOGOS ========== */
+[class*="dialog"], [class*="Dialog"],
+[class*="modal"], [class*="Modal"] {
+  background-color: var(--aparta-card) !important;
+  border: 1px solid var(--aparta-border) !important;
+  box-shadow: 0 20px 60px rgba(26, 18, 11, 0.15) !important;
+  border-radius: 1rem !important;
+}
+
+/* ========== ALERTAS ========== */
+[class*="alert"], [class*="Alert"] {
+  border-radius: 0.75rem !important;
+  border-left-width: 4px !important;
+}
+
+/* ========== CHAT WIDGET PUBLICO ========== */
+#chat-widget, .chat-widget {
   font-family: 'DM Sans', sans-serif !important;
+}
+
+#chat-toggle, .chat-toggle {
+  background: var(--aparta-clay) !important;
+  box-shadow: 0 4px 16px rgba(200, 85, 61, 0.35) !important;
+}
+
+#chat-container, .chat-container {
+  border: 1px solid var(--aparta-border) !important;
+  box-shadow: 0 20px 60px rgba(26, 18, 11, 0.15) !important;
+}
+
+/* ========== RESPONSIVE MEJORAS ========== */
+@media (max-width: 768px) {
+  aside, [class*="sidebar"] {
+    background-color: var(--aparta-ink) !important;
+  }
 }
