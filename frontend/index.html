@@ -1,16 +1,1118 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Aparta — Aparta tu cita. Cobra al instante.</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script type="module" crossorigin src="./assets/index-BTRDF6fF.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-By5J_Csb.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aparta — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --clay: #C8553D;
+      --clay-deep: #A53E2A;
+      --clay-soft: #F1D5C7;
+      --cream: #F4EBDD;
+      --sage: #7B9E7E;
+      --sage-deep: #5E7A60;
+      --ink: #2A1F1A;
+      --ink-light: #4A3F3A;
+      --border: #E8DDD0;
+      --white: #FFFFFF;
+      --shadow: 0 2px 8px rgba(42,31,26,0.08);
+      --shadow-lg: 0 8px 32px rgba(42,31,26,0.12);
+      --radius: 0.875rem;
+      --radius-sm: 0.5rem;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Layout */
+    .app { display: flex; height: 100vh; }
+
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      background: var(--white);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--clay);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo::before {
+      content: '';
+      width: 24px;
+      height: 24px;
+      background: var(--clay);
+      border-radius: 6px 6px 6px 2px;
+      display: inline-block;
+    }
+
+    .logo-sub { font-size: 0.7rem; color: #9E9186; font-weight: 400; font-family: 'DM Sans', sans-serif; }
+
+    .nav { padding: 1rem 0.75rem; flex: 1; overflow-y: auto; }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.65rem 1rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.15s;
+      color: var(--ink-light);
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+    }
+
+    .nav-item:hover { background: var(--cream); color: var(--ink); }
+    .nav-item.active { background: var(--clay-soft); color: var(--clay-deep); font-weight: 600; }
+    .nav-item i { width: 20px; text-align: center; }
+
+    .sidebar-footer {
+      padding: 1rem 1.25rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.75rem;
+      color: #9E9186;
+    }
+
+    /* Main */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .header {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 0.875rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .header-title { font-family: 'Sora', sans-serif; font-size: 1.25rem; font-weight: 600; }
+    .header-actions { display: flex; align-items: center; gap: 0.75rem; }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.25rem;
+      color: var(--ink);
+      cursor: pointer;
+      padding: 0.25rem;
+    }
+
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--cream);
+      padding: 0.4rem 0.875rem;
+      border-radius: 2rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .user-pill i { color: var(--clay); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-sm);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s;
+    }
+
+    .btn-primary { background: var(--clay); color: white; }
+    .btn-primary:hover { background: var(--clay-deep); }
+    .btn-secondary { background: var(--cream); color: var(--ink); border: 1px solid var(--border); }
+    .btn-secondary:hover { background: var(--border); }
+    .btn-danger { background: #FEF2F2; color: #991B1B; }
+    .btn-danger:hover { background: #FEE2E2; }
+    .btn-success { background: #F0FDF4; color: #166534; }
+    .btn-sm { padding: 0.35rem 0.75rem; font-size: 0.8rem; }
+
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem;
+    }
+
+    /* Cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #9E9186;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-value {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .stat-card.clay .stat-value { color: var(--clay); }
+    .stat-card.sage .stat-value { color: var(--sage); }
+
+    /* Tables */
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .card-title { font-family: 'Sora', sans-serif; font-size: 1rem; font-weight: 600; }
+
+    .table-wrap { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    th, td { padding: 0.75rem 1rem; text-align: left; }
+    th {
+      background: var(--cream);
+      font-family: 'Sora', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #6B5E54;
+      white-space: nowrap;
+    }
+    tbody tr { border-top: 1px solid var(--border); transition: background 0.1s; }
+    tbody tr:hover { background: #FAF7F2; }
+
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 1rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .badge-pending { background: #FEF3C7; color: #92400E; }
+    .badge-confirmed { background: #D1FAE5; color: #065F46; }
+    .badge-cancelled { background: #F3F4F6; color: #6B7280; }
+    .badge-completed { background: #DBEAFE; color: #1E40AF; }
+    .badge-active { background: #D1FAE5; color: #065F46; }
+    .badge-inactive { background: #F3F4F6; color: #6B7280; }
+
+    .actions { display: flex; gap: 0.35rem; }
+    .actions .btn { padding: 0.3rem 0.5rem; font-size: 0.75rem; }
+
+    /* Filters */
+    .filters {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .input, .select {
+      padding: 0.5rem 0.75rem;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      color: var(--ink);
+      background: var(--white);
+      outline: none;
+    }
+    .input:focus, .select:focus { border-color: var(--clay); }
+    .input::placeholder { color: #9E9186; }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(42,31,26,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 1rem;
+    }
+    .modal-overlay.show { display: flex; }
+
+    .modal {
+      background: var(--white);
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 520px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .modal-header {
+      padding: 1.25rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .modal-title { font-family: 'Sora', sans-serif; font-size: 1.1rem; font-weight: 600; }
+    .modal-close { background: none; border: none; font-size: 1.25rem; color: #9E9186; cursor: pointer; }
+
+    .modal-body { padding: 1.25rem; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .form-group { display: flex; flex-direction: column; gap: 0.35rem; }
+    .form-group.full { grid-column: 1 / -1; }
+    .form-label { font-size: 0.75rem; font-weight: 600; color: #6B5E54; text-transform: uppercase; letter-spacing: 0.04em; }
+    .form-input, .form-select, .form-textarea {
+      padding: 0.6rem 0.875rem;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      color: var(--ink);
+      background: var(--white);
+      outline: none;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--clay); }
+    .form-textarea { min-height: 80px; resize: vertical; }
+
+    .modal-footer {
+      padding: 1rem 1.25rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+    }
+
+    /* Toast */
+    .toast-container {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .toast {
+      background: var(--white);
+      border-radius: var(--radius-sm);
+      padding: 0.875rem 1.25rem;
+      box-shadow: var(--shadow-lg);
+      border-left: 4px solid var(--clay);
+      font-size: 0.875rem;
+      animation: slideIn 0.3s ease;
+      max-width: 320px;
+    }
+    .toast.success { border-left-color: var(--sage); }
+    .toast.error { border-left-color: var(--clay); }
+    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+    /* Empty state */
+    .empty {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #9E9186;
+    }
+    .empty i { font-size: 2.5rem; margin-bottom: 0.75rem; color: var(--border); }
+
+    /* Loading */
+    .loading { text-align: center; padding: 2rem; color: #9E9186; }
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--border);
+      border-top-color: var(--clay);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Section visibility */
+    .section { display: none; }
+    .section.active { display: block; }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed;
+        z-index: 50;
+        height: 100vh;
+        transform: translateX(-100%);
+      }
+      .sidebar.open { transform: translateX(0); }
+      .menu-toggle { display: block; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .form-grid { grid-template-columns: 1fr; }
+      .card-header { flex-direction: column; align-items: stretch; }
+      .filters { width: 100%; }
+      .filters .input, .filters .select { flex: 1; }
+    }
+
+    @media (max-width: 480px) {
+      .stats-grid { grid-template-columns: 1fr; }
+      .content { padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">Aparta</div>
+        <div class="logo-sub">Aparta tu cita. Cobra al instante.</div>
+      </div>
+      <nav class="nav">
+        <button class="nav-item active" data-section="dashboard" onclick="showSection('dashboard')">
+          <i class="fas fa-chart-pie"></i> Dashboard
+        </button>
+        <button class="nav-item" data-section="appointments" onclick="showSection('appointments')">
+          <i class="fas fa-calendar-check"></i> Citas
+        </button>
+        <button class="nav-item" data-section="patients" onclick="showSection('patients')">
+          <i class="fas fa-users"></i> Pacientes
+        </button>
+        <button class="nav-item" data-section="payments" onclick="showSection('payments')">
+          <i class="fas fa-credit-card"></i> Pagos
+        </button>
+        <button class="nav-item" data-section="settings" onclick="showSection('settings')">
+          <i class="fas fa-cog"></i> Configuración
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        v1.0 · Aparta
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="main">
+      <header class="header">
+        <div style="display:flex;align-items:center;gap:0.75rem;">
+          <button class="menu-toggle" onclick="toggleSidebar()" id="menuBtn">
+            <i class="fas fa-bars"></i>
+          </button>
+          <h1 class="header-title" id="pageTitle">Dashboard</h1>
+        </div>
+        <div class="header-actions">
+          <div class="user-pill">
+            <i class="fas fa-user-circle"></i>
+            <span id="userName">Admin</span>
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Salir
+          </button>
+        </div>
+      </header>
+
+      <div class="content">
+        <!-- Dashboard -->
+        <div class="section active" id="section-dashboard">
+          <div class="stats-grid" id="statsGrid">
+            <div class="stat-card"><div class="stat-label">Citas hoy</div><div class="stat-value">—</div></div>
+            <div class="stat-card clay"><div class="stat-label">Pacientes activos</div><div class="stat-value">—</div></div>
+            <div class="stat-card sage"><div class="stat-label">Ingresos del mes</div><div class="stat-value">—</div></div>
+            <div class="stat-card"><div class="stat-label">Depósitos pendientes</div><div class="stat-value">—</div></div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Citas recientes</div>
+              <button class="btn btn-primary btn-sm" onclick="openAppointmentModal()">
+                <i class="fas fa-plus"></i> Nueva cita
+              </button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Paciente</th><th>Fecha</th><th>Hora</th><th>Tipo</th><th>Estado</th><th>Monto</th></tr></thead>
+                <tbody id="recentAppointments"><tr><td colspan="6" class="loading"><div class="spinner"></div></td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Appointments -->
+        <div class="section" id="section-appointments">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Todas las citas</div>
+              <div class="filters">
+                <input type="date" class="input" id="aptFilterDate" onchange="loadAppointments()">
+                <select class="select" id="aptFilterStatus" onchange="loadAppointments()">
+                  <option value="">Todos los estados</option>
+                  <option value="pending">Pendiente</option>
+                  <option value="confirmed">Confirmada</option>
+                  <option value="cancelled">Cancelada</option>
+                  <option value="completed">Completada</option>
+                </select>
+                <button class="btn btn-primary btn-sm" onclick="openAppointmentModal()">
+                  <i class="fas fa-plus"></i> Nueva
+                </button>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Paciente</th><th>Teléfono</th><th>Fecha</th><th>Hora</th>
+                    <th>Tipo</th><th>Estado</th><th>Anticipo</th><th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="appointmentsTable"><tr><td colspan="8" class="loading"><div class="spinner"></div></td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Patients -->
+        <div class="section" id="section-patients">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Pacientes</div>
+              <div class="filters">
+                <input type="text" class="input" id="patientSearch" placeholder="Buscar..." oninput="searchPatients()">
+                <button class="btn btn-primary btn-sm" onclick="openPatientModal()">
+                  <i class="fas fa-plus"></i> Nuevo
+                </button>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Nombre</th><th>Teléfono</th><th>Email</th><th>Estado</th><th>Notas</th><th>Acciones</th></tr></thead>
+                <tbody id="patientsTable"><tr><td colspan="6" class="loading"><div class="spinner"></div></td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payments -->
+        <div class="section" id="section-payments">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Historial de pagos</div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Fecha</th><th>Paciente</th><th>Monto</th><th>Anticipo</th><th>Método</th><th>Estado</th></tr></thead>
+                <tbody id="paymentsTable"><tr><td colspan="6" class="loading"><div class="spinner"></div></td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Settings -->
+        <div class="section" id="section-settings">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Configuración</div>
+              <button class="btn btn-primary btn-sm" onclick="saveSettings()">
+                <i class="fas fa-save"></i> Guardar
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="form-grid" id="settingsForm">
+                <div class="form-group full"><div class="loading"><div class="spinner"></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Appointment Modal -->
+  <div class="modal-overlay" id="aptModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title" id="aptModalTitle">Nueva cita</div>
+        <button class="modal-close" onclick="closeModal('aptModal')"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <form id="aptForm" class="form-grid" onsubmit="event.preventDefault(); saveAppointment();">
+          <input type="hidden" id="aptId">
+          <div class="form-group">
+            <label class="form-label">Nombre del paciente</label>
+            <input type="text" class="form-input" id="aptPatientName" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Teléfono</label>
+            <input type="tel" class="form-input" id="aptPatientPhone">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-input" id="aptPatientEmail">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Fecha</label>
+            <input type="date" class="form-input" id="aptDate" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Hora</label>
+            <input type="time" class="form-input" id="aptTime" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Duración (min)</label>
+            <input type="number" class="form-input" id="aptDuration" value="60" min="15" step="15">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tipo de sesión</label>
+            <select class="form-select" id="aptType">
+              <option value="Primera consulta">Primera consulta</option>
+              <option value="Sesión regular">Sesión regular</option>
+              <option value="Terapia de pareja">Terapia de pareja</option>
+              <option value="Consulta online">Consulta online</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Estado</label>
+            <select class="form-select" id="aptStatus">
+              <option value="pending">Pendiente</option>
+              <option value="confirmed">Confirmada</option>
+              <option value="completed">Completada</option>
+              <option value="cancelled">Cancelada</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tarifa total ($)</label>
+            <input type="number" class="form-input" id="aptFee" value="1200" min="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label">% Anticipo</label>
+            <input type="number" class="form-input" id="aptDepositPct" value="20" min="0" max="100">
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Notas</label>
+            <textarea class="form-textarea" id="aptNotes" placeholder="Notas adicionales..."></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('aptModal')">Cancelar</button>
+        <button class="btn btn-primary" onclick="saveAppointment()">Guardar cita</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Patient Modal -->
+  <div class="modal-overlay" id="patModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title" id="patModalTitle">Nuevo paciente</div>
+        <button class="modal-close" onclick="closeModal('patModal')"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <form id="patForm" class="form-grid" onsubmit="event.preventDefault(); savePatient();">
+          <input type="hidden" id="patId">
+          <div class="form-group">
+            <label class="form-label">Nombre completo</label>
+            <input type="text" class="form-input" id="patName" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Teléfono</label>
+            <input type="tel" class="form-input" id="patPhone">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-input" id="patEmail">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Estado</label>
+            <select class="form-select" id="patStatus">
+              <option value="active">Activo</option>
+              <option value="inactive">Inactivo</option>
+            </select>
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Notas</label>
+            <textarea class="form-textarea" id="patNotes" placeholder="Notas del paciente..."></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('patModal')">Cancelar</button>
+        <button class="btn btn-primary" onclick="savePatient()">Guardar paciente</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    // ==========================
+    // AUTH & INIT
+    // ==========================
+    const user = JSON.parse(localStorage.getItem('aparta_user') || '{}');
+    if (!user.email) { window.location.href = '/login'; }
+    document.getElementById('userName').textContent = user.name || user.email || 'Admin';
+
+    function logout() {
+      fetch('/api/auth/logout', { method: 'POST' });
+      localStorage.removeItem('aparta_user');
+      window.location.href = '/login';
+    }
+
+    // ==========================
+    // NAVIGATION
+    // ==========================
+    function showSection(name) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      document.getElementById('section-' + name).classList.add('active');
+      document.querySelector('[data-section="' + name + '"]').classList.add('active');
+
+      const titles = { dashboard: 'Dashboard', appointments: 'Citas', patients: 'Pacientes', payments: 'Pagos', settings: 'Configuración' };
+      document.getElementById('pageTitle').textContent = titles[name] || name;
+
+      if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open');
+
+      // Load data
+      if (name === 'dashboard') loadDashboard();
+      if (name === 'appointments') loadAppointments();
+      if (name === 'patients') loadPatients();
+      if (name === 'payments') loadPayments();
+      if (name === 'settings') loadSettings();
+    }
+
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+    }
+
+    // ==========================
+    // TOASTS
+    // ==========================
+    function toast(message, type = 'success') {
+      const el = document.createElement('div');
+      el.className = 'toast ' + type;
+      el.innerHTML = '<i class="fas fa-' + (type === 'success' ? 'check-circle' : 'exclamation-circle') + '" style="margin-right:0.5rem;color:' + (type === 'success' ? 'var(--sage)' : 'var(--clay)') + '"></i>' + message;
+      document.getElementById('toastContainer').appendChild(el);
+      setTimeout(() => el.remove(), 3500);
+    }
+
+    // ==========================
+    // MODALS
+    // ==========================
+    function openModal(id) { document.getElementById(id).classList.add('show'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+    document.querySelectorAll('.modal-overlay').forEach(m => {
+      m.addEventListener('click', e => { if (e.target === m) m.classList.remove('show'); });
+    });
+
+    // ==========================
+    // DASHBOARD
+    // ==========================
+    async function loadDashboard() {
+      try {
+        const res = await fetch('/api/dashboard/stats');
+        const json = await res.json();
+        if (!json.success) return;
+        const d = json.data;
+        const grid = document.getElementById('statsGrid');
+        grid.innerHTML = `
+          <div class="stat-card"><div class="stat-label">Citas hoy</div><div class="stat-value">${d.todayAppointments}</div></div>
+          <div class="stat-card clay"><div class="stat-label">Pacientes activos</div><div class="stat-value">${d.activePatients}</div></div>
+          <div class="stat-card sage"><div class="stat-label">Ingresos del mes</div><div class="stat-value">$${Number(d.monthlyIncome).toLocaleString()}</div></div>
+          <div class="stat-card"><div class="stat-label">Depósitos pendientes</div><div class="stat-value">$${Number(d.pendingDeposits).toLocaleString()}</div></div>
+        `;
+        const tbody = document.getElementById('recentAppointments');
+        if (!d.recentAppointments?.length) {
+          tbody.innerHTML = '<tr><td colspan="6" class="empty"><i class="fas fa-calendar"></i><div>No hay citas recientes</div></td></tr>';
+          return;
+        }
+        tbody.innerHTML = d.recentAppointments.map(a => `
+          <tr>
+            <td><strong>${a.patient_name}</strong></td>
+            <td>${fmtDate(a.date)}</td>
+            <td>${a.time?.substring(0,5) || a.time}</td>
+            <td>${a.type}</td>
+            <td>${badge(a.status)}</td>
+            <td>$${Number(a.deposit_amount || 0).toLocaleString()}</td>
+          </tr>
+        `).join('');
+      } catch (e) { console.error(e); }
+    }
+
+    // ==========================
+    // APPOINTMENTS
+    // ==========================
+    async function loadAppointments() {
+      const date = document.getElementById('aptFilterDate').value;
+      const status = document.getElementById('aptFilterStatus').value;
+      let url = '/api/appointments?';
+      if (date) url += 'date=' + date + '&';
+      if (status) url += 'status=' + status + '&';
+      try {
+        const res = await fetch(url);
+        const json = await res.json();
+        const tbody = document.getElementById('appointmentsTable');
+        if (!json.data?.length) {
+          tbody.innerHTML = '<tr><td colspan="8" class="empty"><i class="fas fa-calendar"></i><div>No hay citas</div></td></tr>';
+          return;
+        }
+        tbody.innerHTML = json.data.map(a => `
+          <tr>
+            <td><strong>${a.patient_name}</strong></td>
+            <td>${a.patient_phone || '—'}</td>
+            <td>${fmtDate(a.date)}</td>
+            <td>${a.time?.substring(0,5) || a.time}</td>
+            <td>${a.type}</td>
+            <td>${badge(a.status)}</td>
+            <td>$${Number(a.deposit_amount || 0).toLocaleString()}</td>
+            <td>
+              <div class="actions">
+                <button class="btn btn-secondary btn-sm" onclick='editAppointment(${JSON.stringify(a).replace(/'/g,"&#39;")})'><i class="fas fa-edit"></i></button>
+                ${a.status !== 'cancelled' ? `<button class="btn btn-danger btn-sm" onclick="cancelAppointment('${a.id}')"><i class="fas fa-times"></i></button>` : ''}
+              </div>
+            </td>
+          </tr>
+        `).join('');
+      } catch (e) { console.error(e); }
+    }
+
+    function openAppointmentModal() {
+      document.getElementById('aptForm').reset();
+      document.getElementById('aptId').value = '';
+      document.getElementById('aptModalTitle').textContent = 'Nueva cita';
+      document.getElementById('aptDate').value = new Date().toISOString().split('T')[0];
+      openModal('aptModal');
+    }
+
+    function editAppointment(a) {
+      document.getElementById('aptId').value = a.id;
+      document.getElementById('aptPatientName').value = a.patient_name;
+      document.getElementById('aptPatientPhone').value = a.patient_phone || '';
+      document.getElementById('aptPatientEmail').value = a.patient_email || '';
+      document.getElementById('aptDate').value = a.date;
+      document.getElementById('aptTime').value = a.time?.substring(0,5) || a.time;
+      document.getElementById('aptDuration').value = a.duration || 60;
+      document.getElementById('aptType').value = a.type;
+      document.getElementById('aptStatus').value = a.status;
+      document.getElementById('aptFee').value = a.fee || 1200;
+      document.getElementById('aptDepositPct').value = a.deposit_percent || 20;
+      document.getElementById('aptNotes').value = a.notes || '';
+      document.getElementById('aptModalTitle').textContent = 'Editar cita';
+      openModal('aptModal');
+    }
+
+    async function saveAppointment() {
+      const id = document.getElementById('aptId').value;
+      const body = {
+        patient_name: document.getElementById('aptPatientName').value,
+        patient_phone: document.getElementById('aptPatientPhone').value,
+        patient_email: document.getElementById('aptPatientEmail').value,
+        date: document.getElementById('aptDate').value,
+        time: document.getElementById('aptTime').value,
+        duration: parseInt(document.getElementById('aptDuration').value),
+        type: document.getElementById('aptType').value,
+        status: document.getElementById('aptStatus').value,
+        fee: parseFloat(document.getElementById('aptFee').value),
+        deposit_percent: parseInt(document.getElementById('aptDepositPct').value),
+        notes: document.getElementById('aptNotes').value
+      };
+      try {
+        const url = id ? '/api/appointments/' + id : '/api/appointments';
+        const method = id ? 'PUT' : 'POST';
+        const res = await fetch(url, {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        const json = await res.json();
+        if (json.success) {
+          toast(id ? 'Cita actualizada' : 'Cita creada');
+          closeModal('aptModal');
+          loadAppointments();
+          loadDashboard();
+        } else {
+          toast(json.error || 'Error al guardar', 'error');
+        }
+      } catch (e) { toast('Error de conexión', 'error'); }
+    }
+
+    async function cancelAppointment(id) {
+      if (!confirm('¿Cancelar esta cita?')) return;
+      try {
+        const res = await fetch('/api/appointments/' + id, { method: 'DELETE' });
+        const json = await res.json();
+        if (json.success) {
+          toast('Cita cancelada');
+          loadAppointments();
+          loadDashboard();
+        } else {
+          toast(json.error || 'Error', 'error');
+        }
+      } catch (e) { toast('Error de conexión', 'error'); }
+    }
+
+    // ==========================
+    // PATIENTS
+    // ==========================
+    let allPatients = [];
+    async function loadPatients() {
+      try {
+        const res = await fetch('/api/patients');
+        const json = await res.json();
+        allPatients = json.data || [];
+        renderPatients(allPatients);
+      } catch (e) { console.error(e); }
+    }
+
+    function renderPatients(list) {
+      const tbody = document.getElementById('patientsTable');
+      if (!list.length) {
+        tbody.innerHTML = '<tr><td colspan="6" class="empty"><i class="fas fa-users"></i><div>No hay pacientes</div></td></tr>';
+        return;
+      }
+      tbody.innerHTML = list.map(p => `
+        <tr>
+          <td><strong>${p.name}</strong></td>
+          <td>${p.phone || '—'}</td>
+          <td>${p.email || '—'}</td>
+          <td>${badge(p.status)}</td>
+          <td>${p.notes ? '<i class="fas fa-sticky-note" title="' + p.notes.replace(/"/g,'&quot;') + '"></i>' : '—'}</td>
+          <td>
+            <div class="actions">
+              <button class="btn btn-secondary btn-sm" onclick='editPatient(${JSON.stringify(p).replace(/'/g,"&#39;")})'><i class="fas fa-edit"></i></button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function searchPatients() {
+      const term = document.getElementById('patientSearch').value.toLowerCase();
+      if (!term) { renderPatients(allPatients); return; }
+      renderPatients(allPatients.filter(p =>
+        p.name?.toLowerCase().includes(term) ||
+        p.phone?.toLowerCase().includes(term) ||
+        p.email?.toLowerCase().includes(term)
+      ));
+    }
+
+    function openPatientModal() {
+      document.getElementById('patForm').reset();
+      document.getElementById('patId').value = '';
+      document.getElementById('patModalTitle').textContent = 'Nuevo paciente';
+      openModal('patModal');
+    }
+
+    function editPatient(p) {
+      document.getElementById('patId').value = p.id;
+      document.getElementById('patName').value = p.name;
+      document.getElementById('patPhone').value = p.phone || '';
+      document.getElementById('patEmail').value = p.email || '';
+      document.getElementById('patStatus').value = p.status;
+      document.getElementById('patNotes').value = p.notes || '';
+      document.getElementById('patModalTitle').textContent = 'Editar paciente';
+      openModal('patModal');
+    }
+
+    async function savePatient() {
+      const id = document.getElementById('patId').value;
+      const body = {
+        name: document.getElementById('patName').value,
+        phone: document.getElementById('patPhone').value,
+        email: document.getElementById('patEmail').value,
+        status: document.getElementById('patStatus').value,
+        notes: document.getElementById('patNotes').value
+      };
+      try {
+        const url = id ? '/api/patients/' + id : '/api/patients';
+        const method = id ? 'PUT' : 'POST';
+        const res = await fetch(url, {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        const json = await res.json();
+        if (json.success) {
+          toast(id ? 'Paciente actualizado' : 'Paciente creado');
+          closeModal('patModal');
+          loadPatients();
+          loadDashboard();
+        } else {
+          toast(json.error || 'Error al guardar', 'error');
+        }
+      } catch (e) { toast('Error de conexión', 'error'); }
+    }
+
+    // ==========================
+    // PAYMENTS
+    // ==========================
+    async function loadPayments() {
+      try {
+        const res = await fetch('/api/payments');
+        const json = await res.json();
+        const tbody = document.getElementById('paymentsTable');
+        if (!json.data?.length) {
+          tbody.innerHTML = '<tr><td colspan="6" class="empty"><i class="fas fa-credit-card"></i><div>No hay pagos registrados</div></td></tr>';
+          return;
+        }
+        tbody.innerHTML = json.data.map(p => `
+          <tr>
+            <td>${fmtDate(p.date)}</td>
+            <td><strong>${p.patient_name}</strong></td>
+            <td>$${Number(p.amount || 0).toLocaleString()}</td>
+            <td>$${Number(p.deposit_amount || 0).toLocaleString()} (${p.deposit_percent}%)</td>
+            <td>${p.method || '—'}</td>
+            <td>${badge(p.status)}</td>
+          </tr>
+        `).join('');
+      } catch (e) { console.error(e); }
+    }
+
+    // ==========================
+    // SETTINGS
+    // ==========================
+    let currentSettings = {};
+    async function loadSettings() {
+      try {
+        const res = await fetch('/api/settings');
+        const json = await res.json();
+        currentSettings = json.data || {};
+        const container = document.getElementById('settingsForm');
+        const keys = Object.keys(currentSettings);
+        if (!keys.length) {
+          container.innerHTML = '<div class="empty"><i class="fas fa-cog"></i><div>No hay configuraciones</div></div>';
+          return;
+        }
+        container.innerHTML = keys.map(k => {
+          const val = currentSettings[k];
+          const isNum = !isNaN(val) && val !== '';
+          return `
+            <div class="form-group ${val.length > 50 ? 'full' : ''}">
+              <label class="form-label">${k.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</label>
+              <input type="${isNum ? 'number' : 'text'}" class="form-input" id="set-${k}" value="${val}">
+            </div>
+          `;
+        }).join('');
+      } catch (e) { console.error(e); }
+    }
+
+    async function saveSettings() {
+      const updates = {};
+      Object.keys(currentSettings).forEach(k => {
+        const el = document.getElementById('set-' + k);
+        if (el) updates[k] = el.value;
+      });
+      try {
+        const res = await fetch('/api/settings', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updates)
+        });
+        const json = await res.json();
+        if (json.success) {
+          toast('Configuración guardada');
+        } else {
+          toast(json.error || 'Error al guardar', 'error');
+        }
+      } catch (e) { toast('Error de conexión', 'error'); }
+    }
+
+    // ==========================
+    // HELPERS
+    // ==========================
+    function fmtDate(d) {
+      if (!d) return '—';
+      const [y, m, day] = d.split('-');
+      return `${day}/${m}/${y}`;
+    }
+
+    function badge(status) {
+      const map = {
+        pending: '<span class="badge badge-pending">Pendiente</span>',
+        confirmed: '<span class="badge badge-confirmed">Confirmada</span>',
+        cancelled: '<span class="badge badge-cancelled">Cancelada</span>',
+        completed: '<span class="badge badge-completed">Completada</span>',
+        active: '<span class="badge badge-active">Activo</span>',
+        inactive: '<span class="badge badge-inactive">Inactivo</span>'
+      };
+      return map[status] || `<span class="badge">${status}</span>`;
+    }
+
+    // ==========================
+    // INIT
+    // ==========================
+    loadDashboard();
+  </script>
+</body>
 </html>
