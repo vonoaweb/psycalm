@@ -40,3 +40,8 @@ INSERT INTO payments (patient_name, amount, deposit_percent, deposit_amount, sta
   ('Carlos Lopez', 120, 20, 120, 'completed', 'stripe'),
   ('Maria Garcia', 75, 15, 75, 'completed', 'stripe'),
   ('Ana Martinez', 160, 20, 160, 'pending', 'stripe');
+
+-- Admin default (password: admin123)
+INSERT INTO admins (email, password_hash, full_name) VALUES
+  ('admin@aparta.mx', 'd833dc02bdc7cc0006302c781e7dda7758ca6d500c779fac9941a913467613c2', 'Administrador')
+ON CONFLICT (email) DO NOTHING;
