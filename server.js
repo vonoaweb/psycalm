@@ -18,7 +18,7 @@ app.use('/api/dashboard', require('./src/routes/dashboard'));
 app.use('/api/chat', require('./src/routes/chat'));
 
 // Init database — call once after deploy
-app.post('/api/init', async (req, res) => {
+async function initHandler(req, res) {
   try {
     const { init } = require('./init-supabase');
     await init();
@@ -26,7 +26,9 @@ app.post('/api/init', async (req, res) => {
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
-});
+}
+app.post('/api/init', initHandler);
+app.get('/api/init', initHandler);
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
