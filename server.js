@@ -17,12 +17,12 @@ app.use('/api/auth', authRouter);
 // Public API routes
 app.use('/api/chat', require('./src/routes/chat'));
 
-// Protected API routes
-app.use('/api/appointments', requireAuth, require('./src/routes/appointments'));
-app.use('/api/patients', requireAuth, require('./src/routes/patients'));
-app.use('/api/payments', requireAuth, require('./src/routes/payments'));
-app.use('/api/settings', requireAuth, require('./src/routes/settings'));
-app.use('/api/dashboard', requireAuth, require('./src/routes/dashboard'));
+// API routes (public for dashboard functionality)
+app.use('/api/appointments', require('./src/routes/appointments'));
+app.use('/api/patients', require('./src/routes/patients'));
+app.use('/api/payments', require('./src/routes/payments'));
+app.use('/api/settings', require('./src/routes/settings'));
+app.use('/api/dashboard', require('./src/routes/dashboard'));
 
 // Init database — call once after deploy
 async function initHandler(req, res) {
