@@ -119,6 +119,16 @@
     async function loadDetails() {
       const detailsEl = document.getElementById('details');
       try {
+        // Also try to verify payment directly with our server
+        let paymentVerified = false;
+        if (sessionId) {
+          try {
+            const verifyRes = await fetch(`/api/checkout/verify?session_id=${sessionId}`);
+            const verifyJson = await verifyRes.json();
+            if (verifyJson.success && verifyJson.paid) paymentVerified = true;
+          } catch (e) {}
+        }
+
         // Poll for appointment confirmation (webhook may still be processing)
         let apt = null;
         for (let i = 0; i < 10; i++) {
@@ -126,7 +136,7 @@
           const json = await res.json();
           if (json.success && json.data) {
             apt = json.data;
-            if (apt.status === 'confirmed') break;
+            if (apt.status === 'confirmed' || paymentVerified) break;
           }
           await new Promise(r => setTimeout(r, 1500));
         }
