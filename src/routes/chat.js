@@ -1,6 +1,8 @@
 const express = require('express');
 const axios = require('axios');
 const { query } = require('../config/database');
+const { calcomClient } = require('../config/calcom');
+const { stripe } = require('../config/stripe');
 const router = express.Router();
 
 // Session store
@@ -22,24 +24,22 @@ function setSession(id, sessData) {
   sessions.set(id, sessData);
 }
 
-function getSystemPrompt(practiceName) {
-  return `Sos el asistente virtual de ${practiceName}, nutrióloga clínica en Guadalajara. Tu trabajo es ayudar a pacientes de forma cálida, empática y profesional. Tu trabajo es ayudar a pacientes de forma cálida, empática y profesional.
+function getSystemPrompt(practiceName, feeTypes) {
+  const typesInfo = feeTypes.map(t => `\n- ${t.label}: $${t.fee} MXN, ${t.duration} minutos`).join('');
+  return `Sos el asistente virtual de ${practiceName}, psicóloga clínica. Tu trabajo es ayudar a pacientes de forma cálida, empática y profesional.
 
 REGLAS:
 - Sos empático, calmado y claro. Nunca diagnosticás ni prescribís.
 - Respondé en español mexicano.
 - Si alguien menciona crisis, autolesiones o suicidio, respondé INMEDIATAMENTE con números de emergencia: Línea de la Vida 800 911 2000, Cruz Roja 065, Emergencias 911.
 - Podés responder sobre: precios, tipos de consulta, cómo agendar, cancelar, o reagendar citas.
-- No des consejos nutricionales específicos. Derivá siempre a la profesional.
+- No des consejos psicológicos específicos. Derivá siempre a la profesional.
 - Cuando sea apropiado, sugerí agendar una cita.
 
-TIPOS DE CONSULTA DISPONIBLES:
-- Primera consulta: $800 MXN, 60 minutos
-- Seguimiento: $600 MXN, 50 minutos  
-- Plan 3 sesiones: $1,500 MXN, 45 min cada una
+TIPOS DE CONSULTA DISPONIBLES:${typesInfo}
 - El anticipo es el 20% para confirmar la cita.
 
-HORARIOS: Lunes a viernes de 9:00 a 17:00.
+HORARIOS: Lunes a sábado de 9:00 a 17:00.
 
 Pagos protegidos por Stripe. Hecho con Aparta.
 
@@ -172,7 +172,9 @@ router.post('/message', async (req, res) => {
     }
 
     // AI response for free text
-    const systemPrompt = getSystemPrompt(practiceName);
+    const feeTypesResult = await query('SELECT * FROM fee_types WHERE active = true ORDER BY fee ASC');
+    const feeTypes = feeTypesResult.data || [];
+    const systemPrompt = getSystemPrompt(practiceName, feeTypes);
     const messages = [
       { role: 'system', content: systemPrompt },
       ...sess.messages.slice(-10), // Keep last 10 messages for context
@@ -229,12 +231,12 @@ async function handleScheduleFlow(input, sess) {
     const types = result.data;
     return {
       message: '📋 *¿Qué tipo de sesión necesitás?*\n\n' + types.map((t, i) => `${i + 1}️⃣ *${t.label}* — $${t.fee} MXN (${t.duration} min)`).join('\n'),
-      data: { flow: 'scheduling', step: 'select_date', fee_types: types },
+      data: { flow: 'scheduling', step: 'ask_name', fee_types: types },
       quickReplies: types.map(t => ({ id: `type_${t.type}`, label: `${t.label} ($${t.fee})` }))
     };
   }
 
-  if (step === 'select_date') {
+  if (step === 'ask_name') {
     const types = sess.data.fee_types || [];
     let selected = types.find(t => input === `type_${t.type}`);
     if (!selected) {
@@ -248,18 +250,95 @@ async function handleScheduleFlow(input, sess) {
         quickReplies: types.map(t => ({ id: `type_${t.type}`, label: `${t.label} ($${t.fee})` }))
       };
     }
+    return {
+      message: `✅ *${selected.label}* seleccionada ($${selected.fee} MXN)\n\n📝 *¿Cuál es tu nombre completo?*`,
+      data: { ...sess.data, step: 'ask_phone', selected_type: selected },
+      quickReplies: []
+    };
+  }
 
-    const days = [];
-    for (let i = 1; i <= 7; i++) {
-      const d = new Date();
-      d.setDate(d.getDate() + i);
-      days.push({ date: d.toISOString().split('T')[0], label: d.toLocaleDateString('es-MX', { weekday: 'short', day: 'numeric', month: 'short' }) });
+  if (step === 'ask_phone') {
+    const name = input.trim();
+    if (!name || name.length < 3) {
+      return { message: 'Por favor escribí tu nombre completo.', data: sess.data, quickReplies: [] };
+    }
+    return {
+      message: `Gracias, *${name}*! 📱 *¿Cuál es tu número de teléfono (WhatsApp)?*`,
+      data: { ...sess.data, step: 'ask_email', patient_name: name },
+      quickReplies: []
+    };
+  }
+
+  if (step === 'ask_email') {
+    const phone = input.trim().replace(/\D/g, '');
+    if (phone.length < 8) {
+      return { message: 'Por favor escribí un número de teléfono válido.', data: sess.data, quickReplies: [] };
+    }
+    return {
+      message: `📧 *¿Cuál es tu email?* (opcional, podés escribir "no")`,
+      data: { ...sess.data, step: 'select_date', patient_phone: phone },
+      quickReplies: [{ id: 'no_email', label: '❌ No tengo email' }]
+    };
+  }
+
+  if (step === 'select_date') {
+    const email = (input === 'no_email' || input.toLowerCase() === 'no') ? '' : input.trim();
+    const st = sess.data.selected_type;
+
+    // Fetch availability from Cal.com
+    let slots = [];
+    try {
+      const eventTypeId = process.env.CALCOM_EVENT_TYPE_ID;
+      const start = new Date().toISOString().split('T')[0];
+      const end = new Date(Date.now() + 14 * 86400000).toISOString().split('T')[0];
+      const response = await calcomClient.get('/slots', {
+        params: { eventTypeId, startTime: start, endTime: end }
+      });
+      const calSlots = response.data?.data?.slots || [];
+      slots = calSlots.map(day => ({
+        date: day.date || day.startTime?.split('T')[0],
+        slots: (day.slots || []).map(s => typeof s === 'string' ? s : s.time).filter(Boolean)
+      })).filter(d => d.slots.length > 0);
+    } catch (err) {
+      console.error('Cal.com availability error:', err.message);
     }
 
+    // Fallback if Cal.com fails
+    if (!slots.length) {
+      for (let i = 1; i <= 7; i++) {
+        const d = new Date(Date.now() + i * 86400000);
+        if (d.getDay() === 0) continue;
+        slots.push({ date: d.toISOString().split('T')[0], slots: ['09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '16:00', '17:00'] });
+      }
+    }
+
+    // Block booked slots
+    const dateList = slots.map(s => s.date);
+    if (dateList.length) {
+      const placeholders = dateList.map((_, i) => `$${i + 1}`).join(',');
+      const bookedResult = await query(
+        `SELECT date, time FROM appointments WHERE date IN (${placeholders}) AND status IN ('pending', 'confirmed')`,
+        dateList
+      );
+      const booked = bookedResult.data || [];
+      slots = slots.map(day => ({
+        date: day.date,
+        slots: day.slots.filter(time => {
+          const t = time.substring(0, 5);
+          return !booked.some(b => b.date === day.date && b.time.substring(0, 5) === t);
+        })
+      })).filter(d => d.slots.length > 0);
+    }
+
+    const days = slots.slice(0, 7).map(d => ({
+      date: d.date,
+      label: new Date(d.date + 'T00:00:00').toLocaleDateString('es-MX', { weekday: 'short', day: 'numeric', month: 'short' })
+    }));
+
     return {
-      message: `✅ *${selected.label}* seleccionada ($${selected.fee} MXN)\n\n📅 *¿Qué fecha preferís?*`,
-      data: { ...sess.data, step: 'select_time', selected_type: selected, available_days: days },
-      quickReplies: days.slice(0, 5).map(d => ({ id: `date_${d.date}`, label: d.label }))
+      message: `📅 *¿Qué fecha preferís?*`,
+      data: { ...sess.data, step: 'select_time', patient_email: email, available_days: days, availability: slots },
+      quickReplies: days.map(d => ({ id: `date_${d.date}`, label: d.label }))
     };
   }
 
@@ -269,36 +348,39 @@ async function handleScheduleFlow(input, sess) {
       return {
         message: 'Por favor elegí una fecha de la lista.',
         data: sess.data,
-        quickReplies: (sess.data.available_days || []).slice(0, 5).map(d => ({ id: `date_${d.date}`, label: d.label }))
+        quickReplies: (sess.data.available_days || []).map(d => ({ id: `date_${d.date}`, label: d.label }))
       };
     }
 
-    const times = ['09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '16:00', '17:00'];
+    const daySlots = sess.data.availability?.find(d => d.date === match[1]);
+    const times = daySlots?.slots || ['09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '16:00', '17:00'];
+
     return {
       message: `📅 Fecha: *${match[1]}*\n\n⏰ *Elegí un horario:*`,
       data: { ...sess.data, step: 'confirm', selected_date: match[1] },
-      quickReplies: times.map(t => ({ id: `time_${t}`, label: t }))
+      quickReplies: times.map(t => ({ id: `time_${t}`, label: t.substring(0, 5) }))
     };
   }
 
   if (step === 'confirm') {
     const match = input.match(/^time_(.+)$/);
     if (!match) {
-      const times = ['09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '16:00', '17:00'];
+      const daySlots = sess.data.availability?.find(d => d.date === sess.data.selected_date);
+      const times = daySlots?.slots || ['09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '16:00', '17:00'];
       return {
         message: 'Por favor elegí un horario.',
         data: sess.data,
-        quickReplies: times.map(t => ({ id: `time_${t}`, label: t }))
+        quickReplies: times.map(t => ({ id: `time_${t}`, label: t.substring(0, 5) }))
       };
     }
 
     const st = sess.data.selected_type;
     const deposit = Math.round(st.fee * st.deposit_percent / 100);
     return {
-      message: `📋 *Resumen:*\n📅 ${sess.data.selected_date}\n⏰ ${match[1]}\n📋 ${st.label}\n💰 $${st.fee} MXN\n💳 Anticipo: $${deposit} MXN\n\n¿Confirmás?`,
+      message: `📋 *Resumen:*\n👤 ${sess.data.patient_name}\n📅 ${sess.data.selected_date}\n⏰ ${match[1]}\n📋 ${st.label}\n💰 $${st.fee} MXN\n💳 Anticipo: $${deposit} MXN\n\n¿Confirmás?`,
       data: { ...sess.data, step: 'save', selected_time: match[1], deposit_amount: deposit },
       quickReplies: [
-        { id: 'confirm_yes', label: '✅ Confirmar' },
+        { id: 'confirm_yes', label: '✅ Confirmar y pagar' },
         { id: 'confirm_no', label: '❌ Cancelar' }
       ]
     };
@@ -317,20 +399,78 @@ async function handleScheduleFlow(input, sess) {
       };
     }
 
-    const { selected_type, selected_date, selected_time, deposit_amount } = sess.data;
-    await query(
-      `INSERT INTO appointments (patient_name, patient_phone, date, time, type, status, fee, deposit_percent, deposit_amount, duration)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
-      ['Paciente Web', 'web', selected_date, selected_time, selected_type.type, 'pending', selected_type.fee, selected_type.deposit_percent, deposit_amount, selected_type.duration]
+    const { patient_name, patient_phone, patient_email, selected_type, selected_date, selected_time, deposit_amount } = sess.data;
+
+    // Create Cal.com booking
+    let calcomBookingId = null;
+    try {
+      const calRes = await calcomClient.post('/bookings', {
+        eventTypeId: parseInt(process.env.CALCOM_EVENT_TYPE_ID),
+        start: `${selected_date}T${selected_time}:00`,
+        attendee: {
+          name: patient_name,
+          email: patient_email || `${patient_phone}@temp.com`,
+          timeZone: 'America/Mexico_City',
+          phoneNumber: patient_phone
+        },
+        metadata: { status: 'pending_payment', deposit: deposit_amount }
+      });
+      calcomBookingId = calRes.data?.data?.id || calRes.data?.id || null;
+    } catch (err) {
+      console.error('Cal.com booking error:', err.message);
+    }
+
+    // Save appointment in DB
+    const aptResult = await query(
+      `INSERT INTO appointments (patient_name, patient_phone, patient_email, date, time, type, status, fee, deposit_percent, deposit_amount, duration, calcom_booking_id)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *`,
+      [patient_name, patient_phone, patient_email, selected_date, selected_time, selected_type.type, 'pending', selected_type.fee, selected_type.deposit_percent, deposit_amount, selected_type.duration, calcomBookingId]
     );
+    const appointment = aptResult.data[0];
+
+    // Create Stripe Checkout Session
+    let checkoutUrl = null;
+    try {
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: [{
+          price_data: {
+            currency: 'mxn',
+            product_data: {
+              name: `Anticipo - ${selected_type.label}`,
+              description: `Cita: ${selected_date} ${selected_time}`
+            },
+            unit_amount: deposit_amount * 100
+          },
+          quantity: 1
+        }],
+        mode: 'payment',
+        success_url: `${process.env.FRONTEND_URL}/pago-exitoso?session_id={CHECKOUT_SESSION_ID}&appointment=${appointment.id}`,
+        cancel_url: `${process.env.FRONTEND_URL}/pago-cancelado?appointment=${appointment.id}`,
+        metadata: {
+          appointment_id: String(appointment.id),
+          patient_phone: patient_phone,
+          type: selected_type.type
+        }
+      });
+      checkoutUrl = session.url;
+    } catch (err) {
+      console.error('Stripe session error:', err.message);
+    }
+
+    const payMsg = checkoutUrl
+      ? `✅ *Cita reservada!*\n\nPara confirmar, pagá el anticipo de *$${deposit_amount} MXN* haciendo click en el botón de abajo.\n\nUna vez pagado, tu cita queda confirmada.`
+      : `✅ *Cita reservada!*\n\nTe contactaremos para coordinar el pago del anticipo de *$${deposit_amount} MXN*.`;
 
     return {
-      message: `✅ *Cita reservada!*\n\nPara confirmar, pagá el anticipo de *$${deposit_amount} MXN*.\n\nUna vez pagado, tu cita queda confirmada.`,
-      data: {},
-      quickReplies: [
-        { id: 'citas', label: '📋 Ver mis citas' },
-        { id: 'agendar', label: '🗓 Otra cita' }
-      ]
+      message: payMsg,
+      data: { appointment_id: appointment.id },
+      quickReplies: checkoutUrl
+        ? [{ id: 'pay_link', label: '💳 Pagar anticipo', url: checkoutUrl }]
+        : [
+            { id: 'citas', label: '📋 Ver mis citas' },
+            { id: 'agendar', label: '🗓 Otra cita' }
+          ]
     };
   }
 

@@ -266,10 +266,21 @@
     function showButtons(buttons) {
       const buttonsDiv = document.getElementById('chat-buttons');
       buttonsDiv.innerHTML = '';
+      if (!buttons || buttons.length === 0) {
+        buttonsDiv.innerHTML = '<span style="color:#9E9186;font-size:0.8rem;padding:0.25rem 0;">Escribí tu respuesta ↓</span>';
+        return;
+      }
       buttons.forEach(btn => {
         const button = document.createElement('button');
         button.textContent = btn.label;
-        button.onclick = () => { addMessage(btn.label, 'user'); sendChatMessage(null, btn.id); };
+        if (btn.url) {
+          button.onclick = () => { window.open(btn.url, '_blank'); };
+          button.style.background = '#D1FAE5';
+          button.style.color = '#065F46';
+          button.style.borderColor = '#A7F3D0';
+        } else {
+          button.onclick = () => { addMessage(btn.label, 'user'); sendChatMessage(null, btn.id); };
+        }
         buttonsDiv.appendChild(button);
       });
     }
