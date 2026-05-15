@@ -55,7 +55,7 @@ router.post('/login', async (req, res) => {
     }
 
     const result = await query('SELECT * FROM admins WHERE email = $1 AND is_active = true', [email]);
-    if (result.data.length === 0) {
+    if (!result.data || result.data.length === 0) {
       return res.status(401).json({ success: false, error: 'Credenciales inválidas' });
     }
 

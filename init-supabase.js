@@ -98,6 +98,18 @@ async function init() {
   `);
   console.log('   ✅ bot_conversations');
 
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS admins (
+      id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+      email TEXT UNIQUE NOT NULL,
+      password_hash TEXT NOT NULL,
+      full_name TEXT,
+      is_active BOOLEAN DEFAULT TRUE,
+      created_at TIMESTAMPTZ DEFAULT NOW()
+    );
+  `);
+  console.log('   ✅ admins');
+
   console.log('\n🌱 Seeding data...');
 
   await client.query(`
@@ -135,6 +147,13 @@ async function init() {
     ON CONFLICT DO NOTHING;
   `);
   console.log('   ✅ appointments seeded');
+
+  await client.query(`
+    INSERT INTO admins (email, password_hash, full_name) VALUES
+      ('admin@aparta.mx', 'd833dc02bdc7cc0006302c781e7dda7758ca6d500c779fac9941a913467613c2', 'Administrador')
+    ON CONFLICT (email) DO NOTHING;
+  `);
+  console.log('   ✅ admin seeded');
 
   await client.end();
   console.log('\n✅ Database ready!');
