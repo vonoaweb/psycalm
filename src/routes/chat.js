@@ -438,54 +438,67 @@ router.post('/message', async (req, res) => {
       return res.json({ success: true, ...result });
     }
 
-    // AI response for free text
-    const feeTypesResult = await query('SELECT * FROM fee_types WHERE active = true ORDER BY fee ASC');
-    const feeTypes = feeTypesResult.data || [];
-    const systemPrompt = getSystemPrompt(practiceName, feeTypes);
-    const messages = [
-      { role: 'system', content: systemPrompt },
-      ...sess.messages.slice(-10), // Keep last 10 messages for context
-      { role: 'user', content: input }
-    ];
+    // === SMART BRAIN: detect intent first, use Kimi only for complex queries ===
+    const intentResult = detectIntent(input);
+    let responseText, quickReplies;
 
-    const aiResult = await callKimi(messages);
-
-    // Fallback if Kimi fails — use Smart Brain
-    let responseText = aiResult.response;
-    let fallbackQuickReplies = aiResult.buttons || [];
-    if (!responseText) {
-      const intentResult = detectIntent(input);
+    // If strong intent match, use Smart Brain directly (fast & accurate)
+    if (intentResult.confidence >= 5 || ['greeting', 'goodbye', 'thanks', 'help', 'emergency'].includes(intentResult.intent)) {
       const smart = getSmartResponse(intentResult, sess.data || {}, practiceName);
       responseText = smart.response;
-      fallbackQuickReplies = smart.quickReplies;
+      quickReplies = smart.quickReplies;
+    } else {
+      // Complex query → try Kimi AI
+      const feeTypesResult = await query('SELECT * FROM fee_types WHERE active = true ORDER BY fee ASC');
+      const feeTypes = feeTypesResult.data || [];
+      const systemPrompt = getSystemPrompt(practiceName, feeTypes);
+      const messages = [
+        { role: 'system', content: systemPrompt },
+        ...sess.messages.slice(-10),
+        { role: 'user', content: input }
+      ];
+
+      const aiResult = await callKimi(messages);
+
+      if (aiResult.response) {
+        responseText = aiResult.response;
+        quickReplies = aiResult.buttons || [];
+      } else {
+        // Kimi failed → use Smart Brain fallback
+        const smart = getSmartResponse(intentResult, sess.data || {}, practiceName);
+        responseText = smart.response;
+        quickReplies = smart.quickReplies;
+      }
+
+      // Override quick replies for known actions
+      if (aiResult.action === 'schedule' || input.toLowerCase().includes('agendar')) {
+        quickReplies = [{ id: 'agendar', label: '🗓 Sí, agendar' }, { id: 'precios', label: '💰 Precios' }, ...quickReplies];
+      } else if (aiResult.action === 'prices') {
+        quickReplies = [{ id: 'precios', label: '💰 Ver precios' }, { id: 'agendar', label: '🗓 Agendar' }, ...quickReplies];
+      }
     }
 
-    // Update session history
-    sess.messages.push({ role: 'user', content: input });
-    sess.messages.push({ role: 'assistant', content: responseText });
-    setSession(sess.id, sess);
+    // Try to remember patient's name from free text
+    if (!sess.data?.patientName && input.length > 2 && input.length < 40) {
+      const nameMatch = input.match(/^(soy|me llamo|mi nombre es)\s+(.+)$/i);
+      if (nameMatch) {
+        sess.data = { ...sess.data, patientName: nameMatch[2].trim() };
+      }
+    }
 
-    // Build quick replies based on AI action + smart fallback
-    let quickReplies = fallbackQuickReplies.length ? fallbackQuickReplies : (aiResult.buttons || []);
-    if (aiResult.action === 'schedule' || input.toLowerCase().includes('agendar')) {
-      quickReplies = [
-        { id: 'agendar', label: '🗓 Sí, agendar' },
-        { id: 'precios', label: '💰 Precios' },
-        ...quickReplies
-      ];
-    } else if (aiResult.action === 'prices') {
-      quickReplies = [
-        { id: 'precios', label: '💰 Ver precios' },
-        { id: 'agendar', label: '🗓 Agendar' },
-        ...quickReplies
-      ];
-    } else if (quickReplies.length === 0) {
+    // Ensure we always have some quick replies
+    if (!quickReplies || quickReplies.length === 0) {
       quickReplies = [
         { id: 'agendar', label: '🗓 Agendar cita' },
         { id: 'citas', label: '📋 Mis citas' },
         { id: 'precios', label: '💰 Precios' }
       ];
     }
+
+    // Update session history
+    sess.messages.push({ role: 'user', content: input });
+    sess.messages.push({ role: 'assistant', content: responseText });
+    setSession(sess.id, sess);
 
     res.json({
       success: true,
