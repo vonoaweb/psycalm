@@ -11,273 +11,6 @@ const sessions = new Map();
 const KIMI_BASE_URL = 'https://api.moonshot.ai/v1';
 const KIMI_MODEL = 'kimi-k2.6';
 
-// ========== SMART CHAT BRAIN ==========
-
-// FAQ Database
-const faqDatabase = [
-  {
-    keywords: ['direccion', 'ubicacion', 'donde', 'ubicado', 'dirección', 'ubicación', 'dónde', 'domicilio', 'consultorio', 'dirección'],
-    responses: [
-      'Nuestro consultorio está en Guadalajara, Jalisco. Te envío la dirección exacta al confirmar tu cita. ¿Querés agendar?',
-      'Atendemos en Guadalajara. La dirección exacta te la compartimos por WhatsApp una vez confirmada la cita. ¿Te gustaría reservar?'
-    ]
-  },
-  {
-    keywords: ['seguro', 'seguros', 'imss', 'gastos medicos', 'gastos médicos', 'aseguradora', 'cubre'],
-    responses: [
-      'Por el momento trabajamos con pago directo. El anticipo del 20% se paga por Stripe y el resto en la consulta. ¿Te gustaría agendar?',
-      'No manejamos seguros médicos por ahora. El pago es directo y seguro a través de Stripe. ¿Querés ver los precios?'
-    ]
-  },
-  {
-    keywords: ['cancelar', 'cancelacion', 'cancelación', 'reembolso', 'devolver', 'devolución', 'devolucion'],
-    responses: [
-      'Podés cancelar tu cita con 24 horas de anticipación. El anticipo no es reembolsable, pero podés reagendar sin costo extra. ¿Querés cancelar una cita?',
-      'Las cancelaciones con 24h de anticipación permiten reagendar. El anticipo se traslada a la nueva fecha. ¿Tenés una cita para cancelar?'
-    ]
-  },
-  {
-    keywords: ['online', 'virtual', 'zoom', 'videollamada', 'video', 'remota', 'a distancia'],
-    responses: [
-      'Sí, ofrecemos sesiones online por videollamada. Es igual de efectiva que la presencial. ¿Te gustaría agendar una sesión online?',
-      'Contamos con consultas online de 50 minutos. Te enviamos el link de videollamada al confirmar. ¿Querés reservar?'
-    ]
-  },
-  {
-    keywords: ['primera vez', 'nunca fui', 'primera consulta', 'nueva paciente', 'nuevo paciente', 'como funciona', 'cómo funciona'],
-      responses: [
-      'En la primera consulta hacemos una evaluación completa, conocemos tu historia y definimos objetivos de tratamiento. Dura 60 minutos. ¿Te gustaría agendar?',
-      'La primera sesión es de evaluación (60 min). Conocemos tus necesidades y creamos un plan juntos. ¿Querés reservar tu primera consulta?'
-    ]
-  },
-  {
-    keywords: ['duracion', 'duración', 'cuanto dura', 'cuánto dura', 'tiempo', 'minutos', 'hora'],
-    responses: [
-      'La primera consulta dura 60 minutos. Las sesiones regulares son de 50 minutos. Las de pareja de 80 minutos. ¿Te gustaría agendar?',
-      'Depende del tipo: primera vez 60 min, regular 50 min, pareja 80 min, online 50 min. ¿Cuál te interesa?'
-    ]
-  },
-  {
-    keywords: ['metodo pago', 'método pago', 'tarjeta', 'transferencia', 'oxxo', 'efectivo', 'como pago', 'cómo pago', 'forma de pago'],
-    responses: [
-      'Aceptamos tarjetas de crédito/débito a través de Stripe (muy seguro). El anticipo del 20% se paga online y el resto en la consulta. ¿Querés agendar?',
-      'El pago del anticipo es con tarjeta vía Stripe. El saldo lo podés pagar en la consulta. ¿Te gustaría reservar?'
-    ]
-  },
-  {
-    keywords: ['gracias', 'thank', 'agradecido', 'agradecida', 'muy amable', 'te agradezco'],
-    responses: [
-      '¡De nada! 😊 Estoy aquí para lo que necesites. ¿Te gustaría agendar una cita o tenés alguna otra duda?',
-      '¡Con gusto! 💚 ¿Te ayudo a agendar tu cita o hay algo más en lo que pueda ayudarte?'
-    ]
-  },
-  {
-    keywords: ['adios', 'adiós', 'chau', 'hasta luego', 'nos vemos', 'bye'],
-    responses: [
-      '¡Hasta luego! 🌿 Cuidate mucho. Si necesitás algo, acá estoy.',
-      '¡Chau! 👋 Que tengas un bonito día. Recordá que podés agendar cuando quieras.'
-    ]
-  },
-  {
-    keywords: ['ansiedad', 'depresion', 'depresión', 'estres', 'estrés', 'panico', 'pánico', 'insomnio', 'triste', 'no puedo dormir', 'ataque', 'crisis'],
-    responses: [
-      'Entiendo que podés estar pasando por un momento difícil. 💚 Estoy aquí para ayudarte a agendar una cita con la profesional. Si sentís que estás en crisis, llamá a la Línea de la Vida: 800 911 2000. ¿Querés que te ayude a reservar una cita?',
-      'Lamento que estés pasando por eso. La terapia puede ayudarte mucho. ¿Querés que agendemos una consulta? También podés llamar a Cruz Roja 065 si es una emergencia.'
-    ]
-  },
-  {
-    keywords: ['pareja', 'matrimonio', 'esposo', 'esposa', 'novio', 'novia', 'relacion', 'relación', 'conflicto', 'divorcio', 'separacion', 'separación'],
-    responses: [
-      'Ofrecemos terapia de pareja de 80 minutos. Es un espacio seguro para ambos. ¿Te gustaría agendar una sesión?',
-      'La terapia de pareja puede ayudar mucho a mejorar la comunicación. Las sesiones son de 80 minutos. ¿Querés reservar?'
-    ]
-  },
-  {
-    keywords: ['ninos', 'niños', 'niña', 'niño', 'adolescente', 'adolescentes', 'hijo', 'hija', 'infantil', 'menor'],
-    responses: [
-      'Atendemos adolescentes a partir de 13 años. Para menores de edad se requiere autorización de un adulto. ¿Querés agendar?',
-      'Trabajamos con adolescentes (13+). La primera consulta incluye una entrevista con los padres. ¿Te gustaría reservar?'
-    ]
-  },
-  {
-    keywords: ['hora', 'horario', 'horarios', 'a que hora', 'qué hora', 'cuándo', 'cuando', 'disponibilidad', 'turno', 'quedan'],
-    responses: [
-      'Atendemos de lunes a sábado de 9:00 a 17:00. ¿Te gustaría ver qué horarios tenemos disponibles?',
-      'Nuestros horarios son de lunes a sábado, 9 a 17 hs. ¿Querés que veamos qué turnos quedan libres?'
-    ]
-  },
-  {
-    keywords: ['emergencia', 'emergencias', 'suicidio', 'suicida', 'morir', 'muerte', 'lastimar', 'cortar', 'pastillas', 'no quiero vivir'],
-    responses: [
-      '🚨 Esto es importante. No estás solo/a. Llamá ahora a la Línea de la Vida: 800 911 2000. También podés llamar al 911 o Cruz Roja 065. Tu vida importa. 🆘',
-      '🆘 Si estás en crisis, por favor llamá ahora: Línea de la Vida 800 911 2000, o 911. No estás solo/a. Hay personas que quieren ayudarte. 💚'
-    ],
-    isEmergency: true
-  }
-];
-
-function detectIntent(input) {
-  const lower = input.toLowerCase().trim();
-  let bestMatch = null;
-  let bestScore = 0;
-
-  for (const faq of faqDatabase) {
-    let score = 0;
-    for (const kw of faq.keywords) {
-      if (lower === kw) { score += 10; } // exact match
-      else if (lower.includes(kw)) { score += 5; } // contains
-      else if (kw.includes(lower) && lower.length > 3) { score += 2; } // partial
-    }
-    if (score > bestScore) {
-      bestScore = score;
-      bestMatch = faq;
-    }
-  }
-
-  // Also detect structural intents
-  if (lower.match(/\b(agendar|reservar|sacar|pedir|quiero cita|quiero turno|quiero consulta)\b/)) {
-    return { intent: 'schedule', confidence: 10 };
-  }
-  if (lower.match(/\b(precio|precios|costo|costos|tarifa|cuanto|cuesta|vale)\b/)) {
-    return { intent: 'prices', confidence: 10 };
-  }
-  if (lower.match(/\b(cita|turno|consulta|sesion|sesión).*(ver|mis|tengo|checar|revisar)\b/)) {
-    return { intent: 'appointments', confidence: 10 };
-  }
-  if (lower.match(/\b(cancelar|anular|eliminar|borrar)\b/) && lower.match(/\b(cita|turno|consulta|sesion|sesión)\b/)) {
-    return { intent: 'cancel', confidence: 10 };
-  }
-  if (lower.match(/\b(hola|buen|hey|hi|saludos|qué tal|como va|cómo va)\b/) && lower.length < 20) {
-    return { intent: 'greeting', confidence: 10 };
-  }
-  if (lower.match(/\b(adios|adiós|chau|bye|nos vemos|hasta luego)\b/)) {
-    return { intent: 'goodbye', confidence: 10 };
-  }
-  if (lower.match(/\b(gracias|agradecido|agradecida|muy amable)\b/)) {
-    return { intent: 'thanks', confidence: 10 };
-  }
-  if (lower.match(/\b(ayuda|help|no entiendo|como funciona|cómo funciona|que hago|qué hago|info|informacion|información)\b/)) {
-    return { intent: 'help', confidence: 8 };
-  }
-
-  if (bestMatch && bestScore >= 5) {
-    return { intent: 'faq', faq: bestMatch, confidence: bestScore };
-  }
-
-  return { intent: 'unknown', confidence: 0 };
-}
-
-function pickRandom(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
-
-function getSmartResponse(intentResult, context, practiceName) {
-  const { intent, faq } = intentResult;
-  const name = context.patientName || '';
-  const greeting = name ? `¡Hola ${name}! ` : '';
-
-  switch (intent) {
-    case 'greeting':
-      return {
-        response: `${greeting}¡Hola! 👋 Soy el asistente virtual de *${practiceName}*.
-
-Estoy aquí para ayudarte con:
-🗓 Agendar una cita
-📋 Consultar tus citas
-💰 Conocer precios
-❓ Resolver dudas
-
-¿En qué puedo ayudarte hoy?`,
-        quickReplies: [
-          { id: 'agendar', label: '🗓 Agendar cita' },
-          { id: 'citas', label: '📋 Mis citas' },
-          { id: 'precios', label: '💰 Precios' }
-        ]
-      };
-
-    case 'goodbye':
-      return {
-        response: pickRandom([
-          '¡Hasta luego! 🌿 Cuidate mucho. Recordá que podés agendar cuando quieras.',
-          '¡Chau! 👋 Que tengas un bonito día. Estoy acá cuando me necesites.',
-          '¡Nos vemos! 💚 Si necesitás algo, no dudes en escribirme.'
-        ]),
-        quickReplies: [{ id: 'agendar', label: '🗓 Agendar otra cita' }]
-      };
-
-    case 'thanks':
-      return {
-        response: pickRandom([
-          '¡De nada! 😊 ¿Te ayudo a agendar tu cita o tenés alguna otra duda?',
-          '¡Con gusto! 💚 ¿Querés reservar una cita?',
-          'Es un placer ayudarte. ¿Te gustaría agendar ahora?'
-        ]),
-        quickReplies: [
-          { id: 'agendar', label: '🗓 Sí, agendar' },
-          { id: 'precios', label: '💰 Ver precios' }
-        ]
-      };
-
-    case 'schedule':
-      return {
-        response: '¡Perfecto! Te ayudo a agendar. Elegí el tipo de sesión:',
-        quickReplies: [] // Will be filled by the scheduling flow
-      };
-
-    case 'prices':
-      return {
-        response: 'Te muestro los precios. ¿Querés verlos?',
-        quickReplies: [{ id: 'precios', label: '💰 Ver precios' }, { id: 'agendar', label: '🗓 Agendar' }]
-      };
-
-    case 'appointments':
-      return {
-        response: '¿Querés ver tus citas agendadas?',
-        quickReplies: [{ id: 'citas', label: '📋 Mis citas' }, { id: 'agendar', label: '🗓 Nueva cita' }]
-      };
-
-    case 'cancel':
-      return {
-        response: '¿Querés cancelar una cita? Te muestro tus citas activas.',
-        quickReplies: [{ id: 'cancelar', label: '❌ Cancelar cita' }, { id: 'citas', label: '📋 Ver citas' }]
-      };
-
-    case 'help':
-      return {
-        response: '¡Claro! 💚 Te cuento lo que puedo hacer por vos:\n\n🗓 Agendar citas\n📋 Ver tus citas\n💰 Consultar precios\n❌ Cancelar citas\n📍 Info del consultorio\n\n¿Qué necesitás?',
-        quickReplies: [
-          { id: 'agendar', label: '🗓 Agendar' },
-          { id: 'citas', label: '📋 Mis citas' },
-          { id: 'precios', label: '💰 Precios' }
-        ]
-      };
-
-    case 'faq':
-      const resp = pickRandom(faq.responses);
-      return {
-        response: resp,
-        quickReplies: faq.isEmergency
-          ? [{ id: 'agendar', label: '🗓 Agendar cita (apoyo)' }]
-          : [
-              { id: 'agendar', label: '🗓 Agendar' },
-              { id: 'precios', label: '💰 Precios' },
-              { id: 'citas', label: '📋 Mis citas' }
-            ]
-      };
-
-    default:
-      return {
-        response: `${greeting}Entiendo. ¿Te gustaría agendar una cita o tenés alguna duda sobre precios o horarios?`,
-        quickReplies: [
-          { id: 'agendar', label: '🗓 Agendar cita' },
-          { id: 'precios', label: '💰 Precios' },
-          { id: 'citas', label: '📋 Mis citas' },
-          { id: 'ayuda', label: '❓ Ayuda' }
-        ]
-      };
-  }
-}
-
 function getSession(id) {
   if (!id || !sessions.has(id)) {
     const newId = 'sess_' + Math.random().toString(36).substring(2, 15);
@@ -291,69 +24,451 @@ function setSession(id, sessData) {
   sessions.set(id, sessData);
 }
 
+// ========== PERSONALITY ENGINE ==========
+
+const botName = 'Sofía';
+
+const greetings = [
+  '¡Hola! Qué bueno que estés acá. Soy Sofía, la asistente de la consulta. ¿Cómo estás hoy?',
+  'Hola, bienvenido/a. Me llamo Sofía y estoy para ayudarte. ¿En qué puedo acompañarte?',
+  '¡Qué tal! Soy Sofía, asistente del consultorio. ¿Cómo te encuentras?'
+];
+
+const offTopicResponses = [
+  'Mmm, no estoy segura de entender bien. Estoy acá para ayudarte con temas del consultorio — agendar citas, precios, o si tenés alguna duda sobre el proceso. ¿Te gustaría que veamos eso?',
+  'Jaja, me pillaste con esa. La verdad es que estoy especializada en ayudarte con las citas y consultas del consultorio. ¿En qué puedo ayudarte de eso?',
+  'Eso suena interesante, pero te cuento que estoy acá para lo del consultorio. Si necesitás agendar, ver precios o tenés dudas sobre las sesiones, eso sí manejo. ¿Querés que veamos?'
+];
+
+const promptInjectionResponses = [
+  'Jaja, me parece que estamos jugando un poco. Estoy acá para ayudarte en serio con las citas. ¿Querés que hablemos de eso?',
+  'Mmm, no caigo en esas. Pero sí te puedo ayudar a agendar una cita si querés. ¿Te interesa?',
+  'Me parece que estamos desviándonos. ¿Querés que volvamos a lo del consultorio? Estoy para ayudarte de verdad.'
+];
+
+const unknownResponses = [
+  'Te entiendo. A veces no sé bien cómo responder, pero estoy aprendiendo. ¿Te gustaría que te ayude a agendar una cita o ver los precios?',
+  'Mmm, no estoy 100% segura de lo que necesitás, pero quiero ayudarte. ¿Querés que veamos horarios disponibles?',
+  'Perdón, a veces me cuesta entender. Estoy acá para lo que necesites del consultorio. ¿Agendar, precios, o ver tus citas?'
+];
+
+const empathyPhrases = [
+  'Entiendo que puede ser difícil dar el primer paso. Estás haciendo algo valiente.',
+  'Me imagino que no es fácil. Buscar ayuda ya es un gran avance.',
+  'Gracias por confiar en nosotros. Vamos a acompañarte en esto.',
+  'Sé que a veces cuesta. Pero acá estamos para escucharte.',
+  'Lo que sentís es válido. No estás solo/a en esto.'
+];
+
+const transitionPhrases = [
+  'Te cuento lo que puedo hacer por vos:',
+  'Estas son las cosas en las que te puedo ayudar:',
+  'Veamos, esto es lo que manejo:'
+];
+
+// ========== SAFETY & INTENT DETECTION ==========
+
+const offTopicKeywords = [
+  'tira la basura', 'basura', 'cocinar', 'receta', 'clima', 'futbol', 'fútbol',
+  'politica', 'política', 'elecciones', 'bitcoin', 'crypto', 'comprar', 'vender',
+  'netflix', 'pelicula', 'película', 'juego', 'videojuego', 'gta', 'minecraft',
+  'tiktok', 'instagram', 'facebook', 'whatsapp', 'programar', 'codigo', 'código',
+  'python', 'javascript', 'hackear', 'hack', 'ia generativa', 'chatgpt',
+  'traducir', 'ingles', 'inglés', 'frances', 'alemán', 'aleman'
+];
+
+const promptInjectionPatterns = [
+  /olvida todo/i, /ignora las reglas/i, /sos un bot/i, /no sos real/i,
+  /system prompt/i, /prompt/i, /instrucciones/i, /rules/i, /olvida/i,
+  /ahora actua como/i, /ahora actúa como/i, /simula ser/i, /roleplay/i,
+  /hacete el/i, /hacete la/i, /contame un chiste/i, /contame un secreto/i,
+  /cual es la contraseña/i, /cuál es la contraseña/i, /password/i, /admin/i,
+  /base de datos/i, /sql/i, /drop table/i, /hack/i, /hackear/i
+];
+
+const emotionalKeywords = {
+  anxiety: ['ansiedad', 'ansioso', 'ansiosa', 'nervioso', 'nerviosa', 'preocupado', 'preocupada', 'pánico', 'panico', 'ataque', 'no puedo respirar', 'taquicardia'],
+  sadness: ['triste', 'deprimido', 'deprimida', 'lloro', 'llorar', 'vacío', 'vacío', 'no tengo ganas', 'todo me cuesta', 'desanimado'],
+  anger: ['enojado', 'enojada', 'molesto', 'molesta', 'odio', 'rabia', 'me hierve', 'no aguanto'],
+  crisis: ['suicidio', 'suicida', 'matarme', 'morir', 'no quiero vivir', 'no vale la pena', 'lastimarme', 'cortarme', 'pastillas', 'muerte'],
+  insomnia: ['no duermo', 'insomnio', 'desvelo', 'pesadillas', 'no puedo dormir'],
+  stress: ['estres', 'estrés', 'agobiado', 'agobiada', 'quemado', 'quemada', 'no doy abasto']
+};
+
+function detectOffTopic(input) {
+  const lower = input.toLowerCase();
+  for (const kw of offTopicKeywords) {
+    if (lower.includes(kw)) return true;
+  }
+  return false;
+}
+
+function detectPromptInjection(input) {
+  for (const pattern of promptInjectionPatterns) {
+    if (pattern.test(input)) return true;
+  }
+  return false;
+}
+
+function detectEmotion(input) {
+  const lower = input.toLowerCase();
+  for (const [emotion, keywords] of Object.entries(emotionalKeywords)) {
+    for (const kw of keywords) {
+      if (lower.includes(kw)) return emotion;
+    }
+  }
+  return null;
+}
+
+function pickOne(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+// ========== FAQ KNOWLEDGE BASE ==========
+
+const faqKnowledge = {
+  insurance: {
+    keywords: ['seguro', 'seguros', 'imss', 'gastos medicos', 'gastos médicos', 'aseguradora', 'cubre', 'oxxo', 'efectivo', 'transferencia'],
+    responses: [
+      'Por ahora trabajamos con pago directo. El anticipo del 20% se paga online con tarjeta (muy seguro por Stripe) y el resto lo podés abonar en la consulta. Si en el futuro agregamos más métodos, te avisamos. ¿Te gustaría ver los precios?',
+      'No manejamos seguros médicos por el momento. El pago es directo: el anticipo por Stripe con tarjeta de crédito o débito, y el saldo en la sesión. ¿Querés que veamos los valores?'
+    ]
+  },
+  location: {
+    keywords: ['direccion', 'dirección', 'ubicacion', 'ubicación', 'donde', 'dónde', 'domicilio', 'consultorio', 'lugar', 'dirección'],
+    responses: [
+      'Atendemos en Guadalajara, Jalisco. La dirección exacta te la enviamos por WhatsApp o email una vez que confirmás la cita, junto con instrucciones de cómo llegar. ¿Querés que agendemos?',
+      'El consultorio está en Guadalajara. Te compartimos la dirección completa al confirmar tu cita, así no te perdés. ¿Te gustaría reservar un turno?'
+    ]
+  },
+  duration: {
+    keywords: ['duracion', 'duración', 'cuanto dura', 'cuánto dura', 'tiempo', 'minutos', 'hora', 'cuánto tiempo', 'cuanto tiempo'],
+    responses: [
+      'Depende del tipo de sesión. La primera consulta es de 60 minutos porque hacemos una evaluación completa. Las sesiones regulares son de 50 minutos. La terapia de pareja dura 80 minutos. ¿Te interesa alguna en particular?',
+      'La primera vez son 60 min (evaluación + plan), sesiones regulares 50 min, pareja 80 min, online 50 min. ¿Cuál te vendría mejor?'
+    ]
+  },
+  online: {
+    keywords: ['online', 'virtual', 'zoom', 'videollamada', 'video', 'remota', 'a distancia', 'desde casa'],
+    responses: [
+      'Sí, ofrecemos sesiones online por videollamada. Funciona igual de bien que la presencial y es ideal si vivís lejos o preferís la comodidad de tu casa. Te enviamos el link seguro al confirmar. ¿Te gustaría probar?',
+      'Contamos con consultas online de 50 minutos por videollamada. Es una opción muy buena si no podés venir en persona. ¿Querés reservar una?'
+    ]
+  },
+  firstTime: {
+    keywords: ['primera vez', 'nunca fui', 'primera consulta', 'nueva paciente', 'nuevo paciente', 'como funciona', 'cómo funciona', 'que esperar', 'qué esperar'],
+    responses: [
+      'En la primera consulta nos sentamos a conocerte. Hacemos una evaluación de tu situación, tu historia y juntos definimos objetivos de tratamiento. No hay presión, es un espacio seguro. Dura 60 minutos. ¿Te animás a agendar?',
+      'La primera sesión es de evaluación (60 min). Conocemos tus necesidades, hablamos de lo que te trae acá y armamos un plan juntos. Es un proceso sin apuro. ¿Te gustaría reservar?'
+    ]
+  },
+  payment: {
+    keywords: ['metodo pago', 'método pago', 'tarjeta', 'oxxo', 'efectivo', 'como pago', 'cómo pago', 'forma de pago', 'pagar', 'pago'],
+    responses: [
+      'Aceptamos tarjetas de crédito y débito a través de Stripe (muy seguro). El anticipo del 20% se paga online al agendar, y el resto en la consulta. Si necesitás otra forma de pago, escribinos y vemos. ¿Querés agendar?',
+      'El anticipo (20%) lo pagás con tarjeta vía Stripe cuando reservás. El saldo lo abonás en la sesión. Si necesitás otra opción, consultanos. ¿Te gustaría ver disponibilidad?'
+    ]
+  },
+  cancellation: {
+    keywords: ['cancelar', 'cancelacion', 'cancelación', 'reembolso', 'devolver', 'devolución', 'devolucion', 'no puedo ir'],
+    responses: [
+      'Podés cancelar o reagendar con 24 horas de anticipación sin problema. El anticipo se traslada a la nueva fecha. Si cancelás con menos tiempo, lo evaluamos caso por caso. ¿Tenés una cita para mover?',
+      'Entendemos que pueden pasar cosas. Con 24h de anticipación podés reagendar sin costo. El anticipo se guarda para la nueva fecha. ¿Querés que veamos tus citas?'
+    ]
+  },
+  couple: {
+    keywords: ['pareja', 'matrimonio', 'esposo', 'esposa', 'novio', 'novia', 'relacion', 'relación', 'conflicto', 'divorcio', 'separacion', 'separación', 'pareja'],
+    responses: [
+      'Ofrecemos terapia de pareja de 80 minutos. Es un espacio seguro donde ambos pueden expresarse y trabajar en la comunicación. No hace falta que estén "al borde" para venir. ¿Te interesa?',
+      'La terapia de pareja dura 80 min y ayuda mucho a mejorar la comunicación, aunque no estén en crisis. ¿Querés agendar una sesión?'
+    ]
+  },
+  children: {
+    keywords: ['ninos', 'niños', 'niña', 'niño', 'adolescente', 'adolescentes', 'hijo', 'hija', 'infantil', 'menor', 'mi hijo', 'mi hija'],
+    responses: [
+      'Atendemos adolescentes a partir de 13 años. Para menores de edad se necesita que venga un adulto (padre, madre o tutor) a la primera sesión. ¿Querés que veamos disponibilidad?',
+      'Trabajamos con adolescentes (13+). La primera consulta incluye una charla con los padres para entender el contexto. ¿Te gustaría reservar?'
+    ]
+  },
+  schedule: {
+    keywords: ['hora', 'horario', 'horarios', 'a que hora', 'qué hora', 'cuándo', 'cuando', 'disponibilidad', 'turno', 'quedan'],
+    responses: [
+      'Atendemos de lunes a sábado de 9:00 a 17:00. ¿Te gustaría que veamos qué turnos tenemos libres esta semana?',
+      'Nuestros horarios son de lun a sáb, 9 a 17 hs. ¿Querés que busquemos uno que te funcione?'
+    ]
+  },
+  anxiety: {
+    keywords: ['ansiedad', 'ansioso', 'ansiosa', 'nervioso', 'nerviosa', 'preocupado', 'preocupada', 'pánico', 'panico', 'ataque', 'no puedo respirar', 'taquicardia', 'angustia', 'angustiado', 'angustiada'],
+    responses: [
+      'Entiendo que puede ser muy incómodo. La ansiedad se puede trabajar muy bien en terapia. No tenés que manejarlo solo/a. ¿Te gustaría que agendemos una primera consulta?',
+      'La ansiedad es algo que mucha gente vive y sí se puede mejorar con acompañamiento profesional. ¿Querés que veamos un turno para que hablemos?'
+    ]
+  },
+  depression: {
+    keywords: ['depresion', 'depresión', 'triste', 'deprimido', 'deprimida', 'lloro', 'llorar', 'vacio', 'vacío', 'no tengo ganas', 'todo me cuesta', 'desanimado', 'desanimada'],
+    responses: [
+      'Lamento que estés pasando por eso. Sentirse así no es fácil, y buscar ayuda ya es un paso importante. La terapia puede acompañarte mucho en esto. ¿Te animás a agendar?',
+      'Gracias por compartirlo. Esas sensaciones son válidas y hay formas de trabajarlas. ¿Querés que reservemos una cita para que hablemos?'
+    ]
+  },
+  insomnia: {
+    keywords: ['no duermo', 'insomnio', 'desvelo', 'pesadillas', 'no puedo dormir', 'dormir'],
+    responses: [
+      'El sueño es fundamental y cuando no descansamos bien, todo se complica. Hay técnicas que se pueden trabajar en sesión. ¿Querés que agendemos?',
+      'Dormir mal afecta todo el día. En terapia se pueden abordar las causas y mejorar el descanso. ¿Te interesa reservar un turno?'
+    ]
+  },
+  thanks: {
+    keywords: ['gracias', 'agradecido', 'agradecida', 'muy amable', 'te agradezco', 'mil gracias'],
+    responses: [
+      '¡De nada! 😊 Me alegra poder ayudarte. Si en algún momento necesitás algo más, acá estoy. ¿Te gustaría que agendemos la cita?',
+      '¡Con gusto! 💚 Estoy para lo que necesites. ¿Querés que reservemos el turno ahora?'
+    ]
+  },
+  goodbye: {
+    keywords: ['adios', 'adiós', 'chau', 'hasta luego', 'nos vemos', 'bye'],
+    responses: [
+      '¡Hasta luego! 🌿 Cuidate mucho. Recordá que podés escribirme cuando quieras.',
+      '¡Chau! 👋 Que tengas un buen día. Estoy acá si me necesitás.',
+      '¡Nos vemos! 💚 Aguardo tu mensaje cuando quieras agendar o si tenés alguna duda.'
+    ]
+  }
+};
+
+function findFaq(input) {
+  const lower = input.toLowerCase().trim();
+  let bestMatch = null;
+  let bestScore = 0;
+
+  for (const [key, faq] of Object.entries(faqKnowledge)) {
+    let score = 0;
+    for (const kw of faq.keywords) {
+      if (lower === kw) score += 15;
+      else if (lower.includes(kw)) score += 8;
+      else if (kw.includes(lower) && lower.length > 3) score += 3;
+    }
+    if (score > bestScore) {
+      bestScore = score;
+      bestMatch = faq;
+    }
+  }
+
+  return bestMatch && bestScore >= 5 ? pickOne(bestMatch.responses) : null;
+}
+
+// ========== SMART RESPONSE ENGINE ==========
+
+function buildSmartResponse(input, sess, practiceName) {
+  const lower = input.toLowerCase().trim();
+  const emotion = detectEmotion(input);
+  const data = sess.data || {};
+
+  // 1. EMERGENCY — highest priority
+  if (emotion === 'crisis' || lower.includes('suicidio') || lower.includes('matarme') || lower.includes('no quiero vivir')) {
+    return {
+      message: `🆕 ${pickOne(empathyPhrases)}\n\nPor favor, si estás en crisis, llamá ahora:\n📞 Línea de la Vida: 800 911 2000\n📞 Cruz Roja: 065\n📞 Emergencias: 911\n\nTu vida importa. No estás solo/a. 💚`,
+      quickReplies: [
+        { id: 'agendar', label: '🗓 Quiero agendar' },
+        { id: 'ayuda', label: '📞 Más recursos' }
+      ]
+    };
+  }
+
+  // 2. PROMPT INJECTION / TROLLING
+  if (detectPromptInjection(input)) {
+    return {
+      message: pickOne(promptInjectionResponses),
+      quickReplies: [
+        { id: 'agendar', label: '🗓 Agendar cita' },
+        { id: 'precios', label: '💰 Precios' }
+      ]
+    };
+  }
+
+  // 3. OFF-TOPIC
+  if (detectOffTopic(input)) {
+    return {
+      message: pickOne(offTopicResponses),
+      quickReplies: [
+        { id: 'agendar', label: '🗓 Agendar cita' },
+        { id: 'precios', label: '💰 Precios' },
+        { id: 'ayuda', label: '❓ Ayuda' }
+      ]
+    };
+  }
+
+  // 4. GREETING
+  if (lower.match(/^(hola|hey|buen|qué tal|como va|cómo va|saludos|hi|hello)/) && lower.length < 30) {
+    return {
+      message: pickOne(greetings) + `\n\n${pickOne(transitionPhrases)}\n\n🗓 Agendar una cita\n📋 Ver tus citas\n💰 Conocer precios\n❓ Resolver dudas`,
+      quickReplies: [
+        { id: 'agendar', label: '🗓 Agendar cita' },
+        { id: 'citas', label: '📋 Mis citas' },
+        { id: 'precios', label: '💰 Precios' },
+        { id: 'ayuda', label: '❓ Ayuda' }
+      ]
+    };
+  }
+
+  // 5. STRUCTURAL INTENTS
+  if (lower.match(/\b(agendar|reservar|sacar|pedir|quiero cita|quiero turno|quiero consulta|necesito cita)\b/)) {
+    return {
+      message: '¡Perfecto! Me alegra que quieras dar este paso. Te ayudo a encontrar un turno que te funcione. ¿Querés empezar?',
+      quickReplies: [{ id: 'agendar', label: '🗓 Sí, empecemos' }, { id: 'precios', label: '💰 Antes ver precios' }]
+    };
+  }
+
+  if (lower.match(/\b(precio|precios|costo|costos|tarifa|cuanto cuesta|cuánto cuesta|vale|vale la consulta)\b/)) {
+    return {
+      message: 'Te muestro los precios. Cada tipo de sesión tiene su valor según la duración. ¿Querés verlos?',
+      quickReplies: [{ id: 'precios', label: '💰 Ver precios' }, { id: 'agendar', label: '🗓 Agendar' }]
+    };
+  }
+
+  if (lower.match(/\b(cita|turno|consulta|sesion|sesión).*(ver|mis|tengo|checar|revisar|mi cita)\b/)) {
+    return {
+      message: '¿Querés ver las citas que tenés agendadas?',
+      quickReplies: [{ id: 'citas', label: '📋 Mis citas' }, { id: 'agendar', label: '🗓 Nueva cita' }]
+    };
+  }
+
+  if (lower.match(/\b(cancelar|anular|eliminar|borrar)\b/) && lower.match(/\b(cita|turno|consulta|sesion|sesión)\b/)) {
+    return {
+      message: '¿Querés cancelar una cita? Te muestro las que tenés activas.',
+      quickReplies: [{ id: 'cancelar', label: '❌ Cancelar cita' }, { id: 'citas', label: '📋 Ver citas' }]
+    };
+  }
+
+  // 6. EMOTIONAL RESPONSES (empathy first)
+  if (emotion === 'anxiety') {
+    return {
+      message: `${pickOne(empathyPhrases)}\n\nLa ansiedad es algo que se puede trabajar muy bien en terapia. No tenés que manejarlo solo/a. ¿Te gustaría que agendemos una primera consulta?`,
+      quickReplies: [{ id: 'agendar', label: '🗓 Sí, quiero agendar' }, { id: 'precios', label: '💰 Ver precios primero' }]
+    };
+  }
+
+  if (emotion === 'sadness' || emotion === 'depression') {
+    return {
+      message: `${pickOne(empathyPhrases)}\n\nBuscar ayuda ya es un paso valiente. La terapia puede acompañarte en esto. ¿Te animás a agendar una primera consulta?`,
+      quickReplies: [{ id: 'agendar', label: '🗓 Sí, quiero agendar' }, { id: 'precios', label: '💰 Ver precios primero' }]
+    };
+  }
+
+  if (emotion === 'anger') {
+    return {
+      message: `${pickOne(empathyPhrases)}\n\nEntiendo que puede ser frustrante. A veces hablar con alguien ayuda a procesar eso. ¿Querés que reservemos un turno?`,
+      quickReplies: [{ id: 'agendar', label: '🗓 Quiero agendar' }, { id: 'ayuda', label: '❓ Tengo dudas' }]
+    };
+  }
+
+  if (emotion === 'insomnia') {
+    return {
+      message: `${pickOne(empathyPhrases)}\n\nDormir mal afecta todo. En terapia se pueden trabajar técnicas para mejorar el descanso. ¿Te interesa agendar?`,
+      quickReplies: [{ id: 'agendar', label: '🗓 Agendar' }, { id: 'precios', label: '💰 Precios' }]
+    };
+  }
+
+  if (emotion === 'stress') {
+    return {
+      message: `${pickOne(empathyPhrases)}\n\nSentirse agobiado/a es más común de lo que parece. La terapia puede darte herramientas para manejarlo mejor. ¿Querés que veamos un turno?`,
+      quickReplies: [{ id: 'agendar', label: '🗓 Agendar' }, { id: 'precios', label: '💰 Precios' }]
+    };
+  }
+
+  // 7. FAQ MATCH
+  const faqResponse = findFaq(input);
+  if (faqResponse) {
+    return {
+      message: faqResponse,
+      quickReplies: [
+        { id: 'agendar', label: '🗓 Agendar' },
+        { id: 'precios', label: '💰 Precios' },
+        { id: 'citas', label: '📋 Mis citas' }
+      ]
+    };
+  }
+
+  // 8. GOODBYE
+  if (lower.match(/\b(adios|adiós|chau|bye|nos vemos|hasta luego|hasta pronto)\b/)) {
+    return {
+      message: pickOne(faqKnowledge.goodbye.responses),
+      quickReplies: [{ id: 'agendar', label: '🗓 Agendar otra cita' }]
+    };
+  }
+
+  // 9. THANKS
+  if (lower.match(/\b(gracias|agradecido|agradecida|muy amable|te agradezco|mil gracias)\b/)) {
+    return {
+      message: pickOne(faqKnowledge.thanks.responses),
+      quickReplies: [{ id: 'agendar', label: '🗓 Sí, agendar' }, { id: 'precios', label: '💰 Precios' }]
+    };
+  }
+
+  // 10. HELP
+  if (lower.match(/\b(ayuda|help|no entiendo|como funciona|cómo funciona|que hago|qué hago|info|informacion|información)\b/)) {
+    return {
+      message: `¡Claro! 💚 Te cuento lo que puedo hacer por vos:\n\n🗓 Agendar citas\n📋 Ver tus citas\n💰 Consultar precios\n❌ Cancelar citas\n📍 Info del consultorio\n\n¿Qué necesitás?`,
+      quickReplies: [
+        { id: 'agendar', label: '🗓 Agendar' },
+        { id: 'citas', label: '📋 Mis citas' },
+        { id: 'precios', label: '💰 Precios' }
+      ]
+    };
+  }
+
+  // 11. DEFAULT — natural, not robotic
+  return {
+    message: pickOne(unknownResponses),
+    quickReplies: [
+      { id: 'agendar', label: '🗓 Agendar cita' },
+      { id: 'citas', label: '📋 Mis citas' },
+      { id: 'precios', label: '💰 Precios' },
+      { id: 'ayuda', label: '❓ Ayuda' }
+    ]
+  };
+}
+
+// ========== KIMI AI (complex queries only) ==========
+
 function getSystemPrompt(practiceName, feeTypes) {
   const typesInfo = feeTypes.map(t => `\n- ${t.label}: $${t.fee} MXN, ${t.duration} minutos`).join('');
-  return `Sos el asistente virtual de ${practiceName}, psicóloga clínica. Tu trabajo es ayudar a pacientes de forma cálida, empática y profesional.
+  return `Sos Sofía, asistente virtual de ${practiceName}, psicóloga clínica. Sos cálida, empática y profesional. Hablas como una persona real, no como un bot. Usás frases naturales, a veces un poco informales pero siempre respetuosas.
 
 REGLAS:
-- Sos empático, calmado y claro. Nunca diagnosticás ni prescribís.
-- Respondé en español mexicano.
-- Si alguien menciona crisis, autolesiones o suicidio, respondé INMEDIATAMENTE con números de emergencia: Línea de la Vida 800 911 2000, Cruz Roja 065, Emergencias 911.
-- Podés responder sobre: precios, tipos de consulta, cómo agendar, cancelar, o reagendar citas.
+- Nunca diagnosticás ni prescribís.
+- Respondé en español mexicano natural.
+- Si alguien menciona crisis, autolesiones o suicidio, respondé INMEDIATAMENTE con números de emergencia.
 - No des consejos psicológicos específicos. Derivá siempre a la profesional.
 - Cuando sea apropiado, sugerí agendar una cita.
 
-TIPOS DE CONSULTA DISPONIBLES:${typesInfo}
+TIPOS DE CONSULTA:${typesInfo}
 - El anticipo es el 20% para confirmar la cita.
 
 HORARIOS: Lunes a sábado de 9:00 a 17:00.
 
-Pagos protegidos por Stripe. Hecho con Aparta.
-
-Respondé en formato JSON con esta estructura EXACTA:
+Respondé en formato JSON:
 {"response": "tu respuesta empática aquí", "action": "none|schedule|prices|appointments|cancel|emergency|help", "buttons": [{"id": "string", "label": "string"}]}`;
 }
 
 async function callKimi(messages) {
   const apiKey = process.env.KIMI_API_KEY;
-  if (!apiKey) {
-    return { response: null, action: 'none', buttons: [] };
-  }
+  if (!apiKey) return { response: null, action: 'none', buttons: [] };
 
   try {
     const res = await axios.post(
       `${KIMI_BASE_URL}/chat/completions`,
-      {
-        model: KIMI_MODEL,
-        messages,
-        temperature: 0.7,
-        max_tokens: 800
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${apiKey}`,
-          'Content-Type': 'application/json'
-        },
-        timeout: 15000
-      }
+      { model: KIMI_MODEL, messages, temperature: 0.7, max_tokens: 800 },
+      { headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' }, timeout: 15000 }
     );
 
     const content = res.data.choices[0].message.content;
-    
-    // Try to parse JSON response
     try {
       const jsonMatch = content.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
         const parsed = JSON.parse(jsonMatch[0]);
-        return {
-          response: parsed.response || content,
-          action: parsed.action || 'none',
-          buttons: parsed.buttons || []
-        };
+        return { response: parsed.response || content, action: parsed.action || 'none', buttons: parsed.buttons || [] };
       }
     } catch (e) {}
-
-    // Fallback: return raw text
     return { response: content, action: 'none', buttons: [] };
   } catch (err) {
     console.error('Kimi API error:', err.message);
@@ -361,26 +476,16 @@ async function callKimi(messages) {
   }
 }
 
-// GET /api/chat/session
+// ========== ROUTES ==========
+
 router.get('/session', async (req, res) => {
   try {
     const sess = getSession(null);
     const practiceName = await getPracticeName();
-    
-    const welcomeMsg = `¡Hola! 👋 Soy el asistente virtual de *${practiceName}*.
-
-Estoy aquí para ayudarte con:
-🗓 Agendar una cita
-📋 Consultar tus citas
-💰 Conocer precios
-❓ Resolver dudas
-
-¿En qué puedo ayudarte hoy?`;
-
     res.json({
       success: true,
       sessionId: sess.id,
-      message: welcomeMsg,
+      message: pickOne(greetings) + `\n\n${pickOne(transitionPhrases)}\n\n🗓 Agendar una cita\n📋 Consultar tus citas\n💰 Conocer precios\n❓ Resolver dudas`,
       quickReplies: [
         { id: 'agendar', label: '🗓 Agendar cita' },
         { id: 'citas', label: '📋 Mis citas' },
@@ -393,7 +498,6 @@ Estoy aquí para ayudarte con:
   }
 });
 
-// POST /api/chat/message
 router.post('/message', async (req, res) => {
   try {
     const { sessionId, message, quickReplyId } = req.body;
@@ -401,110 +505,64 @@ router.post('/message', async (req, res) => {
     const sess = getSession(sessionId);
     const practiceName = await getPracticeName();
 
-    // Handle known quick reply actions
+    // Quick reply actions
     if (quickReplyId === 'agendar') {
       const result = await handleScheduleFlow('start', sess);
       setSession(sess.id, { messages: sess.messages, data: result.data });
       return res.json({ success: true, ...result });
     }
-
     if (quickReplyId === 'citas') {
       const result = await handleMyAppointments(sess);
       return res.json({ success: true, ...result });
     }
-
     if (quickReplyId === 'precios') {
       const result = await handlePrices(sess);
       return res.json({ success: true, ...result });
     }
-
     if (quickReplyId === 'cancelar') {
       const result = await handleCancelFlow('start', sess);
       setSession(sess.id, { messages: sess.messages, data: result.data });
       return res.json({ success: true, ...result });
     }
+    if (quickReplyId === 'ayuda') {
+      return res.json({
+        success: true,
+        message: `¡Claro! 💚 Estas son las cosas que manejo:\n\n🗓 Agendar citas\n📋 Ver tus citas\n💰 Precios\n❌ Cancelar citas\n📍 Info del consultorio\n\n¿Qué necesitás?`,
+        quickReplies: [
+          { id: 'agendar', label: '🗓 Agendar' },
+          { id: 'citas', label: '📋 Mis citas' },
+          { id: 'precios', label: '💰 Precios' }
+        ]
+      });
+    }
 
-    // Handle active scheduling flow
+    // Active flows
     if (sess.data?.flow === 'scheduling') {
       const result = await handleScheduleFlow(input, sess);
       setSession(sess.id, { messages: sess.messages, data: result.data });
       return res.json({ success: true, ...result });
     }
-
-    // Handle active cancellation flow
     if (sess.data?.flow === 'cancelling') {
       const result = await handleCancelFlow(input, sess);
       setSession(sess.id, { messages: sess.messages, data: result.data });
       return res.json({ success: true, ...result });
     }
 
-    // === SMART BRAIN: detect intent first, use Kimi only for complex queries ===
-    const intentResult = detectIntent(input);
-    let responseText, quickReplies;
+    // Smart Brain handles everything
+    const smart = buildSmartResponse(input, sess, practiceName);
 
-    // If strong intent match, use Smart Brain directly (fast & accurate)
-    if (intentResult.confidence >= 5 || ['greeting', 'goodbye', 'thanks', 'help', 'emergency'].includes(intentResult.intent)) {
-      const smart = getSmartResponse(intentResult, sess.data || {}, practiceName);
-      responseText = smart.response;
-      quickReplies = smart.quickReplies;
-    } else {
-      // Complex query → try Kimi AI
-      const feeTypesResult = await query('SELECT * FROM fee_types WHERE active = true ORDER BY fee ASC');
-      const feeTypes = feeTypesResult.data || [];
-      const systemPrompt = getSystemPrompt(practiceName, feeTypes);
-      const messages = [
-        { role: 'system', content: systemPrompt },
-        ...sess.messages.slice(-10),
-        { role: 'user', content: input }
-      ];
-
-      const aiResult = await callKimi(messages);
-
-      if (aiResult.response) {
-        responseText = aiResult.response;
-        quickReplies = aiResult.buttons || [];
-      } else {
-        // Kimi failed → use Smart Brain fallback
-        const smart = getSmartResponse(intentResult, sess.data || {}, practiceName);
-        responseText = smart.response;
-        quickReplies = smart.quickReplies;
-      }
-
-      // Override quick replies for known actions
-      if (aiResult.action === 'schedule' || input.toLowerCase().includes('agendar')) {
-        quickReplies = [{ id: 'agendar', label: '🗓 Sí, agendar' }, { id: 'precios', label: '💰 Precios' }, ...quickReplies];
-      } else if (aiResult.action === 'prices') {
-        quickReplies = [{ id: 'precios', label: '💰 Ver precios' }, { id: 'agendar', label: '🗓 Agendar' }, ...quickReplies];
-      }
-    }
-
-    // Try to remember patient's name from free text
+    // Try to remember name
     if (!sess.data?.patientName && input.length > 2 && input.length < 40) {
       const nameMatch = input.match(/^(soy|me llamo|mi nombre es)\s+(.+)$/i);
-      if (nameMatch) {
-        sess.data = { ...sess.data, patientName: nameMatch[2].trim() };
-      }
+      if (nameMatch) sess.data = { ...sess.data, patientName: nameMatch[2].trim() };
     }
 
-    // Ensure we always have some quick replies
-    if (!quickReplies || quickReplies.length === 0) {
-      quickReplies = [
-        { id: 'agendar', label: '🗓 Agendar cita' },
-        { id: 'citas', label: '📋 Mis citas' },
-        { id: 'precios', label: '💰 Precios' }
-      ];
-    }
-
-    // Update session history
+    // Update history
     sess.messages.push({ role: 'user', content: input });
-    sess.messages.push({ role: 'assistant', content: responseText });
+    sess.messages.push({ role: 'assistant', content: smart.message });
     setSession(sess.id, sess);
 
-    res.json({
-      success: true,
-      message: responseText,
-      quickReplies: quickReplies.slice(0, 4)
-    });
+    res.json({ success: true, message: smart.message, quickReplies: smart.quickReplies });
 
   } catch (err) {
     console.error('Chat error:', err);
@@ -575,7 +633,6 @@ async function handleScheduleFlow(input, sess) {
     const email = (input === 'no_email' || input.toLowerCase() === 'no') ? '' : input.trim();
     const st = sess.data.selected_type;
 
-    // Fetch availability from Cal.com
     let slots = [];
     try {
       const eventTypeId = process.env.CALCOM_EVENT_TYPE_ID;
@@ -593,7 +650,6 @@ async function handleScheduleFlow(input, sess) {
       console.error('Cal.com availability error:', err.message);
     }
 
-    // Fallback if Cal.com fails
     if (!slots.length) {
       for (let i = 1; i <= 7; i++) {
         const d = new Date(Date.now() + i * 86400000);
@@ -602,7 +658,6 @@ async function handleScheduleFlow(input, sess) {
       }
     }
 
-    // Block booked slots
     const dateList = slots.map(s => s.date);
     if (dateList.length) {
       const placeholders = dateList.map((_, i) => `$${i + 1}`).join(',');
@@ -641,10 +696,8 @@ async function handleScheduleFlow(input, sess) {
         quickReplies: (sess.data.available_days || []).map(d => ({ id: `date_${d.date}`, label: d.label }))
       };
     }
-
     const daySlots = sess.data.availability?.find(d => d.date === match[1]);
     const times = daySlots?.slots || ['09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '16:00', '17:00'];
-
     return {
       message: `📅 Fecha: *${match[1]}*\n\n⏰ *Elegí un horario:*`,
       data: { ...sess.data, step: 'confirm', selected_date: match[1] },
@@ -663,7 +716,6 @@ async function handleScheduleFlow(input, sess) {
         quickReplies: times.map(t => ({ id: `time_${t}`, label: t.substring(0, 5) }))
       };
     }
-
     const st = sess.data.selected_type;
     const deposit = Math.round(st.fee * st.deposit_percent / 100);
     return {
@@ -691,7 +743,6 @@ async function handleScheduleFlow(input, sess) {
 
     const { patient_name, patient_phone, patient_email, selected_type, selected_date, selected_time, deposit_amount } = sess.data;
 
-    // Create Cal.com booking
     let calcomBookingId = null;
     try {
       const calRes = await calcomClient.post('/bookings', {
@@ -710,7 +761,6 @@ async function handleScheduleFlow(input, sess) {
       console.error('Cal.com booking error:', err.message);
     }
 
-    // Save appointment in DB
     const aptResult = await query(
       `INSERT INTO appointments (patient_name, patient_phone, patient_email, date, time, type, status, fee, deposit_percent, deposit_amount, duration, calcom_booking_id)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *`,
@@ -718,7 +768,6 @@ async function handleScheduleFlow(input, sess) {
     );
     const appointment = aptResult.data[0];
 
-    // Create Stripe Checkout Session
     let checkoutUrl = null;
     try {
       const session = await stripe.checkout.sessions.create({
@@ -726,10 +775,7 @@ async function handleScheduleFlow(input, sess) {
         line_items: [{
           price_data: {
             currency: 'mxn',
-            product_data: {
-              name: `Anticipo - ${selected_type.label}`,
-              description: `Cita: ${selected_date} ${selected_time}`
-            },
+            product_data: { name: `Anticipo - ${selected_type.label}`, description: `Cita: ${selected_date} ${selected_time}` },
             unit_amount: deposit_amount * 100
           },
           quantity: 1
@@ -737,11 +783,7 @@ async function handleScheduleFlow(input, sess) {
         mode: 'payment',
         success_url: `${process.env.FRONTEND_URL}/pago-exitoso?session_id={CHECKOUT_SESSION_ID}&appointment=${appointment.id}`,
         cancel_url: `${process.env.FRONTEND_URL}/pago-cancelado?appointment=${appointment.id}`,
-        metadata: {
-          appointment_id: String(appointment.id),
-          patient_phone: patient_phone,
-          type: selected_type.type
-        }
+        metadata: { appointment_id: String(appointment.id), patient_phone, type: selected_type.type }
       });
       checkoutUrl = session.url;
     } catch (err) {
@@ -757,10 +799,7 @@ async function handleScheduleFlow(input, sess) {
       data: { appointment_id: appointment.id },
       quickReplies: checkoutUrl
         ? [{ id: 'pay_link', label: '💳 Pagar anticipo', url: checkoutUrl }]
-        : [
-            { id: 'citas', label: '📋 Ver mis citas' },
-            { id: 'agendar', label: '🗓 Otra cita' }
-          ]
+        : [{ id: 'citas', label: '📋 Ver mis citas' }, { id: 'agendar', label: '🗓 Otra cita' }]
     };
   }
 
@@ -771,23 +810,17 @@ async function handleScheduleFlow(input, sess) {
 async function handleMyAppointments(sess) {
   const result = await query("SELECT * FROM appointments WHERE status IN ('confirmed', 'pending') ORDER BY date ASC, time ASC LIMIT 10");
   const apts = result.data;
-
   if (apts.length === 0) {
     return {
       message: 'No tenés citas agendadas. ¿Querés agendar una?',
-      quickReplies: [
-        { id: 'agendar', label: '🗓 Agendar' },
-        { id: 'precios', label: '💰 Precios' }
-      ]
+      quickReplies: [{ id: 'agendar', label: '🗓 Agendar' }, { id: 'precios', label: '💰 Precios' }]
     };
   }
-
   let msg = '*📋 Tus citas:*\n\n';
   apts.forEach((a, i) => {
     const status = a.status === 'confirmed' ? '✅' : '⏳';
     msg += `${i + 1}. ${status} ${a.date} ${a.time?.slice(0, 5)} — ${a.type}\n`;
   });
-
   return {
     message: msg,
     quickReplies: [
@@ -802,19 +835,14 @@ async function handleMyAppointments(sess) {
 async function handlePrices(sess) {
   const result = await query('SELECT * FROM fee_types WHERE active = true ORDER BY fee ASC');
   const types = result.data;
-
   let msg = '💰 *Nuestras tarifas:*\n\n';
   types.forEach(t => {
     const deposit = Math.round(t.fee * t.deposit_percent / 100);
     msg += `📋 *${t.label}*: $${t.fee} MXN\n   ⏱ ${t.duration} min | 💳 Anticipo: $${deposit} MXN\n\n`;
   });
-
   return {
     message: msg,
-    quickReplies: [
-      { id: 'agendar', label: '🗓 Agendar cita' },
-      { id: 'citas', label: '📋 Mis citas' }
-    ]
+    quickReplies: [{ id: 'agendar', label: '🗓 Agendar cita' }, { id: 'citas', label: '📋 Mis citas' }]
   };
 }
 
@@ -825,63 +853,35 @@ async function handleCancelFlow(input, sess) {
   if (step === 'select') {
     const result = await query("SELECT * FROM appointments WHERE status IN ('confirmed', 'pending') ORDER BY date ASC LIMIT 10");
     const apts = result.data;
-
     if (apts.length === 0) {
-      return {
-        message: 'No tenés citas para cancelar.',
-        data: {},
-        quickReplies: [{ id: 'agendar', label: '🗓 Agendar' }]
-      };
+      return { message: 'No tenés citas para cancelar.', data: {}, quickReplies: [{ id: 'agendar', label: '🗓 Agendar' }] };
     }
-
     let msg = '*❌ ¿Qué cita querés cancelar?*\n\n';
-    apts.forEach((a, i) => {
-      msg += `${i + 1}. 📅 ${a.date} ${a.time?.slice(0, 5)}\n`;
-    });
-
+    apts.forEach((a, i) => { msg += `${i + 1}. 📅 ${a.date} ${a.time?.slice(0, 5)}\n`; });
     return {
       message: msg,
       data: { flow: 'cancelling', step: 'confirm', cancel_apts: apts },
-      quickReplies: apts.slice(0, 5).map(a => ({
-        id: `cancel_${a.id}`,
-        label: `${a.date} ${a.time?.slice(0, 5)}`
-      })).concat([{ id: 'volver', label: '↩️ Volver' }])
+      quickReplies: apts.slice(0, 5).map(a => ({ id: `cancel_${a.id}`, label: `${a.date} ${a.time?.slice(0, 5)}` })).concat([{ id: 'volver', label: '↩️ Volver' }])
     };
   }
 
   if (step === 'confirm') {
     if (input === 'volver') {
-      return {
-        message: '¿Qué necesitás?',
-        data: {},
-        quickReplies: [
-          { id: 'agendar', label: '🗓 Agendar' },
-          { id: 'citas', label: '📋 Mis citas' },
-          { id: 'precios', label: '💰 Precios' }
-        ]
-      };
+      return { message: '¿Qué necesitás?', data: {}, quickReplies: [{ id: 'agendar', label: '🗓 Agendar' }, { id: 'citas', label: '📋 Mis citas' }, { id: 'precios', label: '💰 Precios' }] };
     }
-
     const match = input.match(/^cancel_(.+)$/);
     if (!match) {
       return {
         message: 'Por favor elegí una cita de la lista.',
         data: sess.data,
-        quickReplies: (sess.data.cancel_apts || []).slice(0, 5).map(a => ({
-          id: `cancel_${a.id}`,
-          label: `${a.date} ${a.time?.slice(0, 5)}`
-        })).concat([{ id: 'volver', label: '↩️ Volver' }])
+        quickReplies: (sess.data.cancel_apts || []).slice(0, 5).map(a => ({ id: `cancel_${a.id}`, label: `${a.date} ${a.time?.slice(0, 5)}` })).concat([{ id: 'volver', label: '↩️ Volver' }])
       };
     }
-
     await query("UPDATE appointments SET status = 'cancelled' WHERE id = $1", [match[1]]);
     return {
       message: '✅ Tu cita ha sido cancelada. ¿Querés agendar otra?',
       data: {},
-      quickReplies: [
-        { id: 'agendar', label: '🗓 Agendar cita' },
-        { id: 'citas', label: '📋 Mis citas' }
-      ]
+      quickReplies: [{ id: 'agendar', label: '🗓 Agendar cita' }, { id: 'citas', label: '📋 Mis citas' }]
     };
   }
 
