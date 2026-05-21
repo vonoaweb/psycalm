@@ -238,7 +238,15 @@ function handleMockQuery(text, params) {
   }
 
   // 7. SELECT key, value FROM settings
-  if (sqlLower.includes('select key, value from settings') || sqlLower.includes('select * from settings')) {
+  if (sqlLower.includes('select key, value from settings') || sqlLower.includes('select * from settings') || sqlLower.includes('select value from settings')) {
+    if (sqlLower.includes("where key = 'practice_name'")) {
+      const match = data.settings.find(s => s.key === 'practice_name');
+      return { data: match ? [match] : [], error: null, count: match ? 1 : 0 };
+    }
+    if (sqlLower.includes("where key = $1")) {
+      const match = data.settings.find(s => s.key === params[0]);
+      return { data: match ? [match] : [], error: null, count: match ? 1 : 0 };
+    }
     return { data: data.settings, error: null, count: data.settings.length };
   }
 

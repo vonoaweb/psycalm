@@ -233,6 +233,40 @@
       "deposit_amount": 160,
       "paid": false,
       "created_at": "2026-05-21T20:26:56.075Z"
+    },
+    {
+      "id": "c3b13881-ccaa-4f7c-8fc6-5ab4fe0dfa32",
+      "patient_name": "Ana Martinez",
+      "patient_phone": "+525556789012",
+      "patient_email": "ana@email.com",
+      "date": "2026-05-26",
+      "time": "11:00",
+      "type": "Primera consulta",
+      "status": "pending",
+      "fee": 1200,
+      "deposit_percent": 20,
+      "deposit_amount": 240,
+      "notes": "",
+      "duration": 60,
+      "paid": false,
+      "created_at": "2026-05-21T20:45:43.941Z"
+    },
+    {
+      "id": "057c3c21-e604-4f60-9a5c-795e3d78f3ed",
+      "patient_name": "Ana Martinezjpjpjpjpj",
+      "patient_phone": "+525556789012",
+      "patient_email": "ana@email.com",
+      "date": "2026-05-27",
+      "time": "12:00",
+      "type": "Terapia de pareja",
+      "status": "pending",
+      "fee": 1500,
+      "deposit_percent": 20,
+      "deposit_amount": 300,
+      "notes": "",
+      "duration": 80,
+      "paid": false,
+      "created_at": "2026-05-21T20:47:18.582Z"
     }
   ],
   "payments": [
