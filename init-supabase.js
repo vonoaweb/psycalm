@@ -1,4 +1,8 @@
 #!/usr/bin/env node
+const dns = require('dns');
+if (dns.setDefaultResultOrder) {
+  dns.setDefaultResultOrder('verbatim');
+}
 const { Client } = require('pg');
 
 async function init() {
@@ -11,8 +15,7 @@ async function init() {
 
   const client = new Client({
     connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false },
-    family: 4 // Force IPv4
+    ssl: { rejectUnauthorized: false }
   });
   
   await client.connect();

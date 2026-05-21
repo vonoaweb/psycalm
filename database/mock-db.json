@@ -1,0 +1,298 @@
+{
+  "fee_types": [
+    {
+      "id": "f1",
+      "type": "primera_consulta",
+      "label": "Primera consulta",
+      "fee": 800,
+      "deposit_percent": 20,
+      "duration": 60,
+      "color": "#E07050",
+      "active": true,
+      "created_at": "2026-05-21T20:26:56.075Z"
+    },
+    {
+      "id": "f2",
+      "type": "sesion_regular",
+      "label": "Sesion regular",
+      "fee": 600,
+      "deposit_percent": 20,
+      "duration": 50,
+      "color": "#3B82F6",
+      "active": true,
+      "created_at": "2026-05-21T20:26:56.075Z"
+    },
+    {
+      "id": "f3",
+      "type": "sesion_online",
+      "label": "Sesion online",
+      "fee": 500,
+      "deposit_percent": 15,
+      "duration": 45,
+      "color": "#10B981",
+      "active": true,
+      "created_at": "2026-05-21T20:26:56.075Z"
+    }
+  ],
+  "settings": [
+    {
+      "id": "s1",
+      "key": "practice_name",
+      "value": {
+        "name": "Consulta de Psicologia Dra. Rodriguez"
+      },
+      "updated_at": "2026-05-21T20:26:56.075Z"
+    },
+    {
+      "id": "s2",
+      "key": "practice_description",
+      "value": {
+        "text": "Atencion psicologica profesional y personalizada"
+      },
+      "updated_at": "2026-05-21T20:26:56.075Z"
+    },
+    {
+      "id": "s3",
+      "key": "currency",
+      "value": {
+        "code": "MXN",
+        "symbol": "$"
+      },
+      "updated_at": "2026-05-21T20:26:56.075Z"
+    },
+    {
+      "id": "s4",
+      "key": "deposit_percent_default",
+      "value": {
+        "percent": 20
+      },
+      "updated_at": "2026-05-21T20:26:56.075Z"
+    },
+    {
+      "id": "s5",
+      "key": "welcome_message",
+      "value": {
+        "text": "Hola! Soy el asistente virtual de la consulta. En que puedo ayudarte?"
+      },
+      "updated_at": "2026-05-21T20:26:56.075Z"
+    },
+    {
+      "id": "s6",
+      "key": "schedule",
+      "value": {
+        "lunes": {
+          "active": true,
+          "start": "09:00",
+          "end": "17:00"
+        },
+        "martes": {
+          "active": true,
+          "start": "09:00",
+          "end": "17:00"
+        },
+        "miercoles": {
+          "active": true,
+          "start": "09:00",
+          "end": "17:00"
+        },
+        "jueves": {
+          "active": true,
+          "start": "09:00",
+          "end": "17:00"
+        },
+        "viernes": {
+          "active": true,
+          "start": "09:00",
+          "end": "14:00"
+        },
+        "sabado": {
+          "active": false
+        },
+        "domingo": {
+          "active": false
+        }
+      },
+      "updated_at": "2026-05-21T20:26:56.075Z"
+    }
+  ],
+  "patients": [
+    {
+      "id": "p1",
+      "name": "Maria Garcia",
+      "phone": "+525512345678",
+      "email": "maria@email.com",
+      "status": "active",
+      "notes": "Ansiedad generalizada",
+      "created_at": "2026-05-21T20:26:56.075Z"
+    },
+    {
+      "id": "p2",
+      "name": "Carlos Lopez",
+      "phone": "+525598765432",
+      "email": "carlos@email.com",
+      "status": "active",
+      "notes": "Terapia cognitiva",
+      "created_at": "2026-05-21T20:26:56.075Z"
+    },
+    {
+      "id": "p3",
+      "name": "Ana Martinez",
+      "phone": "+525556789012",
+      "email": "ana@email.com",
+      "status": "active",
+      "notes": "Primera consulta",
+      "created_at": "2026-05-21T20:26:56.075Z"
+    },
+    {
+      "id": "p4",
+      "name": "Luis Hernandez",
+      "phone": "+525523456789",
+      "email": "luis@email.com",
+      "status": "inactive",
+      "notes": "Sesion completada",
+      "created_at": "2026-05-21T20:26:56.075Z"
+    }
+  ],
+  "appointments": [
+    {
+      "id": "a1",
+      "patient_name": "Maria Garcia",
+      "patient_phone": "+525512345678",
+      "patient_email": "maria@email.com",
+      "date": "2026-05-16",
+      "time": "10:00",
+      "duration": 50,
+      "type": "sesion_regular",
+      "status": "confirmed",
+      "fee": 600,
+      "deposit_percent": 20,
+      "deposit_amount": 120,
+      "paid": true,
+      "created_at": "2026-05-21T20:26:56.075Z"
+    },
+    {
+      "id": "a2",
+      "patient_name": "Carlos Lopez",
+      "patient_phone": "+525598765432",
+      "patient_email": "carlos@email.com",
+      "date": "2026-05-16",
+      "time": "14:00",
+      "duration": 50,
+      "type": "sesion_regular",
+      "status": "confirmed",
+      "fee": 600,
+      "deposit_percent": 20,
+      "deposit_amount": 120,
+      "paid": true,
+      "created_at": "2026-05-21T20:26:56.075Z"
+    },
+    {
+      "id": "a3",
+      "patient_name": "Ana Martinez",
+      "patient_phone": "+525556789012",
+      "patient_email": "ana@email.com",
+      "date": "2026-05-17",
+      "time": "09:00",
+      "duration": 60,
+      "type": "primera_consulta",
+      "status": "pending",
+      "fee": 800,
+      "deposit_percent": 20,
+      "deposit_amount": 160,
+      "paid": false,
+      "created_at": "2026-05-21T20:26:56.075Z"
+    },
+    {
+      "id": "a4",
+      "patient_name": "Maria Garcia",
+      "patient_phone": "+525512345678",
+      "patient_email": "maria@email.com",
+      "date": "2026-05-19",
+      "time": "11:00",
+      "duration": 45,
+      "type": "sesion_online",
+      "status": "confirmed",
+      "fee": 500,
+      "deposit_percent": 15,
+      "deposit_amount": 75,
+      "paid": true,
+      "created_at": "2026-05-21T20:26:56.075Z"
+    },
+    {
+      "id": "a5",
+      "patient_name": "Roberto Sanchez",
+      "patient_phone": "+525534567890",
+      "patient_email": null,
+      "date": "2026-05-20",
+      "time": "16:00",
+      "duration": 60,
+      "type": "primera_consulta",
+      "status": "pending",
+      "fee": 800,
+      "deposit_percent": 20,
+      "deposit_amount": 160,
+      "paid": false,
+      "created_at": "2026-05-21T20:26:56.075Z"
+    }
+  ],
+  "payments": [
+    {
+      "id": "pay1",
+      "appointment_id": "a1",
+      "patient_name": "Maria Garcia",
+      "amount": 120,
+      "deposit_percent": 20,
+      "deposit_amount": 120,
+      "status": "completed",
+      "date": "2026-05-21T20:26:56.075Z",
+      "method": "stripe",
+      "created_at": "2026-05-21T20:26:56.075Z"
+    },
+    {
+      "id": "pay2",
+      "appointment_id": "a2",
+      "patient_name": "Carlos Lopez",
+      "amount": 120,
+      "deposit_percent": 20,
+      "deposit_amount": 120,
+      "status": "completed",
+      "date": "2026-05-21T20:26:56.075Z",
+      "method": "stripe",
+      "created_at": "2026-05-21T20:26:56.075Z"
+    },
+    {
+      "id": "pay3",
+      "appointment_id": "a4",
+      "patient_name": "Maria Garcia",
+      "amount": 75,
+      "deposit_percent": 15,
+      "deposit_amount": 75,
+      "status": "completed",
+      "date": "2026-05-21T20:26:56.075Z",
+      "method": "stripe",
+      "created_at": "2026-05-21T20:26:56.075Z"
+    },
+    {
+      "id": "pay4",
+      "appointment_id": "a3",
+      "patient_name": "Ana Martinez",
+      "amount": 160,
+      "deposit_percent": 20,
+      "deposit_amount": 160,
+      "status": "pending",
+      "date": "2026-05-21T20:26:56.075Z",
+      "method": "stripe",
+      "created_at": "2026-05-21T20:26:56.075Z"
+    }
+  ],
+  "admins": [
+    {
+      "id": "adm1",
+      "email": "admin@aparta.mx",
+      "password_hash": "d833dc02bdc7cc0006302c781e7dda7758ca6d500c779fac9941a913467613c2",
+      "full_name": "Administrador",
+      "is_active": true,
+      "created_at": "2026-05-21T20:26:56.075Z"
+    }
+  ]
+}
