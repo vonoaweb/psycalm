@@ -160,8 +160,25 @@ function handleMockQuery(text, params) {
     return { data: [{ total: sum }], error: null, count: 1 };
   }
 
+  // 4a. SELECT date, time FROM appointments
+  if (sqlLower.includes('select date, time from appointments')) {
+    if (sqlLower.includes('where date in (')) {
+      let list = data.appointments.filter(a => {
+        const aDate = a.date.includes('T') ? a.date.split('T')[0] : a.date;
+        const isDateMatch = params.includes(aDate) || params.some(p => p && p.startsWith(aDate));
+        const isStatusMatch = ['pending', 'confirmed'].includes(a.status);
+        return isDateMatch && isStatusMatch;
+      });
+      let mappedList = list.map(a => ({
+        date: a.date,
+        time: a.time
+      }));
+      return { data: mappedList, error: null, count: mappedList.length };
+    }
+  }
+
   // 4. SELECT * FROM appointments
-  if (sqlLower.includes('select * from appointments')) {
+  if (sqlLower.includes('select * from appointments') || sqlLower.includes('select date, time from appointments')) {
     // If specific ID query
     if (sqlLower.includes('where id = $1')) {
       const match = data.appointments.find(a => a.id === params[0]);
