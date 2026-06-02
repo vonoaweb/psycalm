@@ -1321,6 +1321,65 @@
             </div>
           </section>
 
+          <!-- Suscripciones Section -->
+          <section class="landing-section" id="landing-pricing">
+            <div class="landing-section-title">
+              <span class="landing-badge" style="background:rgba(200, 85, 61, 0.15); color:var(--clay-deep);">Precios Flexibles</span>
+              <h2>Planes Mensuales de Bienestar</h2>
+              <p>Elige el esquema que mejor se adapte a tu momento actual. Comienza hoy desde $259 al mes y gestiona tu calma sin presiones.</p>
+            </div>
+            
+            <div class="specs-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+              <!-- Plan 1 -->
+              <div class="spec-card" style="display: flex; flex-direction: column; justify-content: space-between; border-color: var(--border);">
+                <div>
+                  <span style="font-size:0.75rem; text-transform:uppercase; font-weight:700; color:#9E9186; letter-spacing:0.05em;">Acompañamiento Básico</span>
+                  <h3 style="font-size:1.75rem; font-family:'Sora',sans-serif; margin-top:0.5rem; margin-bottom:1rem; color:var(--ink);">$259 <span style="font-size:0.9rem; font-weight:normal; color:var(--ink-light);">/ mes</span></h3>
+                  <p style="font-size:0.85rem; color:var(--ink-light); margin-bottom:1.5rem;">Ideal para comenzar a cuidar tu salud mental diaria de la mano de herramientas interactivas.</p>
+                  <ul style="list-style: none; padding: 0; margin: 0 0 2rem 0; font-size:0.85rem; color:var(--ink-light); display:flex; flex-direction:column; gap:0.5rem;">
+                    <li><i class="fas fa-check" style="color:var(--sage); margin-right:0.5rem;"></i> Acceso ilimitado 24/7 al Chat con Sofía</li>
+                    <li><i class="fas fa-check" style="color:var(--sage); margin-right:0.5rem;"></i> Bitácora de emociones digital</li>
+                    <li><i class="fas fa-check" style="color:var(--sage); margin-right:0.5rem;"></i> Recursos y ejercicios anti-ansiedad</li>
+                  </ul>
+                </div>
+                <button class="btn btn-secondary" onclick="switchPortalTab('chat')" style="border-radius:20px; font-size:0.85rem;">Comenzar con Sofía</button>
+              </div>
+
+              <!-- Plan 2 (Popular) -->
+              <div class="spec-card" style="display: flex; flex-direction: column; justify-content: space-between; border-color: var(--clay); box-shadow: var(--shadow-lg); position: relative; background: #FEF6F4;">
+                <span style="position: absolute; top: -12px; right: 20px; background: var(--clay); color: white; font-size: 0.7rem; font-weight: 700; padding: 0.25rem 0.75rem; border-radius: 10px; text-transform: uppercase;">Recomendado</span>
+                <div>
+                  <span style="font-size:0.75rem; text-transform:uppercase; font-weight:700; color:var(--clay); letter-spacing:0.05em;">Plan Bienestar Integral</span>
+                  <h3 style="font-size:1.75rem; font-family:'Sora',sans-serif; margin-top:0.5rem; margin-bottom:1rem; color:var(--clay-deep);">$899 <span style="font-size:0.9rem; font-weight:normal; color:var(--ink-light);">/ mes</span></h3>
+                  <p style="font-size:0.85rem; color:var(--ink-light); margin-bottom:1.5rem;">El equilibrio perfecto entre terapia profesional y herramientas digitales continuas.</p>
+                  <ul style="list-style: none; padding: 0; margin: 0 0 2rem 0; font-size:0.85rem; color:var(--ink-light); display:flex; flex-direction:column; gap:0.5rem;">
+                    <li><i class="fas fa-check" style="color:var(--sage); margin-right:0.5rem;"></i> **1 Sesión de Terapia** de 50 min al mes</li>
+                    <li><i class="fas fa-check" style="color:var(--sage); margin-right:0.5rem;"></i> Chat ilimitado 24/7 con Sofía</li>
+                    <li><i class="fas fa-check" style="color:var(--sage); margin-right:0.5rem;"></i> Descuento del 15% en sesiones adicionales</li>
+                    <li><i class="fas fa-check" style="color:var(--sage); margin-right:0.5rem;"></i> Reportes de progreso mensuales</li>
+                  </ul>
+                </div>
+                <button class="btn btn-primary" onclick="switchPortalTab('book')" style="border-radius:20px; font-size:0.85rem; box-shadow: 0 4px 12px rgba(200,85,61,0.2);">Agendar Sesión</button>
+              </div>
+
+              <!-- Plan 3 -->
+              <div class="spec-card" style="display: flex; flex-direction: column; justify-content: space-between; border-color: var(--border);">
+                <div>
+                  <span style="font-size:0.75rem; text-transform:uppercase; font-weight:700; color:#9E9186; letter-spacing:0.05em;">Plan Acompañamiento Total</span>
+                  <h3 style="font-size:1.75rem; font-family:'Sora',sans-serif; margin-top:0.5rem; margin-bottom:1rem; color:var(--ink);">$1,499 <span style="font-size:0.9rem; font-weight:normal; color:var(--ink-light);">/ mes</span></h3>
+                  <p style="font-size:0.85rem; color:var(--ink-light); margin-bottom:1.5rem;">Acompañamiento clínico robusto y prioritario para procesos terapéuticos profundos.</p>
+                  <ul style="list-style: none; padding: 0; margin: 0 0 2rem 0; font-size:0.85rem; color:var(--ink-light); display:flex; flex-direction:column; gap:0.5rem;">
+                    <li><i class="fas fa-check" style="color:var(--sage); margin-right:0.5rem;"></i> **2 Sesiones de Terapia** de 50 min al mes</li>
+                    <li><i class="fas fa-check" style="color:var(--sage); margin-right:0.5rem;"></i> Chat ilimitado 24/7 con Sofía</li>
+                    <li><i class="fas fa-check" style="color:var(--sage); margin-right:0.5rem;"></i> Descuento del 20% en sesiones adicionales</li>
+                    <li><i class="fas fa-check" style="color:var(--sage); margin-right:0.5rem;"></i> Contacto de soporte prioritario directo</li>
+                  </ul>
+                </div>
+                <button class="btn btn-secondary" onclick="switchPortalTab('book')" style="border-radius:20px; font-size:0.85rem;">Agendar Sesión</button>
+              </div>
+            </div>
+          </section>
+
           <!-- Nosotros Section -->
           <section class="landing-section" id="landing-about">
             <div class="trust-container">

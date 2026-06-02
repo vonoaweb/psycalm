@@ -485,6 +485,15 @@
           <input type="email" class="form-input" id="patEmail" placeholder="Ej: maria@email.com">
         </div>
 
+        <div class="form-group" style="margin-top: 1.25rem; margin-bottom: 1.25rem;">
+          <label class="form-label">¿Tenés un cupón de descuento?</label>
+          <div style="display: flex; gap: 0.5rem;">
+            <input type="text" class="form-input" id="couponCode" placeholder="Ej: NANO50" style="text-transform: uppercase;">
+            <button class="btn btn-secondary" onclick="applyCoupon()" style="width: auto; padding: 0 1.25rem; font-size: 0.85rem; height: 38px; flex-shrink: 0;">Aplicar</button>
+          </div>
+          <div id="couponStatus" style="font-size: 0.8rem; margin-top: 0.35rem; display: none; font-weight: 500;"></div>
+        </div>
+
         <div class="summary-box" id="summaryBox"></div>
 
         <button class="btn btn-primary" id="payBtn" onclick="submitBooking()">
@@ -709,18 +718,72 @@
     }
 
     // ========================
-    // SUMMARY & PAYMENT
+    // SUMMARY, COUPONS & PAYMENT
     // ========================
+    let activeCoupon = null;
+
+    async function applyCoupon() {
+      const code = document.getElementById('couponCode').value.trim().toUpperCase();
+      const status = document.getElementById('couponStatus');
+      if (!code) {
+        status.style.display = 'none';
+        activeCoupon = null;
+        renderSummary();
+        return;
+      }
+      try {
+        const res = await fetch('/api/bookings/validate-coupon?code=' + encodeURIComponent(code));
+        const json = await res.json();
+        if (json.success) {
+          activeCoupon = { code, ...json.coupon };
+          status.style.color = '#059669';
+          status.textContent = `✅ ¡Cupón aplicado! Descuento: ${activeCoupon.type === 'percent' ? `${activeCoupon.value}%` : `$${activeCoupon.value} MXN`}`;
+          status.style.display = 'block';
+        } else {
+          activeCoupon = null;
+          status.style.color = '#DC2626';
+          status.textContent = `❌ ${json.error || 'Cupón inválido'}`;
+          status.style.display = 'block';
+        }
+      } catch (e) {
+        activeCoupon = null;
+        status.style.color = '#DC2626';
+        status.textContent = '❌ Error de conexión';
+        status.style.display = 'block';
+      }
+      renderSummary();
+    }
+
     function renderSummary() {
       if (!selectedType || !selectedDate || !selectedTime) return;
-      const deposit = Math.round(selectedType.fee * selectedType.deposit_percent / 100);
+      
+      let finalFee = selectedType.fee;
+      let discountAmount = 0;
+      
+      if (activeCoupon) {
+        if (activeCoupon.type === 'percent') {
+          discountAmount = Math.round(selectedType.fee * activeCoupon.value / 100);
+        } else if (activeCoupon.type === 'fixed') {
+          discountAmount = activeCoupon.value;
+        }
+        finalFee = Math.max(0, selectedType.fee - discountAmount);
+      }
+      
+      const deposit = Math.round(finalFee * selectedType.deposit_percent / 100);
       const [y, m, d] = selectedDate.split('-');
+      
+      let discountRowHtml = '';
+      if (activeCoupon && discountAmount > 0) {
+        discountRowHtml = `<div class="summary-row" style="color: #059669; font-weight: 600;"><span>Descuento (${activeCoupon.code})</span><span>-$${discountAmount.toLocaleString()}</span></div>`;
+      }
+      
       document.getElementById('summaryBox').innerHTML = `
         <div class="summary-row"><span>Tipo de sesión</span><span>${selectedType.label}</span></div>
         <div class="summary-row"><span>Fecha</span><span>${d}/${m}/${y}</span></div>
         <div class="summary-row"><span>Hora</span><span>${selectedTime.substring(0,5)}</span></div>
         <div class="summary-row"><span>Duración</span><span>${selectedType.duration} min</span></div>
-        <div class="summary-row"><span>Tarifa total</span><span>$${selectedType.fee.toLocaleString()}</span></div>
+        <div class="summary-row"><span>Tarifa base</span><span>$${selectedType.fee.toLocaleString()}</span></div>
+        ${discountRowHtml}
         <div class="summary-row total"><span>Anticipo a pagar (${selectedType.deposit_percent}%)</span><span class="price">$${deposit.toLocaleString()}</span></div>
       `;
     }
@@ -757,7 +820,8 @@
             fee: selectedType.fee,
             deposit_percent: selectedType.deposit_percent,
             duration: selectedType.duration,
-            notes: ''
+            notes: '',
+            coupon: activeCoupon ? activeCoupon.code : null
           })
         });
 

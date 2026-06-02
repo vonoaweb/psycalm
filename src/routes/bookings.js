@@ -4,17 +4,45 @@ const { calcomClient } = require('../config/calcom');
 const { stripe } = require('../config/stripe');
 const router = express.Router();
 
+const VALID_COUPONS = {
+  'NANO50': { type: 'percent', value: 50 },
+  'BANANA20': { type: 'percent', value: 20 },
+  'NANO100': { type: 'fixed', value: 100 }
+};
+
+// GET /api/bookings/validate-coupon
+router.get('/validate-coupon', (req, res) => {
+  const code = String(req.query.code || '').toUpperCase().trim();
+  if (VALID_COUPONS[code]) {
+    return res.json({ success: true, coupon: VALID_COUPONS[code] });
+  }
+  res.json({ success: false, error: 'Cupón inválido o expirado' });
+});
+
 // POST /api/bookings
 // Full public booking flow: create appointment + Cal.com + Stripe
 router.post('/', async (req, res) => {
   try {
-    const { patient_name, patient_phone, patient_email, date, time, type, fee, deposit_percent, notes, duration } = req.body;
+    const { patient_name, patient_phone, patient_email, date, time, type, fee, deposit_percent, notes, duration, coupon } = req.body;
 
     if (!patient_name || !date || !time || !type) {
       return res.status(400).json({ success: false, error: 'Nombre, fecha, hora y tipo son requeridos' });
     }
 
-    const feeNum = parseFloat(fee) || 1200;
+    let feeNum = parseFloat(fee) || 1200;
+    const couponCode = String(coupon || '').toUpperCase().trim();
+    let discountApplied = 0;
+
+    if (couponCode && VALID_COUPONS[couponCode]) {
+      const c = VALID_COUPONS[couponCode];
+      if (c.type === 'percent') {
+        discountApplied = Math.round(feeNum * c.value / 100);
+      } else if (c.type === 'fixed') {
+        discountApplied = c.value;
+      }
+      feeNum = Math.max(0, feeNum - discountApplied);
+    }
+
     const depPct = parseInt(deposit_percent) || 20;
     const depAmount = Math.round(feeNum * depPct / 100);
     const dur = parseInt(duration) || 60;
@@ -31,7 +59,7 @@ router.post('/', async (req, res) => {
           timeZone: 'America/Mexico_City',
           phoneNumber: patient_phone || ''
         },
-        metadata: { status: 'pending_payment', deposit: depAmount }
+        metadata: { status: 'pending_payment', deposit: depAmount, coupon: couponCode || 'none' }
       });
       calcomBookingId = calRes.data?.data?.id || calRes.data?.id || null;
     } catch (err) {
@@ -56,7 +84,7 @@ router.post('/', async (req, res) => {
           price_data: {
             currency: 'mxn',
             product_data: {
-              name: `Anticipo - ${type}`,
+              name: `Anticipo - ${type}${couponCode ? ` (Cupón ${couponCode} aplicado)` : ''}`,
               description: `Cita: ${date} ${time}`
             },
             unit_amount: depAmount * 100
@@ -69,7 +97,8 @@ router.post('/', async (req, res) => {
         metadata: {
           appointment_id: String(appointment.id),
           patient_phone: patient_phone || '',
-          type: type
+          type: type,
+          coupon: couponCode || ''
         }
       });
       checkoutUrl = session.url;
