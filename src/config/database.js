@@ -20,7 +20,7 @@ const pool = new Pool({
   ssl: {
     rejectUnauthorized: false // Required for Supabase
   },
-  connectionTimeoutMillis: 5000 // 5 seconds timeout
+  connectionTimeoutMillis: 1500 // Reduced timeout (1.5s) for instant JSON fallback locally
 });
 
 const MOCK_DB_PATH = path.join(__dirname, '../../database/mock-db.json');
@@ -382,7 +382,24 @@ function handleMockQuery(text, params) {
     return { data: [pat], error: null, count: 1 };
   }
 
-  // 14. INSERT INTO settings
+  // 14. UPDATE fee_types
+  if (sqlLower.includes('update fee_types set')) {
+    const id = params[params.length - 1];
+    const index = data.fee_types.findIndex(f => f.id === id);
+    if (index === -1) return { data: [], error: 'Not found', count: 0 };
+
+    const feeType = data.fee_types[index];
+    feeType.label = params[3];
+    feeType.duration = parseInt(params[2]);
+    feeType.fee = parseFloat(params[0]);
+    feeType.deposit_percent = parseInt(params[1]);
+
+    data.fee_types[index] = feeType;
+    saveMockData(data);
+    return { data: [feeType], error: null, count: 1 };
+  }
+
+  // 15. INSERT INTO settings
   if (sqlLower.includes('insert into settings')) {
     const key = params[0];
     const val = JSON.parse(params[1]);

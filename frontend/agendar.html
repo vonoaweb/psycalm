@@ -569,12 +569,29 @@
     async function loadFeeTypes() {
       const grid = document.getElementById('typeGrid');
       try {
-        const res = await fetch('/api/settings');
+        const res = await fetch('/api/settings/fee-types');
         const json = await res.json();
-        // If fee_types exist in settings, use them; otherwise fallback
-        let types = feeTypesFallback;
-        // Try to get fee_types from a future endpoint or use fallback
-        renderTypes(types);
+        if (json.success && json.data?.length) {
+          const icons = {
+            'primera_consulta': 'fa-user-md',
+            'sesion_regular': 'fa-heart',
+            'sesion_online': 'fa-video',
+            'terapia_pareja': 'fa-users'
+          };
+          const list = json.data.map(f => ({
+            id: f.id,
+            label: f.label,
+            type: f.type,
+            fee: parseFloat(f.fee),
+            deposit_percent: parseInt(f.deposit_percent),
+            duration: parseInt(f.duration),
+            description: f.type === 'primera_consulta' ? 'Evaluación inicial y plan de tratamiento' : 'Seguimiento terapéutico habitual',
+            icon: icons[f.type] || 'fa-calendar'
+          }));
+          renderTypes(list);
+        } else {
+          renderTypes(feeTypesFallback);
+        }
       } catch (e) {
         renderTypes(feeTypesFallback);
       }

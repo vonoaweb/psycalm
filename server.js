@@ -90,8 +90,8 @@ app.get('/pago-cancelado', (req, res) => {
 app.use('/brand.css', express.static(path.join(__dirname, 'frontend', 'brand.css')));
 app.use('/assets', express.static(path.join(__dirname, 'frontend', 'assets')));
 
-// Protected dashboard — serve React app only if authenticated
-app.get('/', checkAuth, (req, res) => {
+// Unified entry point - serve index.html (auth state checked inside on frontend)
+app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
 });
 

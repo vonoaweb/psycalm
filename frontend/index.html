@@ -431,302 +431,1215 @@
       .stats-grid { grid-template-columns: 1fr; }
       .content { padding: 1rem; }
     }
+
+    /* ============================================
+       PORTAL UNIFICADO - ESTILOS
+       ============================================ */
+    .portal-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.5rem;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .portal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .portal-logo-section {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .portal-tabs {
+      display: flex;
+      gap: 0.35rem;
+      background: rgba(200, 85, 61, 0.05);
+      padding: 0.35rem;
+      border-radius: 2rem;
+      border: 1px solid var(--border);
+    }
+
+    .portal-tab-btn {
+      padding: 0.6rem 1.25rem;
+      border-radius: 1.5rem;
+      border: none;
+      background: none;
+      font-family: 'Sora', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--ink-light);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s;
+    }
+
+    .portal-tab-btn:hover {
+      color: var(--clay);
+    }
+
+    .portal-tab-btn.active {
+      background: var(--clay);
+      color: var(--white);
+      box-shadow: 0 4px 12px rgba(200, 85, 61, 0.2);
+    }
+
+    .portal-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .portal-card {
+      width: 100%;
+      background: var(--white);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      animation: portalFadeIn 0.3s ease;
+    }
+
+    @keyframes portalFadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .portal-view {
+      display: none;
+      width: 100%;
+    }
+
+    .portal-view.active {
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      .portal-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      .portal-tabs {
+        width: 100%;
+        justify-content: center;
+      }
+      .portal-tab-btn {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.75rem;
+      }
+    }
+
+    /* ============================================
+       LANDING PAGE - ESTILOS
+       ============================================ */
+    .landing-hero {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 3rem;
+      padding: 3rem 0;
+      min-height: 450px;
+    }
+
+    .landing-hero-content {
+      flex: 1;
+      max-width: 550px;
+      text-align: left;
+    }
+
+    .landing-badge {
+      display: inline-block;
+      padding: 0.4rem 1rem;
+      background: rgba(123, 158, 126, 0.15);
+      color: var(--sage-deep);
+      border-radius: 2rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .landing-hero h1 {
+      font-family: 'Sora', sans-serif;
+      font-size: 2.75rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--ink);
+      margin-bottom: 1.25rem;
+    }
+
+    .landing-hero h1 span {
+      color: var(--clay);
+    }
+
+    .landing-hero p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: var(--ink-light);
+      margin-bottom: 2rem;
+    }
+
+    .landing-hero-actions {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .landing-hero-image {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    .landing-hero-image-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 360px;
+      height: 360px;
+      border-radius: 50% 50% 50% 20%;
+      background: linear-gradient(135deg, var(--clay-soft) 0%, #E8D5C8 100%);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 6rem;
+      color: var(--clay-deep);
+    }
+
+    .landing-hero-decor {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      background: rgba(123, 158, 126, 0.15);
+      border-radius: 50%;
+      bottom: -20px;
+      left: -20px;
+      z-index: -1;
+    }
+
+    /* Sections */
+    .landing-section {
+      padding: 4.5rem 0;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+
+    .landing-section.no-border {
+      border-bottom: none;
+    }
+
+    .landing-section-title {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto 3.5rem;
+    }
+
+    .landing-section-title h2 {
+      font-family: 'Sora', sans-serif;
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 0.75rem;
+    }
+
+    .landing-section-title p {
+      color: var(--ink-light);
+      font-size: 0.95rem;
+    }
+
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .spec-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .spec-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--clay-soft);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .spec-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(200, 85, 61, 0.1);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--clay);
+      font-size: 1.25rem;
+      margin-bottom: 1.25rem;
+      transition: all 0.3s;
+    }
+
+    .spec-card:hover .spec-icon {
+      background: var(--clay);
+      color: var(--white);
+    }
+
+    .spec-card h3 {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--ink);
+    }
+
+    .spec-card p {
+      font-size: 0.85rem;
+      color: var(--ink-light);
+      line-height: 1.5;
+    }
+
+    /* Trust / Safe space */
+    .trust-container {
+      display: flex;
+      align-items: center;
+      gap: 4rem;
+    }
+
+    .trust-content {
+      flex: 1.2;
+      text-align: left;
+    }
+
+    .trust-image {
+      flex: 0.8;
+      display: flex;
+      justify-content: center;
+      position: relative;
+    }
+
+    .trust-image-wrapper {
+      width: 280px;
+      height: 360px;
+      border-radius: 120px 120px 20px 20px;
+      background: linear-gradient(135deg, var(--sage) 0%, var(--sage-deep) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5rem;
+      color: var(--cream);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .trust-quote-card {
+      background: var(--white);
+      border-left: 4px solid var(--sage);
+      border-radius: var(--radius-sm);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      font-style: italic;
+      line-height: 1.6;
+      color: var(--ink-light);
+      margin-top: 1.5rem;
+    }
+
+    /* Testimonials */
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .testimonial-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: left;
+    }
+
+    .testimonial-text {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--ink-light);
+      font-style: italic;
+      margin-bottom: 1.5rem;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .testimonial-author-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--clay-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      color: var(--clay-deep);
+      font-size: 0.85rem;
+    }
+
+    .testimonial-author-info h4 {
+      font-family: 'Sora', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .testimonial-author-info p {
+      font-size: 0.75rem;
+      color: #9E9186;
+    }
+
+    /* FAQ accordion */
+    .faq-container {
+      max-width: 750px;
+      margin: 0 auto;
+    }
+
+    .faq-item {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--white);
+      margin-bottom: 0.75rem;
+      overflow: hidden;
+    }
+
+    .faq-question {
+      width: 100%;
+      padding: 1.25rem 1.5rem;
+      background: none;
+      border: none;
+      text-align: left;
+      font-family: 'Sora', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--ink);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.2s;
+    }
+
+    .faq-question:hover {
+      background: rgba(200, 85, 61, 0.02);
+    }
+
+    .faq-question i {
+      transition: transform 0.2s;
+      color: var(--clay);
+    }
+
+    .faq-item.active .faq-question i {
+      transform: rotate(180deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+      background: #FAF7F2;
+    }
+
+    .faq-answer-content {
+      padding: 1.25rem 1.5rem;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: var(--ink-light);
+    }
+
+    @media (max-width: 768px) {
+      .landing-hero {
+        flex-direction: column;
+        text-align: center;
+        gap: 2rem;
+        padding: 2rem 0;
+      }
+      .landing-hero-content {
+        text-align: center;
+      }
+      .landing-hero h1 {
+        font-size: 2.25rem;
+      }
+      .landing-hero-actions {
+        justify-content: center;
+      }
+      .trust-container {
+        flex-direction: column;
+        gap: 2rem;
+      }
+      .trust-image {
+        display: none;
+      }
+    }
+
+    /* Scroll fix for portal mode */
+    html.portal-active,
+    body.portal-active {
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      height: auto !important;
+    }
   </style>
 </head>
 <body>
-  <div class="app">
-    <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
-      <div class="sidebar-header">
-        <div class="logo">Aparta</div>
-        <div class="logo-sub">Aparta tu cita. Cobra al instante.</div>
-      </div>
-      <nav class="nav">
-        <button class="nav-item active" data-section="dashboard" onclick="showSection('dashboard')">
-          <i class="fas fa-chart-pie"></i> Dashboard
-        </button>
-        <button class="nav-item" data-section="appointments" onclick="showSection('appointments')">
-          <i class="fas fa-calendar-check"></i> Citas
-        </button>
-        <button class="nav-item" data-section="patients" onclick="showSection('patients')">
-          <i class="fas fa-users"></i> Pacientes
-        </button>
-        <button class="nav-item" data-section="payments" onclick="showSection('payments')">
-          <i class="fas fa-credit-card"></i> Pagos
-        </button>
-        <button class="nav-item" data-section="settings" onclick="showSection('settings')">
-          <i class="fas fa-cog"></i> Configuración
-        </button>
-      </nav>
-      <div class="sidebar-footer">
-        v1.0 · Aparta
-      </div>
-    </aside>
-
-    <!-- Main -->
-    <div class="main">
-      <header class="header">
-        <div style="display:flex;align-items:center;gap:0.75rem;">
-          <button class="menu-toggle" onclick="toggleSidebar()" id="menuBtn">
-            <i class="fas fa-bars"></i>
-          </button>
-          <h1 class="header-title" id="pageTitle">Dashboard</h1>
+  <!-- Admin Layout Wrapper -->
+  <div id="admin-layout" style="display: none;">
+    <div class="app">
+      <!-- Sidebar -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <div class="logo">Aparta</div>
+          <div class="logo-sub">Aparta tu cita. Cobra al instante.</div>
         </div>
-        <div class="header-actions">
-          <div class="user-pill">
-            <i class="fas fa-user-circle"></i>
-            <span id="userName">Admin</span>
+        <nav class="nav">
+          <button class="nav-item active" data-section="dashboard" onclick="showSection('dashboard')">
+            <i class="fas fa-chart-pie"></i> Dashboard
+          </button>
+          <button class="nav-item" data-section="appointments" onclick="showSection('appointments')">
+            <i class="fas fa-calendar-check"></i> Citas
+          </button>
+          <button class="nav-item" data-section="patients" onclick="showSection('patients')">
+            <i class="fas fa-users"></i> Pacientes
+          </button>
+          <button class="nav-item" data-section="payments" onclick="showSection('payments')">
+            <i class="fas fa-credit-card"></i> Pagos
+          </button>
+          <button class="nav-item" data-section="settings" onclick="showSection('settings')">
+            <i class="fas fa-cog"></i> Configuración
+          </button>
+          <button class="nav-item" data-section="test-bot" onclick="showSection('test-bot')">
+            <i class="fas fa-comments"></i> Probar Chatbot
+          </button>
+          <button class="nav-item" data-section="test-book" onclick="showSection('test-book')">
+            <i class="fas fa-calendar-alt"></i> Página de Reserva
+          </button>
+        </nav>
+        <div class="sidebar-footer">
+          v1.0 · Aparta
+        </div>
+      </aside>
+
+      <!-- Main -->
+      <div class="main">
+        <header class="header">
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            <button class="menu-toggle" onclick="toggleSidebar()" id="menuBtn">
+              <i class="fas fa-bars"></i>
+            </button>
+            <h1 class="header-title" id="pageTitle">Dashboard</h1>
           </div>
-          <button class="btn btn-secondary btn-sm" onclick="logout()">
-            <i class="fas fa-sign-out-alt"></i> Salir
+          <div class="header-actions">
+            <div class="user-pill">
+              <i class="fas fa-user-circle"></i>
+              <span id="userName">Admin</span>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="logout()">
+              <i class="fas fa-sign-out-alt"></i> Salir
+            </button>
+          </div>
+        </header>
+
+        <div class="content">
+          <!-- Dashboard -->
+          <div class="section active" id="section-dashboard">
+            <div class="stats-grid" id="statsGrid">
+              <div class="stat-card"><div class="stat-label">Citas hoy</div><div class="stat-value">—</div></div>
+              <div class="stat-card clay"><div class="stat-label">Pacientes activos</div><div class="stat-value">—</div></div>
+              <div class="stat-card sage"><div class="stat-label">Ingresos del mes</div><div class="stat-value">—</div></div>
+              <div class="stat-card"><div class="stat-label">Depósitos pendientes</div><div class="stat-value">—</div></div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">Citas recientes</div>
+                <button class="btn btn-primary btn-sm" onclick="openAppointmentModal()">
+                  <i class="fas fa-plus"></i> Nueva cita
+                </button>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Paciente</th><th>Fecha</th><th>Hora</th><th>Tipo</th><th>Estado</th><th>Monto</th></tr></thead>
+                  <tbody id="recentAppointments"><tr><td colspan="6" class="loading"><div class="spinner"></div></td></tr></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Appointments -->
+          <div class="section" id="section-appointments">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">Todas las citas</div>
+                <div class="filters">
+                  <input type="date" class="input" id="aptFilterDate" onchange="loadAppointments()">
+                  <select class="select" id="aptFilterStatus" onchange="loadAppointments()">
+                    <option value="">Todos los estados</option>
+                    <option value="pending">Pendiente</option>
+                    <option value="confirmed">Confirmada</option>
+                    <option value="cancelled">Cancelada</option>
+                    <option value="completed">Completada</option>
+                  </select>
+                  <button class="btn btn-primary btn-sm" onclick="openAppointmentModal()">
+                    <i class="fas fa-plus"></i> Nueva
+                  </button>
+                </div>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Paciente</th><th>Teléfono</th><th>Fecha</th><th>Hora</th>
+                      <th>Tipo</th><th>Estado</th><th>Anticipo</th><th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody id="appointmentsTable"><tr><td colspan="8" class="loading"><div class="spinner"></div></td></tr></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Patients -->
+          <div class="section" id="section-patients">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">Pacientes</div>
+                <div class="filters">
+                  <input type="text" class="input" id="patientSearch" placeholder="Buscar..." oninput="searchPatients()">
+                  <button class="btn btn-primary btn-sm" onclick="openPatientModal()">
+                    <i class="fas fa-plus"></i> Nuevo
+                  </button>
+                </div>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Nombre</th><th>Teléfono</th><th>Email</th><th>Estado</th><th>Notas</th><th>Acciones</th></tr></thead>
+                  <tbody id="patientsTable"><tr><td colspan="6" class="loading"><div class="spinner"></div></td></tr></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Payments -->
+          <div class="section" id="section-payments">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">Historial de pagos</div>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Fecha</th><th>Paciente</th><th>Monto</th><th>Anticipo</th><th>Método</th><th>Estado</th></tr></thead>
+                  <tbody id="paymentsTable"><tr><td colspan="6" class="loading"><div class="spinner"></div></td></tr></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Settings -->
+          <div class="section" id="section-settings">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">Configuración General</div>
+                <button class="btn btn-primary btn-sm" onclick="saveSettings()">
+                  <i class="fas fa-save"></i> Guardar
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="form-grid" id="settingsForm">
+                  <div class="form-group full"><div class="loading"><div class="spinner"></div></div></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card" style="margin-top: 1.5rem;">
+              <div class="card-header">
+                <div class="card-title">Tarifas y Precios de Sesiones</div>
+              </div>
+              <div class="modal-body">
+                <div class="table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Tipo de Sesión</th>
+                        <th>Duración (min)</th>
+                        <th>Tarifa Total ($)</th>
+                        <th>Anticipo (%)</th>
+                        <th>Acción</th>
+                      </tr>
+                    </thead>
+                    <tbody id="pricesFormTable">
+                      <tr><td colspan="5" class="loading"><div class="spinner"></div></td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Probar Chatbot -->
+          <div class="section" id="section-test-bot">
+            <div class="card" style="padding:0; overflow:hidden; border-radius:var(--radius); border:1px solid var(--border); box-shadow:var(--shadow);">
+              <iframe src="/chat" style="width:100%; height:750px; border:none; display:block;"></iframe>
+            </div>
+          </div>
+
+          <!-- Página de Reserva -->
+          <div class="section" id="section-test-book">
+            <div class="card" style="padding:0; overflow:hidden; border-radius:var(--radius); border:1px solid var(--border); box-shadow:var(--shadow);">
+              <iframe src="/agendar" style="width:100%; height:800px; border:none; display:block;"></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Appointment Modal -->
+    <div class="modal-overlay" id="aptModal">
+      <div class="modal">
+        <div class="modal-header">
+          <div class="modal-title" id="aptModalTitle">Nueva cita</div>
+          <button class="modal-close" onclick="closeModal('aptModal')"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body">
+          <form id="aptForm" class="form-grid" onsubmit="event.preventDefault(); saveAppointment();">
+            <input type="hidden" id="aptId">
+            <div class="form-group">
+              <label class="form-label">Nombre del paciente</label>
+              <input type="text" class="form-input" id="aptPatientName" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Teléfono</label>
+              <input type="tel" class="form-input" id="aptPatientPhone">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-input" id="aptPatientEmail">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Fecha</label>
+              <input type="date" class="form-input" id="aptDate" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Hora</label>
+              <input type="time" class="form-input" id="aptTime" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Duración (min)</label>
+              <input type="number" class="form-input" id="aptDuration" value="60" min="15" step="15">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tipo de sesión</label>
+              <select class="form-select" id="aptType">
+                <option value="Primera consulta">Primera consulta</option>
+                <option value="Sesión regular">Sesión regular</option>
+                <option value="Terapia de pareja">Terapia de pareja</option>
+                <option value="Consulta online">Consulta online</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Estado</label>
+              <select class="form-select" id="aptStatus">
+                <option value="pending">Pendiente</option>
+                <option value="confirmed">Confirmada</option>
+                <option value="completed">Completada</option>
+                <option value="cancelled">Cancelada</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tarifa total ($)</label>
+              <input type="number" class="form-input" id="aptFee" value="1200" min="0">
+            </div>
+            <div class="form-group">
+              <label class="form-label">% Anticipo</label>
+              <input type="number" class="form-input" id="aptDepositPct" value="20" min="0" max="100">
+            </div>
+            <div class="form-group full">
+              <label class="form-label">Notas</label>
+              <textarea class="form-textarea" id="aptNotes" placeholder="Notas adicionales..."></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" onclick="closeModal('aptModal')">Cancelar</button>
+          <button class="btn btn-primary" onclick="saveAppointment()">Guardar cita</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Patient Modal -->
+    <div class="modal-overlay" id="patModal">
+      <div class="modal">
+        <div class="modal-header">
+          <div class="modal-title" id="patModalTitle">Nuevo paciente</div>
+          <button class="modal-close" onclick="closeModal('patModal')"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body">
+          <form id="patForm" class="form-grid" onsubmit="event.preventDefault(); savePatient();">
+            <input type="hidden" id="patId">
+            <div class="form-group">
+              <label class="form-label">Nombre completo</label>
+              <input type="text" class="form-input" id="patName" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Teléfono</label>
+              <input type="tel" class="form-input" id="patPhone">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-input" id="patEmail">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Estado</label>
+              <select class="form-select" id="patStatus">
+                <option value="active">Activo</option>
+                <option value="inactive">Inactivo</option>
+              </select>
+            </div>
+            <div class="form-group full">
+              <label class="form-label">Notas</label>
+              <textarea class="form-textarea" id="patNotes" placeholder="Notas del paciente..."></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" onclick="closeModal('patModal')">Cancelar</button>
+          <button class="btn btn-primary" onclick="savePatient()">Guardar paciente</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+  </div>
+
+  <!-- Public Portal Layout -->
+  <div id="public-portal" style="display: none;">
+    <div class="portal-container">
+      <header class="portal-header">
+        <div class="portal-logo-section">
+          <div class="logo">Aparta</div>
+          <div class="logo-sub">Aparta tu cita. Cobra al instante.</div>
+        </div>
+        <div class="portal-tabs">
+          <button class="portal-tab-btn active" id="btn-portal-home" onclick="switchPortalTab('home')">
+            <i class="fas fa-home"></i> Inicio
+          </button>
+          <button class="portal-tab-btn" id="btn-portal-chat" onclick="switchPortalTab('chat')">
+            <i class="fas fa-comments"></i> Asistente Sofía
+          </button>
+          <button class="portal-tab-btn" id="btn-portal-book" onclick="switchPortalTab('book')">
+            <i class="fas fa-calendar-alt"></i> Reservar Cita
+          </button>
+          <button class="portal-tab-btn" id="btn-portal-login" onclick="switchPortalTab('login')">
+            <i class="fas fa-user-lock"></i> Acceso Admin
           </button>
         </div>
       </header>
 
-      <div class="content">
-        <!-- Dashboard -->
-        <div class="section active" id="section-dashboard">
-          <div class="stats-grid" id="statsGrid">
-            <div class="stat-card"><div class="stat-label">Citas hoy</div><div class="stat-value">—</div></div>
-            <div class="stat-card clay"><div class="stat-label">Pacientes activos</div><div class="stat-value">—</div></div>
-            <div class="stat-card sage"><div class="stat-label">Ingresos del mes</div><div class="stat-value">—</div></div>
-            <div class="stat-card"><div class="stat-label">Depósitos pendientes</div><div class="stat-value">—</div></div>
-          </div>
-          <div class="card">
-            <div class="card-header">
-              <div class="card-title">Citas recientes</div>
-              <button class="btn btn-primary btn-sm" onclick="openAppointmentModal()">
-                <i class="fas fa-plus"></i> Nueva cita
-              </button>
-            </div>
-            <div class="table-wrap">
-              <table>
-                <thead><tr><th>Paciente</th><th>Fecha</th><th>Hora</th><th>Tipo</th><th>Estado</th><th>Monto</th></tr></thead>
-                <tbody id="recentAppointments"><tr><td colspan="6" class="loading"><div class="spinner"></div></td></tr></tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        <!-- Appointments -->
-        <div class="section" id="section-appointments">
-          <div class="card">
-            <div class="card-header">
-              <div class="card-title">Todas las citas</div>
-              <div class="filters">
-                <input type="date" class="input" id="aptFilterDate" onchange="loadAppointments()">
-                <select class="select" id="aptFilterStatus" onchange="loadAppointments()">
-                  <option value="">Todos los estados</option>
-                  <option value="pending">Pendiente</option>
-                  <option value="confirmed">Confirmada</option>
-                  <option value="cancelled">Cancelada</option>
-                  <option value="completed">Completada</option>
-                </select>
-                <button class="btn btn-primary btn-sm" onclick="openAppointmentModal()">
-                  <i class="fas fa-plus"></i> Nueva
+      <main class="portal-content">
+        <!-- Tab 1: Inicio (Landing Page de Psicología) -->
+        <div class="portal-view active" id="portal-view-home">
+          <!-- Hero Section -->
+          <section class="landing-hero">
+            <div class="landing-hero-content">
+              <span class="landing-badge">🌿 Espacio de Acompañamiento</span>
+              <h1>Encuentra la <span>calma</span> y la paz mental que mereces</h1>
+              <p>Te brindo un espacio seguro y profesional para ayudarte a superar la ansiedad, el estrés y encontrar tu equilibrio emocional. Agenda en 1 minuto o conversa hoy mismo con Sofía, nuestra asistente virtual.</p>
+              <div class="landing-hero-actions">
+                <button class="btn btn-primary" onclick="switchPortalTab('book')" style="padding:0.875rem 1.75rem; border-radius:30px; box-shadow:0 4px 14px rgba(200,85,61,0.3);">
+                  <i class="fas fa-calendar-alt"></i> Agendar Cita
+                </button>
+                <button class="btn btn-secondary" onclick="switchPortalTab('chat')" style="padding:0.875rem 1.75rem; border-radius:30px;">
+                  <i class="fas fa-comments"></i> Chatear con Sofía
                 </button>
               </div>
             </div>
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Paciente</th><th>Teléfono</th><th>Fecha</th><th>Hora</th>
-                    <th>Tipo</th><th>Estado</th><th>Anticipo</th><th>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody id="appointmentsTable"><tr><td colspan="8" class="loading"><div class="spinner"></div></td></tr></tbody>
-              </table>
+            <div class="landing-hero-image">
+              <div class="landing-hero-image-wrapper">
+                🌿
+              </div>
+              <div class="landing-hero-decor"></div>
             </div>
-          </div>
-        </div>
+          </section>
 
-        <!-- Patients -->
-        <div class="section" id="section-patients">
-          <div class="card">
-            <div class="card-header">
-              <div class="card-title">Pacientes</div>
-              <div class="filters">
-                <input type="text" class="input" id="patientSearch" placeholder="Buscar..." oninput="searchPatients()">
-                <button class="btn btn-primary btn-sm" onclick="openPatientModal()">
-                  <i class="fas fa-plus"></i> Nuevo
+          <!-- Specialties Section -->
+          <section class="landing-section">
+            <div class="landing-section-title">
+              <h2>¿Cómo puedo ayudarte?</h2>
+              <p>Ofrezco psicoterapia con un enfoque empático, cálido y fundamentado en métodos profesionales para que te sientas en total confianza.</p>
+            </div>
+            <div class="specs-grid">
+              <div class="spec-card" onclick="switchPortalTab('book')">
+                <div class="spec-icon"><i class="fas fa-leaf"></i></div>
+                <h3>Ansiedad y Estrés</h3>
+                <p>Aprende herramientas prácticas para gestionar la mente, reducir el ritmo de pensamiento y recuperar el control de tu tranquilidad.</p>
+              </div>
+              <div class="spec-card" onclick="switchPortalTab('book')">
+                <div class="spec-icon"><i class="fas fa-user"></i></div>
+                <h3>Terapia Individual</h3>
+                <p>Un espacio confidencial y exclusivo adaptado a tu propio ritmo para explorar tus emociones y fortalecer tu crecimiento personal.</p>
+              </div>
+              <div class="spec-card" onclick="switchPortalTab('book')">
+                <div class="spec-icon"><i class="fas fa-heart"></i></div>
+                <h3>Terapia de Pareja</h3>
+                <p>Mejora la comunicación afectiva, sana vínculos heridos y construye relaciones mucho más saludables, empáticas y armoniosas.</p>
+              </div>
+              <div class="spec-card" onclick="switchPortalTab('book')">
+                <div class="spec-icon"><i class="fas fa-video"></i></div>
+                <h3>Consulta Online</h3>
+                <p>Terapia cómoda, segura y profesional a través de videollamadas desde el espacio donde te sientas más tranquilo/a y protegido/a.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Nosotros Section -->
+          <section class="landing-section" id="landing-about">
+            <div class="trust-container">
+              <div class="trust-content">
+                <span class="landing-badge">Sobre Mí</span>
+                <h2 style="font-family:'Sora',sans-serif; font-size:2rem; font-weight:600; color:var(--ink); margin-bottom:1rem;">Dra. Carolina Rodríguez</h2>
+                <p style="font-weight: 600; color: var(--clay); font-size: 1rem; margin-bottom: 1rem;">Psicóloga Clínica · Cédula Profesional: 12345678</p>
+                <p style="font-size:0.95rem; line-height:1.6; color:var(--ink-light); margin-bottom:1rem;">Soy egresada con mención honorífica en Psicología Clínica y cuento con una maestría en Terapia Cognitivo-Conductual. A lo largo de mi trayectoria profesional, me he especializado en brindar acompañamiento terapéutico a adultos y adolescentes que enfrentan trastornos de ansiedad, manejo de estrés crónico, crisis existenciales y procesos de duelo.</p>
+                <p style="font-size:0.95rem; line-height:1.6; color:var(--ink-light); margin-bottom:1rem;">Mi enfoque es totalmente humano, integrador y basado en evidencia científica. Mi objetivo es que cada persona encuentre aquí no solo un tratamiento clínico, sino un espacio cálido de contención donde se sienta verdaderamente escuchada y comprendida.</p>
+                <div style="display: flex; gap: 2rem; margin-top: 1.5rem;">
+                  <div>
+                    <h4 style="font-family:'Sora',sans-serif; color:var(--ink); font-weight:600; margin-bottom:0.25rem;">+8 Años</h4>
+                    <p style="font-size:0.8rem; color:#9E9186;">Experiencia Clínica</p>
+                  </div>
+                  <div>
+                    <h4 style="font-family:'Sora',sans-serif; color:var(--ink); font-weight:600; margin-bottom:0.25rem;">1,500+</h4>
+                    <p style="font-size:0.8rem; color:#9E9186;">Citas Atendidas</p>
+                  </div>
+                  <div>
+                    <h4 style="font-family:'Sora',sans-serif; color:var(--ink); font-weight:600; margin-bottom:0.25rem;">TCC</h4>
+                    <p style="font-size:0.8rem; color:#9E9186;">Enfoque Principal</p>
+                  </div>
+                </div>
+              </div>
+              <div class="trust-image">
+                <div class="trust-image-wrapper" style="background: linear-gradient(135deg, var(--clay-soft) 0%, var(--border) 100%); font-size:5rem; color:var(--clay);">👩‍⚕️</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Safe space Section -->
+          <section class="landing-section">
+            <div class="trust-container">
+              <div class="trust-image">
+                <div class="trust-image-wrapper">🤝</div>
+              </div>
+              <div class="trust-content">
+                <span class="landing-badge" style="background:rgba(123, 158, 126, 0.15); color:var(--sage-deep);">Un espacio de confianza</span>
+                <h2 style="font-family:'Sora',sans-serif; font-size:2rem; font-weight:600; color:var(--ink); margin-bottom:1rem;">Tu bienestar es la prioridad</h2>
+                <p style="font-size:0.95rem; line-height:1.6; color:var(--ink-light); margin-bottom:1rem;">Entiendo que iniciar un proceso terapéutico puede generar dudas y temores. Por eso, nos esforzamos en construir una relación de absoluta confianza, calidez y confidencialidad absoluta desde el primer contacto.</p>
+                <p style="font-size:0.95rem; line-height:1.6; color:var(--ink-light);">Aquí no hay juicios. Hay escucha activa, empatía y el compromiso profesional de acompañarte a sanar a tu propio ritmo.</p>
+                <div class="trust-quote-card">
+                  "El primer paso para el cambio es permitirse un espacio seguro donde poder ser vulnerable sin miedo al juicio."
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Testimonials Section -->
+          <section class="landing-section">
+            <div class="landing-section-title">
+              <h2>Lo que dicen nuestros pacientes</h2>
+              <p>Tu privacidad es sagrada. Compartimos algunos testimonios respetando el anonimato de quienes han transformado su bienestar emocional.</p>
+            </div>
+            <div class="testimonials-grid">
+              <div class="testimonial-card">
+                <p class="testimonial-text">"Llegué con constantes ataques de pánico y ansiedad por el trabajo. Gracias al acompañamiento, he aprendido a poner límites y a respirar de nuevo con tranquilidad. Me salvó la vida."</p>
+                <div class="testimonial-author">
+                  <div class="testimonial-author-avatar">MG</div>
+                  <div class="testimonial-author-info">
+                    <h4>María G.</h4>
+                    <p>Paciente de Terapia Individual</p>
+                  </div>
+                </div>
+              </div>
+              <div class="testimonial-card">
+                <p class="testimonial-text">"La consulta online ha sido una bendición por mis horarios. Me siento muy escuchado, el ambiente es súper profesional y las herramientas que me dan me funcionan cada día."</p>
+                <div class="testimonial-author">
+                  <div class="testimonial-author-avatar">CL</div>
+                  <div class="testimonial-author-info">
+                    <h4>Carlos L.</h4>
+                    <p>Paciente de Consulta Online</p>
+                  </div>
+                </div>
+              </div>
+              <div class="testimonial-card">
+                <p class="testimonial-text">"Veníamos de una crisis muy dura con mi pareja. En terapia pudimos hablar de cosas que nos dolían sin gritar y entendernos de verdad. Ahora nos sentimos más unidos."</p>
+                <div class="testimonial-author">
+                  <div class="testimonial-author-avatar">AR</div>
+                  <div class="testimonial-author-info">
+                    <h4>Andrea R.</h4>
+                    <p>Paciente de Terapia de Pareja</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Contacto Section -->
+          <section class="landing-section" id="landing-contact">
+            <div class="landing-section-title">
+              <h2>Ubicación y Contacto</h2>
+              <p>Estoy aquí para escucharte. Puedes agendar tu sesión de forma directa o contactarme por los canales tradicionales.</p>
+            </div>
+            <div class="specs-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 3rem;">
+              <div style="text-align: left;">
+                <h3 style="font-family:'Sora',sans-serif; font-size:1.25rem; font-weight:600; color:var(--ink); margin-bottom:1rem;">¿Dónde se encuentra la consulta?</h3>
+                <p style="font-size:0.95rem; line-height:1.6; color:var(--ink-light); margin-bottom:1.5rem;">Mi consultorio físico está ubicado en una zona céntrica, de fácil acceso y diseñada para brindarte privacidad, silencio y comodidad desde el momento en que ingresas.</p>
+                
+                <div style="display:flex; flex-direction:column; gap:1.25rem; margin-top:1.5rem;">
+                  <div style="display:flex; gap:1rem; align-items:flex-start;">
+                    <div style="width:36px; height:36px; border-radius:50%; background:rgba(123,158,126,0.1); display:flex; align-items:center; justify-content:center; color:var(--sage-deep); flex-shrink:0;"><i class="fas fa-map-marker-alt"></i></div>
+                    <div>
+                      <h4 style="font-family:'Sora',sans-serif; font-size:0.95rem; font-weight:600; color:var(--ink);">Dirección Física</h4>
+                      <p style="font-size:0.85rem; color:var(--ink-light); margin-top:0.15rem;">Paseo de la Reforma #405, Piso 12, Oficina B, Col. Cuauhtémoc, Ciudad de México.</p>
+                    </div>
+                  </div>
+                  <div style="display:flex; gap:1rem; align-items:flex-start;">
+                    <div style="width:36px; height:36px; border-radius:50%; background:rgba(200,85,61,0.1); display:flex; align-items:center; justify-content:center; color:var(--clay); flex-shrink:0;"><i class="fas fa-envelope"></i></div>
+                    <div>
+                      <h4 style="font-family:'Sora',sans-serif; font-size:0.95rem; font-weight:600; color:var(--ink);">Correo Electrónico</h4>
+                      <p style="font-size:0.85rem; color:var(--ink-light); margin-top:0.15rem;">contacto@psycalm.com.mx</p>
+                    </div>
+                  </div>
+                  <div style="display:flex; gap:1rem; align-items:flex-start;">
+                    <div style="width:36px; height:36px; border-radius:50%; background:rgba(123,158,126,0.1); display:flex; align-items:center; justify-content:center; color:var(--sage-deep); flex-shrink:0;"><i class="fas fa-phone-alt"></i></div>
+                    <div>
+                      <h4 style="font-family:'Sora',sans-serif; font-size:0.95rem; font-weight:600; color:var(--ink);">Teléfono de Atención</h4>
+                      <p style="font-size:0.85rem; color:var(--ink-light); margin-top:0.15rem;">+52 55 1234 5678</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Quick Contact Box -->
+              <div style="background:var(--white); border:1px solid var(--border); border-radius:var(--radius); padding:2rem; box-shadow:var(--shadow); text-align:center; height: fit-content;">
+                <div style="font-size:3rem; color:#25D366; margin-bottom:1rem;"><i class="fab fa-whatsapp"></i></div>
+                <h3 style="font-family:'Sora',sans-serif; font-size:1.15rem; font-weight:600; color:var(--ink); margin-bottom:0.5rem;">¿Prefieres WhatsApp?</h3>
+                <p style="font-size:0.85rem; color:var(--ink-light); line-height:1.5; margin-bottom:1.5rem;">¿Tienes una duda rápida o prefieres coordinar directamente con nuestro chatbot Sofía en WhatsApp? Escríbenos al instante.</p>
+                <a href="https://wa.me/525512345678" target="_blank" class="btn btn-success" style="width:100%; padding:0.8rem; border-radius:var(--radius-sm); text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:0.5rem; font-weight:600; font-size:0.9rem; background:#25D366; color:white; border:none; cursor:pointer;">
+                  <i class="fab fa-whatsapp"></i> Enviar Mensaje
+                </a>
+              </div>
+            </div>
+          </section>
+
+          <!-- FAQs Section -->
+          <section class="landing-section no-border">
+            <div class="landing-section-title">
+              <h2>Preguntas Frecuentes</h2>
+              <p>Resuelvo tus dudas principales para que des el primer paso con total tranquilidad.</p>
+            </div>
+            <div class="faq-container">
+              <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                  ¿Cómo sé si necesito terapia? <i class="fas fa-chevron-down"></i>
                 </button>
+                <div class="faq-answer">
+                  <div class="faq-answer-content">
+                    Si te sientes abrumado/a por la ansiedad, el estrés, tienes problemas para dormir, conflictos en tus relaciones o simplemente sientes que necesitas un espacio para hablar y organizarte emocionalmente, la terapia es un excelente lugar de ayuda y claridad.
+                  </div>
+                </div>
+              </div>
+              <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                  ¿Cómo funciona el agendamiento y el pago de anticipo? <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                  <div class="faq-answer-content">
+                    Elige el tipo de sesión y el horario que más te convenga en la pestaña "Reservar Cita". Para asegurar tu espacio, realizas un pago de anticipo (20% del total) de forma 100% segura con tarjeta a través de Stripe. El saldo restante lo liquidas al finalizar tu sesión.
+                  </div>
+                </div>
+              </div>
+              <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                  ¿Puedo confiar en que mis datos y charlas son privados? <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                  <div class="faq-answer-content">
+                    Absolutamente. La confidencialidad es un requisito legal y ético inviolable en psicología. Toda la información que compartas en consulta, así como tus datos de contacto, están estrictamente protegidos bajo secreto profesional.
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="table-wrap">
-              <table>
-                <thead><tr><th>Nombre</th><th>Teléfono</th><th>Email</th><th>Estado</th><th>Notas</th><th>Acciones</th></tr></thead>
-                <tbody id="patientsTable"><tr><td colspan="6" class="loading"><div class="spinner"></div></td></tr></tbody>
-              </table>
-            </div>
+          </section>
+        </div>
+
+        <!-- Tab 2: Chatbot (Sofía) iframe -->
+        <div class="portal-view" id="portal-view-chat">
+          <div class="portal-card">
+            <iframe src="/chat" style="width: 100%; height: 650px; border: none; display: block;"></iframe>
           </div>
         </div>
 
-        <!-- Payments -->
-        <div class="section" id="section-payments">
-          <div class="card">
-            <div class="card-header">
-              <div class="card-title">Historial de pagos</div>
-            </div>
-            <div class="table-wrap">
-              <table>
-                <thead><tr><th>Fecha</th><th>Paciente</th><th>Monto</th><th>Anticipo</th><th>Método</th><th>Estado</th></tr></thead>
-                <tbody id="paymentsTable"><tr><td colspan="6" class="loading"><div class="spinner"></div></td></tr></tbody>
-              </table>
-            </div>
+        <!-- Tab 3: Reservar Cita (Agendar) iframe -->
+        <div class="portal-view" id="portal-view-book">
+          <div class="portal-card">
+            <iframe src="/agendar" style="width: 100%; height: 800px; border: none; display: block;"></iframe>
           </div>
         </div>
 
-        <!-- Settings -->
-        <div class="section" id="section-settings">
-          <div class="card">
-            <div class="card-header">
-              <div class="card-title">Configuración</div>
-              <button class="btn btn-primary btn-sm" onclick="saveSettings()">
-                <i class="fas fa-save"></i> Guardar
-              </button>
-            </div>
-            <div class="modal-body">
-              <div class="form-grid" id="settingsForm">
-                <div class="form-group full"><div class="loading"><div class="spinner"></div></div></div>
-              </div>
+        <!-- Tab 4: Admin Login Form (Native) -->
+        <div class="portal-view" id="portal-view-login">
+          <div class="portal-card" style="max-width: 420px; margin: 2rem auto;">
+            <div style="padding: 2.5rem;">
+              <h2 style="font-family: 'Sora', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--clay); margin-bottom: 0.5rem;">Acceso Administrativo</h2>
+              <p style="color: #6B5E54; font-size: 0.9rem; margin-bottom: 2rem;">Ingresa para administrar tus citas, pacientes y pagos.</p>
+              
+              <div class="error" id="portal-login-error" style="background: #FEF2F2; color: #991B1B; padding: 0.75rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; margin-bottom: 1.25rem; display: none;"></div>
+              
+              <form id="portal-login-form" onsubmit="handlePortalLogin(event)">
+                <div class="form-group" style="margin-bottom: 1.25rem; display: flex; flex-direction: column; gap: 0.35rem;">
+                  <label class="form-label" style="font-family: 'Sora', sans-serif; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #6B5E54;">Email</label>
+                  <input type="email" id="portal-login-email" placeholder="admin@aparta.mx" required style="width: 100%; padding: 0.75rem 1rem; border: 1.5px solid #E8DDD0; border-radius: 0.75rem; font-family: 'DM Sans', sans-serif; font-size: 1rem; color: var(--ink); background: var(--cream); outline: none;" autofocus>
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 0.35rem;">
+                  <label class="form-label" style="font-family: 'Sora', sans-serif; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #6B5E54;">Contraseña</label>
+                  <input type="password" id="portal-login-password" placeholder="••••••••" required style="width: 100%; padding: 0.75rem 1rem; border: 1.5px solid #E8DDD0; border-radius: 0.75rem; font-family: 'DM Sans', sans-serif; font-size: 1rem; color: var(--ink); background: var(--cream); outline: none;">
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.875rem; font-family: 'Sora', sans-serif; font-weight: 600; font-size: 1rem; border-radius: 0.75rem; cursor: pointer; background: var(--clay); color: white; border: none;">Iniciar sesión</button>
+              </form>
             </div>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   </div>
-
-  <!-- Appointment Modal -->
-  <div class="modal-overlay" id="aptModal">
-    <div class="modal">
-      <div class="modal-header">
-        <div class="modal-title" id="aptModalTitle">Nueva cita</div>
-        <button class="modal-close" onclick="closeModal('aptModal')"><i class="fas fa-times"></i></button>
-      </div>
-      <div class="modal-body">
-        <form id="aptForm" class="form-grid" onsubmit="event.preventDefault(); saveAppointment();">
-          <input type="hidden" id="aptId">
-          <div class="form-group">
-            <label class="form-label">Nombre del paciente</label>
-            <input type="text" class="form-input" id="aptPatientName" required>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Teléfono</label>
-            <input type="tel" class="form-input" id="aptPatientPhone">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Email</label>
-            <input type="email" class="form-input" id="aptPatientEmail">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Fecha</label>
-            <input type="date" class="form-input" id="aptDate" required>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Hora</label>
-            <input type="time" class="form-input" id="aptTime" required>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Duración (min)</label>
-            <input type="number" class="form-input" id="aptDuration" value="60" min="15" step="15">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Tipo de sesión</label>
-            <select class="form-select" id="aptType">
-              <option value="Primera consulta">Primera consulta</option>
-              <option value="Sesión regular">Sesión regular</option>
-              <option value="Terapia de pareja">Terapia de pareja</option>
-              <option value="Consulta online">Consulta online</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Estado</label>
-            <select class="form-select" id="aptStatus">
-              <option value="pending">Pendiente</option>
-              <option value="confirmed">Confirmada</option>
-              <option value="completed">Completada</option>
-              <option value="cancelled">Cancelada</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Tarifa total ($)</label>
-            <input type="number" class="form-input" id="aptFee" value="1200" min="0">
-          </div>
-          <div class="form-group">
-            <label class="form-label">% Anticipo</label>
-            <input type="number" class="form-input" id="aptDepositPct" value="20" min="0" max="100">
-          </div>
-          <div class="form-group full">
-            <label class="form-label">Notas</label>
-            <textarea class="form-textarea" id="aptNotes" placeholder="Notas adicionales..."></textarea>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="closeModal('aptModal')">Cancelar</button>
-        <button class="btn btn-primary" onclick="saveAppointment()">Guardar cita</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Patient Modal -->
-  <div class="modal-overlay" id="patModal">
-    <div class="modal">
-      <div class="modal-header">
-        <div class="modal-title" id="patModalTitle">Nuevo paciente</div>
-        <button class="modal-close" onclick="closeModal('patModal')"><i class="fas fa-times"></i></button>
-      </div>
-      <div class="modal-body">
-        <form id="patForm" class="form-grid" onsubmit="event.preventDefault(); savePatient();">
-          <input type="hidden" id="patId">
-          <div class="form-group">
-            <label class="form-label">Nombre completo</label>
-            <input type="text" class="form-input" id="patName" required>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Teléfono</label>
-            <input type="tel" class="form-input" id="patPhone">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Email</label>
-            <input type="email" class="form-input" id="patEmail">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Estado</label>
-            <select class="form-select" id="patStatus">
-              <option value="active">Activo</option>
-              <option value="inactive">Inactivo</option>
-            </select>
-          </div>
-          <div class="form-group full">
-            <label class="form-label">Notas</label>
-            <textarea class="form-textarea" id="patNotes" placeholder="Notas del paciente..."></textarea>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="closeModal('patModal')">Cancelar</button>
-        <button class="btn btn-primary" onclick="savePatient()">Guardar paciente</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Toast Container -->
-  <div class="toast-container" id="toastContainer"></div>
 
   <script>
     // ==========================
-    // AUTH & INIT
+    // AUTH & PORTAL SYSTEM
     // ==========================
     const user = JSON.parse(localStorage.getItem('aparta_user') || '{}');
-    if (!user.email) { window.location.href = '/login'; }
-    document.getElementById('userName').textContent = user.name || user.email || 'Admin';
+    
+    // Auto detection and mounting
+    if (user.email) {
+      document.body.classList.remove('portal-active');
+      document.documentElement.classList.remove('portal-active');
+      document.getElementById('admin-layout').style.display = 'block';
+      document.getElementById('public-portal').style.display = 'none';
+      document.getElementById('userName').textContent = user.name || user.email || 'Admin';
+    } else {
+      document.body.classList.add('portal-active');
+      document.documentElement.classList.add('portal-active');
+      document.getElementById('admin-layout').style.display = 'none';
+      document.getElementById('public-portal').style.display = 'block';
+    }
 
     function logout() {
       fetch('/api/auth/logout', { method: 'POST' });
       localStorage.removeItem('aparta_user');
-      window.location.href = '/login';
+      document.body.classList.add('portal-active');
+      document.documentElement.classList.add('portal-active');
+      window.location.href = '/';
+    }
+
+    // Portal view switcher
+    function switchPortalTab(tabName) {
+      document.querySelectorAll('.portal-tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.portal-view').forEach(view => view.classList.remove('active'));
+
+      if (tabName === 'home') {
+        document.getElementById('btn-portal-home').classList.add('active');
+        document.getElementById('portal-view-home').classList.add('active');
+      } else if (tabName === 'chat') {
+        document.getElementById('btn-portal-chat').classList.add('active');
+        document.getElementById('portal-view-chat').classList.add('active');
+      } else if (tabName === 'book') {
+        document.getElementById('btn-portal-book').classList.add('active');
+        document.getElementById('portal-view-book').classList.add('active');
+      } else if (tabName === 'login') {
+        document.getElementById('btn-portal-login').classList.add('active');
+        document.getElementById('portal-view-login').classList.add('active');
+      }
+
+      // Smooth scroll to top when changing views
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // FAQ Accordion Toggle
+    function toggleFaq(btn) {
+      const item = btn.parentElement;
+      const answer = btn.nextElementSibling;
+      const isOpen = item.classList.contains('active');
+
+      // Close all other FAQs
+      document.querySelectorAll('.faq-item').forEach(i => {
+        i.classList.remove('active');
+        i.querySelector('.faq-answer').style.maxHeight = null;
+      });
+
+      if (!isOpen) {
+        item.classList.add('active');
+        answer.style.maxHeight = answer.scrollHeight + 'px';
+      }
+    }
+
+    // Portal Login Handler
+    async function handlePortalLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('portal-login-email').value;
+      const password = document.getElementById('portal-login-password').value;
+      const errorEl = document.getElementById('portal-login-error');
+      errorEl.style.display = 'none';
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          localStorage.setItem('aparta_user', JSON.stringify(data.user));
+          document.body.classList.remove('portal-active');
+          document.documentElement.classList.remove('portal-active');
+          window.location.reload();
+        } else {
+          errorEl.textContent = data.error || 'Error al iniciar sesión';
+          errorEl.style.display = 'block';
+        }
+      } catch (err) {
+        errorEl.textContent = 'Error de conexión. Intenta de nuevo.';
+        errorEl.style.display = 'block';
+      }
     }
 
     // ==========================
@@ -738,7 +1651,15 @@
       document.getElementById('section-' + name).classList.add('active');
       document.querySelector('[data-section="' + name + '"]').classList.add('active');
 
-      const titles = { dashboard: 'Dashboard', appointments: 'Citas', patients: 'Pacientes', payments: 'Pagos', settings: 'Configuración' };
+      const titles = { 
+        dashboard: 'Dashboard', 
+        appointments: 'Citas', 
+        patients: 'Pacientes', 
+        payments: 'Pagos', 
+        settings: 'Configuración',
+        'test-bot': 'Probar Chatbot',
+        'test-book': 'Página de Reserva'
+      };
       document.getElementById('pageTitle').textContent = titles[name] || name;
 
       if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open');
@@ -1045,6 +1966,7 @@
     let currentSettings = {};
     async function loadSettings() {
       try {
+        // 1. General settings
         const res = await fetch('/api/settings');
         const json = await res.json();
         currentSettings = json.data || {};
@@ -1052,19 +1974,37 @@
         const keys = Object.keys(currentSettings);
         if (!keys.length) {
           container.innerHTML = '<div class="empty"><i class="fas fa-cog"></i><div>No hay configuraciones</div></div>';
+        } else {
+          container.innerHTML = keys.map(k => {
+            const val = currentSettings[k];
+            const sval = String(val || '');
+            const isNum = !isNaN(sval) && sval !== '' && !isNaN(parseFloat(sval));
+            return `
+              <div class="form-group ${sval.length > 50 ? 'full' : ''}">
+                <label class="form-label">${k.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</label>
+                <input type="${isNum ? 'number' : 'text'}" class="form-input" id="set-${k}" value="${sval.replace(/"/g,'&quot;')}">
+              </div>
+            `;
+          }).join('');
+        }
+
+        // 2. Load fee types (prices)
+        const pres = await fetch('/api/settings/fee-types');
+        const pjson = await pres.json();
+        const ptbody = document.getElementById('pricesFormTable');
+        if (!pjson.data?.length) {
+          ptbody.innerHTML = '<tr><td colspan="5" class="empty">No hay tarifas configuradas</td></tr>';
           return;
         }
-        container.innerHTML = keys.map(k => {
-          const val = currentSettings[k];
-          const sval = String(val || '');
-          const isNum = !isNaN(sval) && sval !== '' && !isNaN(parseFloat(sval));
-          return `
-            <div class="form-group ${sval.length > 50 ? 'full' : ''}">
-              <label class="form-label">${k.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</label>
-              <input type="${isNum ? 'number' : 'text'}" class="form-input" id="set-${k}" value="${sval.replace(/"/g,'&quot;')}">
-            </div>
-          `;
-        }).join('');
+        ptbody.innerHTML = pjson.data.map(f => `
+          <tr id="price-row-${f.id}">
+            <td><input type="text" class="form-input" id="price-label-${f.id}" value="${f.label}" style="font-weight:600; padding:0.4rem 0.6rem;"></td>
+            <td><input type="number" class="form-input" id="price-dur-${f.id}" value="${f.duration}" style="width:80px; padding:0.4rem 0.6rem;"></td>
+            <td><input type="number" class="form-input" id="price-fee-${f.id}" value="${f.fee}" style="width:100px; padding:0.4rem 0.6rem;"></td>
+            <td><input type="number" class="form-input" id="price-pct-${f.id}" value="${f.deposit_percent}" style="width:80px; padding:0.4rem 0.6rem;"></td>
+            <td><button class="btn btn-primary btn-sm" onclick="saveFeeType('${f.id}')"><i class="fas fa-save"></i> Guardar</button></td>
+          </tr>
+        `).join('');
       } catch (e) { console.error(e); }
     }
 
@@ -1083,6 +2023,28 @@
         const json = await res.json();
         if (json.success) {
           toast('Configuración guardada');
+        } else {
+          toast(json.error || 'Error al guardar', 'error');
+        }
+      } catch (e) { toast('Error de conexión', 'error'); }
+    }
+
+    async function saveFeeType(id) {
+      const body = {
+        label: document.getElementById('price-label-' + id).value,
+        duration: parseInt(document.getElementById('price-dur-' + id).value),
+        fee: parseFloat(document.getElementById('price-fee-' + id).value),
+        deposit_percent: parseInt(document.getElementById('price-pct-' + id).value)
+      };
+      try {
+        const res = await fetch('/api/settings/fee-types/' + id, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        const json = await res.json();
+        if (json.success) {
+          toast('Tarifa actualizada con éxito');
         } else {
           toast(json.error || 'Error al guardar', 'error');
         }
@@ -1113,7 +2075,9 @@
     // ==========================
     // INIT
     // ==========================
-    loadDashboard();
+    if (user.email) {
+      loadDashboard();
+    }
   </script>
 </body>
 </html>

@@ -32,4 +32,29 @@ router.put('/', async (req, res) => {
   }
 });
 
+// GET /api/settings/fee-types
+router.get('/fee-types', async (req, res) => {
+  try {
+    const result = await query('SELECT * FROM fee_types ORDER BY id ASC');
+    res.json({ success: true, data: result.data });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// PUT /api/settings/fee-types/:id
+router.put('/fee-types/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { fee, deposit_percent, duration, label } = req.body;
+    await query(
+      'UPDATE fee_types SET fee = $1, deposit_percent = $2, duration = $3, label = $4 WHERE id = $5',
+      [fee, deposit_percent, duration, label, id]
+    );
+    res.json({ success: true, message: 'Tarifa actualizada con éxito' });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 module.exports = router;
