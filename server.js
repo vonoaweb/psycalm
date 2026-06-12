@@ -32,6 +32,7 @@ app.use('/api/dashboard', require('./src/routes/dashboard'));
 app.use('/api/availability', require('./src/routes/availability'));
 app.use('/api/bookings', require('./src/routes/bookings'));
 app.use('/api/checkout', require('./src/routes/checkout'));
+app.use('/api/therapists', require('./src/routes/therapists'));
 
 // Init database — call once after deploy
 async function initHandler(req, res) {
@@ -76,6 +77,11 @@ app.get('/chat', (req, res) => {
 // Public booking page for patients
 app.get('/agendar', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend', 'agendar.html'));
+});
+
+// Public therapist directory
+app.get('/terapeutas', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend', 'terapeutas.html'));
 });
 
 // Payment result pages

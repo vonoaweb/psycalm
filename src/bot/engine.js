@@ -118,7 +118,7 @@ class BotEngine {
   }
 
   async handleAwaitingPayment(phone, message, conv) {
-    await notification.sendText(phone, '⏳ Estamos esperando la confirmación de tu pago. Te avisaremos cuando se complete. Si tenés problemas, escribí *!ayuda*.');
+    await notification.sendText(phone, '⏳ Estamos esperando la confirmación de tu pago. Te avisaremos cuando se complete. Si tienes problemas, escribe *!ayuda*.');
     return { state: 'awaiting_payment', data: conv.data };
   }
 
@@ -140,7 +140,7 @@ class BotEngine {
       .order('created_at', { ascending: false });
 
     if (!appointments || appointments.length === 0) {
-      await notification.sendText(phone, 'No tenés pagos registrados.');
+      await notification.sendText(phone, 'No tienes pagos registrados.');
       return;
     }
 

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es-MX">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Agendar cita — Aparta</title>
+  <meta name="description" content="Reserva tu cita de psicología en línea. Elige fecha y hora, paga el anticipo de forma segura y recibe confirmación al instante.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -20,6 +21,8 @@
       --ink-light: #4A3F3A;
       --border: #E8DDD0;
       --white: #FFFFFF;
+      --error: #B93836;
+      --error-soft: #FEF2F2;
       --radius: 0.875rem;
       --radius-sm: 0.5rem;
       --shadow: 0 2px 8px rgba(42,31,26,0.08);
@@ -29,11 +32,22 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
 
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+
     body {
       font-family: 'DM Sans', sans-serif;
       background: var(--cream);
       color: var(--ink);
       line-height: 1.5;
+    }
+
+    :focus-visible {
+      outline: 3px solid rgba(200, 85, 61, 0.5);
+      outline-offset: 2px;
+      border-radius: 4px;
     }
 
     /* Header */
@@ -79,9 +93,12 @@
       border: none;
       cursor: pointer;
       font-family: 'DM Sans', sans-serif;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
     }
-    .header-btn.primary { background: var(--clay); color: white; }
     .header-btn.secondary { background: var(--cream); color: var(--ink); border: 1px solid var(--border); }
+    .header-btn.secondary:hover { border-color: var(--clay-soft); color: var(--clay-deep); }
 
     /* Main */
     .main { max-width: 720px; margin: 0 auto; padding: 1.5rem; }
@@ -125,6 +142,10 @@
       font-size: 0.8rem;
       font-weight: 600;
       color: #9E9186;
+      background: none;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      padding: 0.25rem;
     }
     .step-dot {
       width: 28px; height: 28px;
@@ -135,14 +156,55 @@
       justify-content: center;
       font-size: 0.75rem;
       color: var(--ink-light);
+      transition: background 0.2s;
     }
     .step.active .step-dot { background: var(--clay); color: white; }
     .step.active { color: var(--clay-deep); }
     .step.done .step-dot { background: var(--sage); color: white; }
+    .step.done { cursor: pointer; }
+    .step.done:hover { color: var(--sage-deep); }
     .step-line {
       width: 24px; height: 2px;
       background: var(--border);
     }
+
+    /* Context bar: shows what's selected so far */
+    .context-bar {
+      display: none;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0.625rem 0.875rem;
+      margin-bottom: 1rem;
+      font-size: 0.85rem;
+      box-shadow: var(--shadow);
+    }
+    .context-bar.show { display: flex; }
+    .context-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--ink-light);
+      font-weight: 500;
+    }
+    .context-chip i { color: var(--sage); font-size: 0.8rem; }
+    .context-chip .sep { color: var(--border); }
+    .context-edit {
+      margin-left: auto;
+      background: none;
+      border: none;
+      color: var(--clay);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: underline;
+      padding: 0.25rem;
+    }
+    .context-edit:hover { color: var(--clay-deep); }
 
     /* Cards */
     .card {
@@ -174,6 +236,11 @@
       display: flex;
       align-items: flex-start;
       gap: 0.875rem;
+      background: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      text-align: left;
+      width: 100%;
+      color: var(--ink);
     }
     .type-card:hover { border-color: var(--clay-soft); }
     .type-card.selected { border-color: var(--clay); background: #FEF6F4; }
@@ -193,6 +260,7 @@
     .type-name { font-weight: 600; font-size: 0.95rem; }
     .type-desc { font-size: 0.8rem; color: #6B5E54; margin-top: 0.15rem; }
     .type-price { font-family: 'Sora', sans-serif; font-weight: 700; color: var(--clay); white-space: nowrap; }
+    .type-price small { display: block; font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 0.7rem; color: #9E9186; text-align: right; }
 
     /* Calendar */
     .days-scroll {
@@ -214,10 +282,12 @@
       cursor: pointer;
       text-align: center;
       transition: all 0.15s;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--ink);
     }
-    .day-btn:hover { border-color: var(--clay-soft); }
+    .day-btn:hover:not(:disabled) { border-color: var(--clay-soft); }
     .day-btn.selected { border-color: var(--clay); background: #FEF6F4; }
-    .day-btn.disabled { opacity: 0.4; cursor: not-allowed; }
+    .day-btn:disabled { opacity: 0.4; cursor: not-allowed; }
     .day-label { font-size: 0.7rem; text-transform: uppercase; color: #9E9186; font-weight: 600; }
     .day-num { font-family: 'Sora', sans-serif; font-size: 1.1rem; font-weight: 700; }
     .day-month { font-size: 0.7rem; color: #9E9186; }
@@ -237,6 +307,7 @@
       font-size: 0.85rem;
       font-weight: 500;
       transition: all 0.15s;
+      color: var(--ink);
     }
     .slot-btn:hover { border-color: var(--clay-soft); }
     .slot-btn.selected { border-color: var(--clay); background: #FEF6F4; color: var(--clay-deep); font-weight: 600; }
@@ -252,18 +323,51 @@
       color: #6B5E54;
       margin-bottom: 0.35rem;
     }
+    .form-label .optional {
+      text-transform: none;
+      letter-spacing: 0;
+      font-weight: 500;
+      color: #9E9186;
+    }
     .form-input {
       width: 100%;
       padding: 0.6rem 0.875rem;
       border: 1.5px solid var(--border);
       border-radius: var(--radius-sm);
       font-family: 'DM Sans', sans-serif;
-      font-size: 0.9rem;
+      font-size: 1rem;
       color: var(--ink);
       background: var(--white);
       outline: none;
+      transition: border-color 0.15s;
     }
     .form-input:focus { border-color: var(--clay); }
+    .form-input.invalid { border-color: var(--error); background: var(--error-soft); }
+    .form-hint { font-size: 0.78rem; color: #9E9186; margin-top: 0.3rem; }
+    .field-error {
+      display: none;
+      font-size: 0.8rem;
+      color: var(--error);
+      font-weight: 500;
+      margin-top: 0.3rem;
+    }
+    .field-error.show { display: block; }
+
+    /* Error banner (replaces alert()) */
+    .error-banner {
+      display: none;
+      align-items: flex-start;
+      gap: 0.6rem;
+      background: var(--error-soft);
+      color: #991B1B;
+      border: 1px solid #FECACA;
+      border-radius: var(--radius-sm);
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+    }
+    .error-banner.show { display: flex; }
+    .error-banner i { margin-top: 0.15rem; flex-shrink: 0; }
 
     /* Summary */
     .summary-box {
@@ -275,13 +379,16 @@
     .summary-row {
       display: flex;
       justify-content: space-between;
+      gap: 1rem;
       padding: 0.4rem 0;
       font-size: 0.9rem;
       border-bottom: 1px solid var(--border);
     }
+    .summary-row span:last-child { text-align: right; }
     .summary-row:last-child { border-bottom: none; }
     .summary-row.total { font-weight: 700; font-size: 1rem; }
     .summary-row.total .price { color: var(--clay); font-family: 'Sora', sans-serif; }
+    .summary-row.muted { color: #6B5E54; font-size: 0.85rem; }
 
     /* Buttons */
     .btn {
@@ -304,6 +411,15 @@
     .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
     .btn-secondary { background: var(--cream); color: var(--ink); border: 1px solid var(--border); }
     .btn-secondary:hover { background: var(--border); }
+
+    .pay-note {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #6B5E54;
+      margin-top: 0.6rem;
+      line-height: 1.45;
+    }
+    .pay-note i { color: var(--sage); margin-right: 0.25rem; }
 
     /* Info section */
     .info-section {
@@ -338,6 +454,8 @@
       font-size: 0.8rem;
       color: #9E9186;
     }
+    .footer a { color: #9E9186; }
+    .footer a:hover { color: var(--clay-deep); }
 
     /* Loading */
     .loading { text-align: center; padding: 2rem; color: #9E9186; }
@@ -348,12 +466,17 @@
       border-top-color: var(--clay);
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
+      vertical-align: middle;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
     /* Hidden sections */
     .step-section { display: none; }
-    .step-section.active { display: block; }
+    .step-section.active { display: block; animation: fadeIn 0.25s ease; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
     /* Chat widget */
     .chat-widget {
@@ -411,8 +534,8 @@
     <div class="header-inner">
       <a href="/agendar" class="logo">Aparta</a>
       <div class="header-actions">
-        <a href="/chat" class="header-btn secondary">Chat</a>
-        <a href="/login" class="header-btn primary">Admin</a>
+        <a href="/terapeutas" class="header-btn secondary"><i class="fas fa-user-group"></i> Equipo</a>
+        <a href="/chat" class="header-btn secondary"><i class="fas fa-comment-dots"></i> ¿Dudas?</a>
       </div>
     </div>
   </header>
@@ -421,32 +544,35 @@
     <!-- Hero -->
     <div class="hero">
       <div class="hero-avatar"><i class="fas fa-user-md"></i></div>
-      <h1>Reservá tu cita</h1>
-      <p>Seleccioná el tipo de sesión, fecha y hora. Pagá el anticipo y listo.</p>
+      <h1>Reserva tu cita</h1>
+      <p>Elige el tipo de sesión, fecha y hora. Paga el anticipo y listo.</p>
     </div>
 
     <!-- Steps indicator -->
-    <div class="steps">
-      <div class="step active" id="step-ind-1">
-        <div class="step-dot">1</div>
-        <span>Tipo</span>
-      </div>
-      <div class="step-line"></div>
-      <div class="step" id="step-ind-2">
-        <div class="step-dot">2</div>
+    <nav class="steps" aria-label="Progreso de la reserva">
+      <button type="button" class="step active" id="step-ind-1" onclick="stepIndicatorClick(1)">
+        <div class="step-dot" aria-hidden="true">1</div>
+        <span>Sesión</span>
+      </button>
+      <div class="step-line" aria-hidden="true"></div>
+      <button type="button" class="step" id="step-ind-2" onclick="stepIndicatorClick(2)">
+        <div class="step-dot" aria-hidden="true">2</div>
         <span>Fecha</span>
-      </div>
-      <div class="step-line"></div>
-      <div class="step" id="step-ind-3">
-        <div class="step-dot">3</div>
+      </button>
+      <div class="step-line" aria-hidden="true"></div>
+      <button type="button" class="step" id="step-ind-3" onclick="stepIndicatorClick(3)">
+        <div class="step-dot" aria-hidden="true">3</div>
         <span>Datos</span>
-      </div>
-    </div>
+      </button>
+    </nav>
+
+    <!-- Context bar: what's selected so far -->
+    <div class="context-bar" id="contextBar" aria-live="polite"></div>
 
     <!-- Step 1: Session type -->
     <div class="step-section active" id="step-1">
       <div class="card">
-        <div class="card-title">¿Qué tipo de sesión necesitás?</div>
+        <div class="card-title">¿Qué tipo de sesión necesitas?</div>
         <div class="type-grid" id="typeGrid">
           <div class="loading"><div class="spinner"></div></div>
         </div>
@@ -456,11 +582,11 @@
     <!-- Step 2: Date & time -->
     <div class="step-section" id="step-2">
       <div class="card">
-        <div class="card-title">Elegí fecha y hora</div>
+        <div class="card-title">Elige fecha y hora</div>
         <div id="calendarLoading" class="loading"><div class="spinner"></div> Cargando disponibilidad...</div>
         <div id="calendarContent" style="display:none;">
           <div class="days-scroll" id="daysScroll"></div>
-          <div id="slotsContainer"></div>
+          <div id="slotsContainer" aria-live="polite"></div>
         </div>
         <div style="margin-top:1rem;">
           <button class="btn btn-secondary" onclick="goToStep(1)"><i class="fas fa-arrow-left"></i> Volver</button>
@@ -472,33 +598,50 @@
     <div class="step-section" id="step-3">
       <div class="card">
         <div class="card-title">Tus datos</div>
+
+        <div class="error-banner" id="formError" role="alert">
+          <i class="fas fa-circle-exclamation"></i>
+          <span id="formErrorText"></span>
+        </div>
+
         <div class="form-group">
-          <label class="form-label">Nombre completo</label>
-          <input type="text" class="form-input" id="patName" placeholder="Ej: María González" required>
+          <label class="form-label" for="patName">Nombre completo</label>
+          <input type="text" class="form-input" id="patName" placeholder="Ej: María González"
+                 autocomplete="name" required>
+          <div class="field-error" id="errName">Escribe tu nombre completo.</div>
         </div>
         <div class="form-group">
-          <label class="form-label">Teléfono (WhatsApp)</label>
-          <input type="tel" class="form-input" id="patPhone" placeholder="Ej: 5512345678" required>
+          <label class="form-label" for="patPhone">Teléfono (WhatsApp)</label>
+          <input type="tel" class="form-input" id="patPhone" placeholder="Ej: 55 1234 5678"
+                 autocomplete="tel-national" inputmode="numeric" maxlength="16" required>
+          <div class="form-hint">A 10 dígitos. Te enviaremos la confirmación y recordatorios por WhatsApp.</div>
+          <div class="field-error" id="errPhone">Escribe un teléfono válido de 10 dígitos.</div>
         </div>
         <div class="form-group">
-          <label class="form-label">Email</label>
-          <input type="email" class="form-input" id="patEmail" placeholder="Ej: maria@email.com">
+          <label class="form-label" for="patEmail">Email <span class="optional">(opcional)</span></label>
+          <input type="email" class="form-input" id="patEmail" placeholder="Ej: maria@email.com"
+                 autocomplete="email" inputmode="email">
+          <div class="field-error" id="errEmail">Ese email no parece válido. Revísalo o déjalo vacío.</div>
         </div>
 
         <div class="form-group" style="margin-top: 1.25rem; margin-bottom: 1.25rem;">
-          <label class="form-label">¿Tenés un cupón de descuento?</label>
+          <label class="form-label" for="couponCode">¿Tienes un cupón de descuento?</label>
           <div style="display: flex; gap: 0.5rem;">
-            <input type="text" class="form-input" id="couponCode" placeholder="Ej: NANO50" style="text-transform: uppercase;">
-            <button class="btn btn-secondary" onclick="applyCoupon()" style="width: auto; padding: 0 1.25rem; font-size: 0.85rem; height: 38px; flex-shrink: 0;">Aplicar</button>
+            <input type="text" class="form-input" id="couponCode" placeholder="Ej: NANO50"
+                   style="text-transform: uppercase;" autocomplete="off">
+            <button class="btn btn-secondary" id="couponBtn" onclick="applyCoupon()" style="width: auto; padding: 0 1.25rem; font-size: 0.85rem; height: 42px; flex-shrink: 0;">Aplicar</button>
           </div>
-          <div id="couponStatus" style="font-size: 0.8rem; margin-top: 0.35rem; display: none; font-weight: 500;"></div>
+          <div id="couponStatus" role="status" style="font-size: 0.8rem; margin-top: 0.35rem; display: none; font-weight: 500;"></div>
         </div>
 
         <div class="summary-box" id="summaryBox"></div>
 
         <button class="btn btn-primary" id="payBtn" onclick="submitBooking()">
-          <i class="fas fa-lock"></i> Pagar anticipo y confirmar
+          <i class="fas fa-lock"></i> <span id="payBtnText">Pagar anticipo y confirmar</span>
         </button>
+        <p class="pay-note">
+          <i class="fas fa-shield-alt"></i>Pago seguro con Stripe. El resto lo pagas el día de tu sesión.
+        </p>
         <div style="margin-top:0.75rem;">
           <button class="btn btn-secondary" onclick="goToStep(2)"><i class="fas fa-arrow-left"></i> Volver</button>
         </div>
@@ -510,24 +653,24 @@
       <h2 style="font-family:'Sora',sans-serif;font-size:1.1rem;">¿Por qué elegirnos?</h2>
       <div class="info-grid">
         <div class="info-item">
-          <i class="fas fa-shield-alt"></i>
+          <i class="fas fa-shield-alt" aria-hidden="true"></i>
           <h3>Pagos seguros</h3>
           <p>Protegidos por Stripe con encriptación SSL.</p>
         </div>
         <div class="info-item">
-          <i class="fas fa-calendar-check"></i>
+          <i class="fas fa-calendar-check" aria-hidden="true"></i>
           <h3>Confirmación instantánea</h3>
           <p>Tu cita queda reservada al instante.</p>
         </div>
         <div class="info-item">
-          <i class="fas fa-redo"></i>
-          <h3>Reagendá cuando quieras</h3>
-          <p>Podés modificar tu cita con anticipación.</p>
+          <i class="fas fa-redo" aria-hidden="true"></i>
+          <h3>Reagenda cuando quieras</h3>
+          <p>Puedes modificar tu cita con anticipación.</p>
         </div>
         <div class="info-item">
-          <i class="fas fa-headset"></i>
-          <h3>¿Dudas? Chateá</h3>
-          <p>Nuestro asistente te ayuda 24/7.</p>
+          <i class="fas fa-headset" aria-hidden="true"></i>
+          <h3>¿Dudas? Chatea</h3>
+          <p>Nuestra asistente te ayuda 24/7.</p>
         </div>
       </div>
     </div>
@@ -535,7 +678,7 @@
 
   <footer class="footer">
     <p>© Aparta — Aparta tu cita. Cobra al instante.</p>
-    <p style="margin-top:0.25rem;">Pagos protegidos por Stripe</p>
+    <p style="margin-top:0.25rem;">Pagos protegidos por Stripe · <a href="/login">Acceso profesional</a></p>
   </footer>
 
   <!-- Chat widget -->
@@ -543,11 +686,11 @@
     <div class="chat-panel" id="chatPanel">
       <div class="chat-header">
         <h4><i class="fas fa-comments" style="margin-right:0.4rem;"></i>¿Dudas?</h4>
-        <button class="chat-close" onclick="toggleChat()"><i class="fas fa-times"></i></button>
+        <button class="chat-close" onclick="toggleChat()" aria-label="Cerrar chat"><i class="fas fa-times"></i></button>
       </div>
-      <iframe class="chat-iframe" src="/chat" id="chatFrame"></iframe>
+      <iframe class="chat-iframe" src="/chat" id="chatFrame" title="Chat de ayuda"></iframe>
     </div>
-    <button class="chat-btn" onclick="toggleChat()" id="chatBtn"><i class="fas fa-comment-dots"></i></button>
+    <button class="chat-btn" onclick="toggleChat()" id="chatBtn" aria-label="Abrir chat de ayuda"><i class="fas fa-comment-dots"></i></button>
   </div>
 
   <script>
@@ -559,6 +702,10 @@
     let selectedDate = null;
     let selectedTime = null;
     let availabilityData = [];
+
+    const DIAS = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+    const DIAS_CORTO = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+    const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 
     // Fee types (loaded from API or fallback)
     const feeTypesFallback = [
@@ -573,6 +720,17 @@
     // ========================
     async function init() {
       await loadFeeTypes();
+      document.getElementById('couponCode').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); applyCoupon(); }
+      });
+      // Clear inline errors as the user types
+      [['patName','errName'], ['patPhone','errPhone'], ['patEmail','errEmail']].forEach(([inputId, errId]) => {
+        document.getElementById(inputId).addEventListener('input', () => {
+          document.getElementById(inputId).classList.remove('invalid');
+          document.getElementById(errId).classList.remove('show');
+          hideFormError();
+        });
+      });
     }
 
     async function loadFeeTypes() {
@@ -609,21 +767,22 @@
     function renderTypes(types) {
       const grid = document.getElementById('typeGrid');
       grid.innerHTML = types.map(t => `
-        <div class="type-card" onclick="selectType(${t.id}, this)" data-type='${JSON.stringify(t).replace(/'/g,"&#39;")}'>
-          <div class="type-icon"><i class="fas ${t.icon || 'fa-calendar'}"></i></div>
+        <button type="button" class="type-card" onclick="selectType(this)" data-type='${JSON.stringify(t).replace(/'/g,"&#39;")}'>
+          <div class="type-icon" aria-hidden="true"><i class="fas ${t.icon || 'fa-calendar'}"></i></div>
           <div class="type-info">
             <div class="type-name">${t.label}</div>
             <div class="type-desc">${t.description} · ${t.duration} min</div>
           </div>
-          <div class="type-price">$${t.fee.toLocaleString()}</div>
-        </div>
+          <div class="type-price">$${t.fee.toLocaleString()}<small>anticipo $${Math.round(t.fee * t.deposit_percent / 100).toLocaleString()}</small></div>
+        </button>
       `).join('');
     }
 
-    function selectType(id, el) {
+    function selectType(el) {
       document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
       el.classList.add('selected');
       selectedType = JSON.parse(el.dataset.type.replace(/&#39;/g, "'"));
+      // Reset date/time if changing session type mid-flow
       goToStep(2);
       loadAvailability();
     }
@@ -631,6 +790,11 @@
     // ========================
     // STEP NAVIGATION
     // ========================
+    function stepIndicatorClick(n) {
+      // Only allow going back to steps already completed
+      if (n < currentStep) goToStep(n);
+    }
+
     function goToStep(n) {
       currentStep = n;
       document.querySelectorAll('.step-section').forEach(s => s.classList.remove('active'));
@@ -641,6 +805,41 @@
         if (i + 1 < n) s.classList.add('done');
         if (i + 1 === n) s.classList.add('active');
       });
+
+      renderContextBar();
+      hideFormError();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function renderContextBar() {
+      const bar = document.getElementById('contextBar');
+      if (currentStep === 1 || !selectedType) {
+        bar.classList.remove('show');
+        return;
+      }
+      let chips = `
+        <span class="context-chip"><i class="fas fa-check-circle"></i>${selectedType.label} · ${selectedType.duration} min · $${selectedType.fee.toLocaleString()}</span>
+      `;
+      if (currentStep === 3 && selectedDate && selectedTime) {
+        chips += `<span class="context-chip"><span class="sep">|</span><i class="fas fa-calendar-check"></i>${fmtShortDate(selectedDate)}, ${selectedTime.substring(0,5)} h</span>`;
+      }
+      const backTo = currentStep === 3 ? 2 : 1;
+      const backLabel = currentStep === 3 ? 'Cambiar fecha' : 'Cambiar sesión';
+      bar.innerHTML = chips + `<button type="button" class="context-edit" onclick="goToStep(${backTo})">${backLabel}</button>`;
+      bar.classList.add('show');
+    }
+
+    // ========================
+    // DATE HELPERS
+    // ========================
+    function fmtShortDate(dateStr) {
+      const d = new Date(dateStr + 'T00:00:00');
+      return `${DIAS_CORTO[d.getDay()].toLowerCase()} ${d.getDate()} ${d.toLocaleDateString('es-MX',{month:'short'})}`;
+    }
+
+    function fmtLongDate(dateStr) {
+      const d = new Date(dateStr + 'T00:00:00');
+      return `${DIAS[d.getDay()].charAt(0).toUpperCase() + DIAS[d.getDay()].slice(1)} ${d.getDate()} de ${MESES[d.getMonth()]}`;
     }
 
     // ========================
@@ -649,6 +848,7 @@
     async function loadAvailability() {
       const loading = document.getElementById('calendarLoading');
       const content = document.getElementById('calendarContent');
+      loading.innerHTML = '<div class="spinner"></div> Cargando disponibilidad...';
       loading.style.display = 'block';
       content.style.display = 'none';
 
@@ -660,32 +860,45 @@
         loading.style.display = 'none';
         content.style.display = 'block';
       } catch (e) {
-        loading.innerHTML = '<div>Error al cargar disponibilidad. Intentá de nuevo.</div>';
+        loading.innerHTML = `
+          <div style="margin-bottom:0.75rem;">No pudimos cargar la disponibilidad.</div>
+          <button class="btn btn-secondary" style="width:auto;padding:0.6rem 1.25rem;font-size:0.875rem;" onclick="loadAvailability()">
+            <i class="fas fa-redo"></i> Intentar de nuevo
+          </button>
+        `;
       }
     }
 
     function renderCalendar() {
       const scroll = document.getElementById('daysScroll');
       if (!availabilityData.length) {
-        scroll.innerHTML = '<div style="color:#9E9186;font-size:0.9rem;">No hay disponibilidad por el momento.</div>';
+        scroll.innerHTML = '<div style="color:#9E9186;font-size:0.9rem;">Por ahora no hay horarios disponibles. Escríbenos por el chat y te ayudamos a encontrar un espacio.</div>';
+        document.getElementById('slotsContainer').innerHTML = '';
         return;
       }
 
-      const dias = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
       scroll.innerHTML = availabilityData.map(day => {
         const d = new Date(day.date + 'T00:00:00');
         return `
-          <div class="day-btn ${day.slots.length ? '' : 'disabled'}" data-date="${day.date}" onclick="selectDate('${day.date}', this)">
-            <div class="day-label">${dias[d.getDay()]}</div>
+          <button type="button" class="day-btn" ${day.slots.length ? '' : 'disabled'} data-date="${day.date}" onclick="selectDate('${day.date}', this)" aria-label="${fmtLongDate(day.date)}${day.slots.length ? '' : ' (sin horarios)'}">
+            <div class="day-label">${DIAS_CORTO[d.getDay()]}</div>
             <div class="day-num">${d.getDate()}</div>
             <div class="day-month">${d.toLocaleDateString('es-MX',{month:'short'})}</div>
-          </div>
+          </button>
         `;
       }).join('');
+
+      // Auto-select the first day that has open slots so the patient
+      // immediately sees real times instead of an empty panel
+      const firstAvailable = availabilityData.find(d => d.slots.length);
+      if (firstAvailable) {
+        const btn = scroll.querySelector(`[data-date="${firstAvailable.date}"]`);
+        if (btn) selectDate(firstAvailable.date, btn);
+      }
     }
 
     function selectDate(date, el) {
-      if (el.classList.contains('disabled')) return;
+      if (el.disabled) return;
       document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('selected'));
       el.classList.add('selected');
       selectedDate = date;
@@ -700,10 +913,10 @@
         return;
       }
       container.innerHTML = `
-        <div style="font-size:0.8rem;font-weight:600;color:#6B5E54;margin-bottom:0.5rem;">Horarios disponibles</div>
+        <div style="font-size:0.8rem;font-weight:600;color:#6B5E54;margin-bottom:0.5rem;">Horarios para ${fmtLongDate(date).toLowerCase()}</div>
         <div class="slots-grid">
           ${day.slots.map(time => `
-            <button class="slot-btn" onclick="selectTime('${time}', this)">${time.substring(0,5)}</button>
+            <button type="button" class="slot-btn" onclick="selectTime('${time}', this)">${time.substring(0,5)}</button>
           `).join('')}
         </div>
       `;
@@ -713,8 +926,8 @@
       document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('selected'));
       el.classList.add('selected');
       selectedTime = time;
-      setTimeout(() => goToStep(3), 200);
       renderSummary();
+      setTimeout(() => goToStep(3), 200);
     }
 
     // ========================
@@ -725,12 +938,15 @@
     async function applyCoupon() {
       const code = document.getElementById('couponCode').value.trim().toUpperCase();
       const status = document.getElementById('couponStatus');
+      const btn = document.getElementById('couponBtn');
       if (!code) {
         status.style.display = 'none';
         activeCoupon = null;
         renderSummary();
         return;
       }
+      btn.disabled = true;
+      btn.innerHTML = '<div class="spinner" style="width:14px;height:14px;"></div>';
       try {
         const res = await fetch('/api/bookings/validate-coupon?code=' + encodeURIComponent(code));
         const json = await res.json();
@@ -748,18 +964,17 @@
       } catch (e) {
         activeCoupon = null;
         status.style.color = '#DC2626';
-        status.textContent = '❌ Error de conexión';
+        status.textContent = '❌ Error de conexión. Intenta de nuevo.';
         status.style.display = 'block';
       }
+      btn.disabled = false;
+      btn.innerHTML = 'Aplicar';
       renderSummary();
     }
 
-    function renderSummary() {
-      if (!selectedType || !selectedDate || !selectedTime) return;
-      
+    function computeTotals() {
       let finalFee = selectedType.fee;
       let discountAmount = 0;
-      
       if (activeCoupon) {
         if (activeCoupon.type === 'percent') {
           discountAmount = Math.round(selectedType.fee * activeCoupon.value / 100);
@@ -768,41 +983,93 @@
         }
         finalFee = Math.max(0, selectedType.fee - discountAmount);
       }
-      
       const deposit = Math.round(finalFee * selectedType.deposit_percent / 100);
-      const [y, m, d] = selectedDate.split('-');
-      
+      return { finalFee, discountAmount, deposit, remaining: finalFee - deposit };
+    }
+
+    function renderSummary() {
+      if (!selectedType || !selectedDate || !selectedTime) return;
+
+      const { finalFee, discountAmount, deposit, remaining } = computeTotals();
+
       let discountRowHtml = '';
       if (activeCoupon && discountAmount > 0) {
         discountRowHtml = `<div class="summary-row" style="color: #059669; font-weight: 600;"><span>Descuento (${activeCoupon.code})</span><span>-$${discountAmount.toLocaleString()}</span></div>`;
       }
-      
+
       document.getElementById('summaryBox').innerHTML = `
         <div class="summary-row"><span>Tipo de sesión</span><span>${selectedType.label}</span></div>
-        <div class="summary-row"><span>Fecha</span><span>${d}/${m}/${y}</span></div>
-        <div class="summary-row"><span>Hora</span><span>${selectedTime.substring(0,5)}</span></div>
+        <div class="summary-row"><span>Fecha</span><span>${fmtLongDate(selectedDate)}</span></div>
+        <div class="summary-row"><span>Hora</span><span>${selectedTime.substring(0,5)} h</span></div>
         <div class="summary-row"><span>Duración</span><span>${selectedType.duration} min</span></div>
-        <div class="summary-row"><span>Tarifa base</span><span>$${selectedType.fee.toLocaleString()}</span></div>
+        <div class="summary-row"><span>Tarifa de la sesión</span><span>$${selectedType.fee.toLocaleString()}</span></div>
         ${discountRowHtml}
-        <div class="summary-row total"><span>Anticipo a pagar (${selectedType.deposit_percent}%)</span><span class="price">$${deposit.toLocaleString()}</span></div>
+        <div class="summary-row total"><span>Anticipo a pagar hoy (${selectedType.deposit_percent}%)</span><span class="price">$${deposit.toLocaleString()}</span></div>
+        <div class="summary-row muted"><span>Resto a pagar en tu sesión</span><span>$${remaining.toLocaleString()}</span></div>
       `;
+
+      document.getElementById('payBtnText').textContent = `Pagar anticipo de $${deposit.toLocaleString()} y confirmar`;
+    }
+
+    // ========================
+    // VALIDATION & ERRORS
+    // ========================
+    function showFormError(msg) {
+      const banner = document.getElementById('formError');
+      document.getElementById('formErrorText').textContent = msg;
+      banner.classList.add('show');
+      banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function hideFormError() {
+      document.getElementById('formError').classList.remove('show');
+    }
+
+    function markInvalid(inputId, errId) {
+      document.getElementById(inputId).classList.add('invalid');
+      document.getElementById(errId).classList.add('show');
+    }
+
+    function validateForm() {
+      hideFormError();
+      let firstInvalid = null;
+
+      const name = document.getElementById('patName').value.trim();
+      if (name.length < 3) {
+        markInvalid('patName', 'errName');
+        firstInvalid = firstInvalid || 'patName';
+      }
+
+      const phoneDigits = document.getElementById('patPhone').value.replace(/\D/g, '');
+      if (phoneDigits.length < 10 || phoneDigits.length > 13) {
+        markInvalid('patPhone', 'errPhone');
+        firstInvalid = firstInvalid || 'patPhone';
+      }
+
+      const email = document.getElementById('patEmail').value.trim();
+      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        markInvalid('patEmail', 'errEmail');
+        firstInvalid = firstInvalid || 'patEmail';
+      }
+
+      if (firstInvalid) {
+        document.getElementById(firstInvalid).focus();
+        return null;
+      }
+      return { name, phone: phoneDigits, email };
     }
 
     async function submitBooking() {
-      const name = document.getElementById('patName').value.trim();
-      const phone = document.getElementById('patPhone').value.trim();
-      const email = document.getElementById('patEmail').value.trim();
-      const btn = document.getElementById('payBtn');
+      const data = validateForm();
+      if (!data) return;
 
-      if (!name || !phone) {
-        alert('Por favor completá tu nombre y teléfono.');
-        return;
-      }
       if (!selectedType || !selectedDate || !selectedTime) {
-        alert('Error: faltan datos de la cita. Volvé a empezar.');
+        showFormError('Faltan datos de tu cita. Regresa y elige la sesión, fecha y hora.');
         return;
       }
 
+      const btn = document.getElementById('payBtn');
+      const originalLabel = btn.innerHTML;
       btn.disabled = true;
       btn.innerHTML = '<div class="spinner" style="border-color:rgba(255,255,255,0.3);border-top-color:#fff;"></div> Procesando...';
 
@@ -811,9 +1078,9 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            patient_name: name,
-            patient_phone: phone,
-            patient_email: email,
+            patient_name: data.name,
+            patient_phone: data.phone,
+            patient_email: data.email,
             date: selectedDate,
             time: selectedTime,
             type: selectedType.type,
@@ -827,19 +1094,29 @@
 
         const json = await res.json();
         if (json.success && json.checkout_url) {
+          btn.innerHTML = '<i class="fas fa-check"></i> Redirigiendo al pago seguro...';
           window.location.href = json.checkout_url;
         } else if (json.success) {
-          alert('Cita creada. Te contactaremos para el pago.');
-          window.location.href = '/agendar';
+          // Booking created but no payment gateway: confirm in place
+          document.querySelector('#step-3 .card').innerHTML = `
+            <div style="text-align:center;padding:1.5rem 0;">
+              <div style="width:72px;height:72px;background:#D1FAE5;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
+                <i class="fas fa-check" style="font-size:2rem;color:#065F46;"></i>
+              </div>
+              <h2 style="font-family:'Sora',sans-serif;font-size:1.25rem;margin-bottom:0.5rem;">¡Cita registrada!</h2>
+              <p style="color:#6B5E54;margin-bottom:1.5rem;">${selectedType.label} · ${fmtLongDate(selectedDate)} · ${selectedTime.substring(0,5)} h<br>Te contactaremos por WhatsApp para coordinar el pago.</p>
+              <a href="/agendar" class="btn btn-primary" style="text-decoration:none;max-width:280px;margin:0 auto;">Agendar otra cita</a>
+            </div>
+          `;
         } else {
-          alert(json.error || 'Error al crear la cita. Intentá de nuevo.');
+          showFormError(json.error || 'No pudimos crear tu cita. Intenta de nuevo en un momento.');
           btn.disabled = false;
-          btn.innerHTML = '<i class="fas fa-lock"></i> Pagar anticipo y confirmar';
+          btn.innerHTML = originalLabel;
         }
       } catch (e) {
-        alert('Error de conexión. Intentá de nuevo.');
+        showFormError('Error de conexión. Revisa tu internet e intenta de nuevo.');
         btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-lock"></i> Pagar anticipo y confirmar';
+        btn.innerHTML = originalLabel;
       }
     }
 
@@ -849,9 +1126,9 @@
     function toggleChat() {
       document.getElementById('chatPanel').classList.toggle('open');
       const btn = document.getElementById('chatBtn');
-      btn.innerHTML = document.getElementById('chatPanel').classList.contains('open')
-        ? '<i class="fas fa-times"></i>'
-        : '<i class="fas fa-comment-dots"></i>';
+      const isOpen = document.getElementById('chatPanel').classList.contains('open');
+      btn.innerHTML = isOpen ? '<i class="fas fa-times"></i>' : '<i class="fas fa-comment-dots"></i>';
+      btn.setAttribute('aria-label', isOpen ? 'Cerrar chat de ayuda' : 'Abrir chat de ayuda');
     }
 
     init();

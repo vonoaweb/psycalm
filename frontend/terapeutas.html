@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nuestro equipo — Aparta</title>
+  <meta name="description" content="Conoce al equipo de psicólogas y psicólogos. Especialidades, enfoque y modalidad de cada profesional. Agenda con quien mejor te acompañe.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --clay: #C8553D;
+      --clay-deep: #A53E2A;
+      --clay-soft: #F1D5C7;
+      --cream: #F4EBDD;
+      --sage: #7B9E7E;
+      --sage-deep: #5E7A60;
+      --ink: #2A1F1A;
+      --ink-light: #4A3F3A;
+      --border: #E8DDD0;
+      --white: #FFFFFF;
+      --radius: 0.875rem;
+      --radius-sm: 0.5rem;
+      --shadow: 0 2px 8px rgba(42,31,26,0.08);
+      --shadow-lg: 0 8px 32px rgba(42,31,26,0.12);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    :focus-visible {
+      outline: 3px solid rgba(200, 85, 61, 0.5);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+
+    /* Header */
+    .header {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .header-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--clay);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+    }
+    .logo::before {
+      content: '';
+      width: 22px; height: 22px;
+      background: var(--clay);
+      border-radius: 6px 6px 6px 2px;
+      display: inline-block;
+    }
+    .header-actions { display: flex; gap: 0.5rem; }
+    .header-btn {
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .header-btn.primary { background: var(--clay); color: white; }
+    .header-btn.primary:hover { background: var(--clay-deep); }
+    .header-btn.secondary { background: var(--cream); color: var(--ink); border: 1px solid var(--border); }
+    .header-btn.secondary:hover { border-color: var(--clay-soft); color: var(--clay-deep); }
+
+    /* Main */
+    .main { max-width: 960px; margin: 0 auto; padding: 1.5rem; }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 2.5rem 1rem 1.5rem;
+    }
+    .hero h1 {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.85rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+    .hero p { color: #6B5E54; font-size: 1rem; max-width: 540px; margin: 0 auto; }
+
+    /* Filters */
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-bottom: 1.75rem;
+    }
+    .filter-chip {
+      padding: 0.45rem 1rem;
+      border-radius: 9999px;
+      border: 1.5px solid var(--border);
+      background: var(--white);
+      color: var(--ink-light);
+      font-family: 'Sora', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .filter-chip:hover { border-color: var(--clay-soft); }
+    .filter-chip.active { background: var(--clay); color: white; border-color: var(--clay); }
+
+    /* Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+
+    .card-head {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .avatar {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 1.35rem;
+      color: white;
+      flex-shrink: 0;
+    }
+    .card-name {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      line-height: 1.25;
+    }
+    .card-title {
+      font-size: 0.85rem;
+      color: var(--clay-deep);
+      font-weight: 500;
+      margin-top: 0.15rem;
+    }
+
+    .card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem 1rem;
+      font-size: 0.8rem;
+      color: #6B5E54;
+      margin-bottom: 0.875rem;
+    }
+    .card-meta span { display: inline-flex; align-items: center; gap: 0.35rem; }
+    .card-meta i { color: var(--sage); }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1rem;
+    }
+    .tag {
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.25rem 0.6rem;
+      border-radius: 9999px;
+      background: var(--cream);
+      color: var(--ink-light);
+      border: 1px solid var(--border);
+    }
+
+    .card-bio {
+      font-size: 0.875rem;
+      color: var(--ink-light);
+      margin-bottom: 1.25rem;
+      flex: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .btn {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      padding: 0.7rem;
+      border-radius: var(--radius-sm);
+      font-family: 'Sora', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+    .btn-primary { background: var(--clay); color: white; }
+    .btn-primary:hover { background: var(--clay-deep); }
+    .btn-ghost { background: transparent; color: var(--ink-light); border: 1.5px solid var(--border); }
+    .btn-ghost:hover { border-color: var(--clay); color: var(--clay-deep); }
+
+    /* Loading / empty */
+    .loading, .empty { text-align: center; padding: 3rem 1rem; color: #9E9186; grid-column: 1 / -1; }
+    .spinner {
+      display: inline-block;
+      width: 22px; height: 22px;
+      border: 2px solid var(--border);
+      border-top-color: var(--clay);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      vertical-align: middle;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(26,18,11,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      z-index: 100;
+    }
+    .modal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .modal {
+      background: var(--white);
+      border-radius: 1.25rem;
+      max-width: 480px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(26,18,11,0.25);
+      animation: slideUp 0.25s ease;
+    }
+    @keyframes slideUp { from { transform: translateY(12px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+    .modal-header {
+      padding: 1.75rem 1.75rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      position: relative;
+    }
+    .modal-close {
+      position: absolute;
+      top: 1rem; right: 1rem;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      border: none;
+      background: var(--cream);
+      color: var(--ink-light);
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .modal-close:hover { background: var(--border); }
+    .modal-body { padding: 0 1.75rem 1.75rem; }
+    .modal-section { margin-bottom: 1.25rem; }
+    .modal-section h4 {
+      font-family: 'Sora', sans-serif;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #9E9186;
+      margin-bottom: 0.5rem;
+    }
+    .modal-section p { font-size: 0.92rem; color: var(--ink-light); }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 2.5rem 1rem;
+      font-size: 0.8rem;
+      color: #9E9186;
+    }
+    .footer a { color: #9E9186; }
+    .footer a:hover { color: var(--clay-deep); }
+
+    .disclaimer {
+      max-width: 540px;
+      margin: 2rem auto 0;
+      text-align: center;
+      font-size: 0.78rem;
+      color: #B8A99A;
+    }
+
+    @media (max-width: 600px) {
+      .header-btn.secondary .label-long { display: none; }
+      .hero h1 { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="/agendar" class="logo">Aparta</a>
+      <div class="header-actions">
+        <a href="/chat" class="header-btn secondary"><i class="fas fa-comment-dots"></i> <span class="label-long">¿Dudas?</span></a>
+        <a href="/agendar" class="header-btn primary"><i class="fas fa-calendar-plus"></i> Agendar</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="hero">
+      <h1>Conoce a nuestro equipo</h1>
+      <p>Psicólogas y psicólogos con cédula profesional, cada uno con su especialidad. Elige con quién quieres iniciar tu proceso.</p>
+    </div>
+
+    <div class="filters" id="filters" role="group" aria-label="Filtrar por modalidad"></div>
+
+    <div class="grid" id="grid">
+      <div class="loading"><div class="spinner"></div></div>
+    </div>
+
+    <p class="disclaimer">
+      ¿Buscas a alguien en particular o no sabes con quién empezar? Escríbenos por el
+      <a href="/chat" style="color:var(--clay-deep);font-weight:600;">chat</a> y te orientamos sin costo.
+    </p>
+  </main>
+
+  <footer class="footer">
+    <p>© Aparta — Aparta tu cita. Cobra al instante.</p>
+    <p style="margin-top:0.25rem;">Pagos protegidos por Stripe · <a href="/login">Acceso profesional</a></p>
+  </footer>
+
+  <!-- Detail modal -->
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModalOnOverlay(event)">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalName">
+      <div class="modal-header">
+        <div class="avatar" id="modalAvatar"></div>
+        <div>
+          <div class="card-name" id="modalName"></div>
+          <div class="card-title" id="modalTitle"></div>
+        </div>
+        <button class="modal-close" onclick="closeModal()" aria-label="Cerrar">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="card-meta" id="modalMeta" style="margin-bottom:1.25rem;"></div>
+        <div class="modal-section">
+          <h4>Sobre mí</h4>
+          <p id="modalBio"></p>
+        </div>
+        <div class="modal-section">
+          <h4>Especialidades</h4>
+          <div class="tags" id="modalTags"></div>
+        </div>
+        <div class="modal-section" id="modalApproachSection">
+          <h4>Enfoque</h4>
+          <p id="modalApproach"></p>
+        </div>
+        <a href="/agendar" class="btn btn-primary" style="width:100%;"><i class="fas fa-calendar-plus"></i> Agendar una cita</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let therapists = [];
+    let activeFilter = 'Todos';
+
+    const fallback = [
+      { id: 'dra-mariana-rodriguez', name: 'Dra. Mariana Rodríguez', title: 'Psicóloga clínica · Directora', cedula: '12345678', years: 12, modalities: ['Presencial','Online'], specialties: ['Ansiedad','Depresión','Terapia cognitivo-conductual'], languages: ['Español','Inglés'], approach: 'Terapia cognitivo-conductual (TCC)', bio: 'Fundadora del consultorio. Acompaño a adultos que atraviesan ansiedad, depresión y momentos de cambio. Trabajo desde un enfoque cálido y basado en evidencia.', accent: '#C8553D' }
+    ];
+
+    function initials(name) {
+      const clean = name.replace(/^(Dra?\.|Lic\.|Mtra?\.|Psic\.)\s*/i, '').trim();
+      const parts = clean.split(/\s+/);
+      return ((parts[0]?.[0] || '') + (parts[1]?.[0] || '')).toUpperCase();
+    }
+
+    async function load() {
+      try {
+        const res = await fetch('/api/therapists');
+        const json = await res.json();
+        therapists = (json.success && json.data?.length) ? json.data : fallback;
+      } catch (e) {
+        therapists = fallback;
+      }
+      renderFilters();
+      render();
+    }
+
+    function renderFilters() {
+      const mods = ['Todos', 'Presencial', 'Online'];
+      document.getElementById('filters').innerHTML = mods.map(m =>
+        `<button type="button" class="filter-chip ${m === activeFilter ? 'active' : ''}" onclick="setFilter('${m}')">${m}</button>`
+      ).join('');
+    }
+
+    function setFilter(m) {
+      activeFilter = m;
+      renderFilters();
+      render();
+    }
+
+    function render() {
+      const grid = document.getElementById('grid');
+      const list = activeFilter === 'Todos'
+        ? therapists
+        : therapists.filter(t => (t.modalities || []).includes(activeFilter));
+
+      if (!list.length) {
+        grid.innerHTML = '<div class="empty">No hay terapeutas para esta modalidad por ahora.</div>';
+        return;
+      }
+
+      grid.innerHTML = list.map((t, i) => {
+        const accent = t.accent || '#C8553D';
+        return `
+          <article class="card">
+            <div class="card-head">
+              <div class="avatar" style="background:${accent};">${initials(t.name)}</div>
+              <div>
+                <div class="card-name">${t.name}</div>
+                <div class="card-title">${t.title || ''}</div>
+              </div>
+            </div>
+            <div class="card-meta">
+              ${t.years ? `<span><i class="fas fa-award"></i>${t.years} años de experiencia</span>` : ''}
+              ${(t.modalities || []).length ? `<span><i class="fas fa-laptop-house"></i>${t.modalities.join(' y ')}</span>` : ''}
+              ${t.cedula ? `<span><i class="fas fa-id-badge"></i>Céd. ${t.cedula}</span>` : ''}
+            </div>
+            <div class="tags">
+              ${(t.specialties || []).slice(0,3).map(s => `<span class="tag">${s}</span>`).join('')}
+            </div>
+            <p class="card-bio">${t.bio || ''}</p>
+            <div class="card-actions">
+              <button type="button" class="btn btn-ghost" onclick="openModal(${i})">Ver perfil</button>
+              <a href="/agendar" class="btn btn-primary">Agendar</a>
+            </div>
+          </article>
+        `;
+      }).join('');
+
+      // Keep modal indices aligned with the filtered list
+      window._renderedList = list;
+    }
+
+    function openModal(i) {
+      const t = (window._renderedList || therapists)[i];
+      if (!t) return;
+      const accent = t.accent || '#C8553D';
+      document.getElementById('modalAvatar').style.background = accent;
+      document.getElementById('modalAvatar').textContent = initials(t.name);
+      document.getElementById('modalName').textContent = t.name;
+      document.getElementById('modalTitle').textContent = t.title || '';
+      document.getElementById('modalBio').textContent = t.bio || '';
+      document.getElementById('modalMeta').innerHTML = `
+        ${t.years ? `<span><i class="fas fa-award"></i>${t.years} años</span>` : ''}
+        ${(t.modalities || []).length ? `<span><i class="fas fa-laptop-house"></i>${t.modalities.join(' y ')}</span>` : ''}
+        ${t.cedula ? `<span><i class="fas fa-id-badge"></i>Céd. prof. ${t.cedula}</span>` : ''}
+        ${(t.languages || []).length ? `<span><i class="fas fa-language"></i>${t.languages.join(', ')}</span>` : ''}
+      `;
+      document.getElementById('modalTags').innerHTML = (t.specialties || []).map(s => `<span class="tag">${s}</span>`).join('');
+      const approachSection = document.getElementById('modalApproachSection');
+      if (t.approach) {
+        document.getElementById('modalApproach').textContent = t.approach;
+        approachSection.style.display = 'block';
+      } else {
+        approachSection.style.display = 'none';
+      }
+      document.getElementById('modalOverlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('modalOverlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function closeModalOnOverlay(e) {
+      if (e.target.id === 'modalOverlay') closeModal();
+    }
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+    load();
+  </script>
+</body>
+</html>

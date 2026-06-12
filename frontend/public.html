@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aparta — Agenda tu cita</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -441,7 +441,7 @@
         </div>
       </div>
 
-      <div class="messages-area" id="messagesArea">
+      <div class="messages-area" id="messagesArea" aria-live="polite">
         <div class="typing-row" id="typingRow">
           <div class="msg-avatar bot">🌿</div>
           <div class="typing-bubble">
@@ -455,8 +455,8 @@
       <div class="chat-buttons" id="chatButtons"></div>
 
       <div class="chat-input-wrap">
-        <input type="text" id="chatInput" placeholder="Escribile a Sofía..." onkeypress="handleKeyPress(event)" autocomplete="off">
-        <button onclick="sendMessage()" id="sendBtn"><i class="fas fa-paper-plane"></i></button>
+        <input type="text" id="chatInput" placeholder="Escríbele a Sofía..." onkeypress="handleKeyPress(event)" autocomplete="off" aria-label="Mensaje para Sofía">
+        <button onclick="sendMessage()" id="sendBtn" aria-label="Enviar mensaje"><i class="fas fa-paper-plane"></i></button>
       </div>
     </div>
   </div>
@@ -474,7 +474,7 @@
         addBotMessage(data.message);
         showButtons(data.quickReplies || []);
       } catch (err) {
-        addBotMessage('⚠️ Ups, no pude conectarme. Intentá recargar la página.');
+        addBotMessage('⚠️ Ups, no pude conectarme. Intenta recargar la página.');
       }
     }
 
@@ -502,7 +502,7 @@
       row.innerHTML = `
         <div>
           <div class="msg-bubble user">${formatText(text)}</div>
-          <div class="msg-time">Vos · ${time}</div>
+          <div class="msg-time">Tú · ${time}</div>
         </div>
       `;
       area.appendChild(row);
@@ -567,7 +567,7 @@
         showButtons(result.quickReplies || []);
       } catch (err) {
         await new Promise(r => setTimeout(r, 600));
-        addBotMessage('⚠️ Me quedé sin conexión por un segundo. ¿Podés repetirme?');
+        addBotMessage('⚠️ Me quedé sin conexión por un segundo. ¿Me lo repites?');
         showButtons([{ id: 'retry', label: '🔄 Reintentar' }]);
       } finally {
         showTyping(false);

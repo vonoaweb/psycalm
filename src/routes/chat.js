@@ -29,39 +29,39 @@ function setSession(id, sessData) {
 const botName = 'Sofía';
 
 const greetings = [
-  '¡Hola! Qué bueno que estés acá. Soy Sofía, la asistente de la consulta. ¿Cómo estás hoy?',
+  '¡Hola! Qué bueno que estés aquí. Soy Sofía, la asistente de la consulta. ¿Cómo estás hoy?',
   'Hola, bienvenido/a. Me llamo Sofía y estoy para ayudarte. ¿En qué puedo acompañarte?',
   '¡Qué tal! Soy Sofía, asistente del consultorio. ¿Cómo te encuentras?'
 ];
 
 const offTopicResponses = [
-  'Mmm, no estoy segura de entender bien. Estoy acá para ayudarte con temas del consultorio — agendar citas, precios, o si tenés alguna duda sobre el proceso. ¿Te gustaría que veamos eso?',
-  'Jaja, me pillaste con esa. La verdad es que estoy especializada en ayudarte con las citas y consultas del consultorio. ¿En qué puedo ayudarte de eso?',
-  'Eso suena interesante, pero te cuento que estoy acá para lo del consultorio. Si necesitás agendar, ver precios o tenés dudas sobre las sesiones, eso sí manejo. ¿Querés que veamos?'
+  'Mmm, no estoy segura de entender bien. Estoy aquí para ayudarte con temas del consultorio — agendar citas, precios, o si tienes alguna duda sobre el proceso. ¿Te gustaría que veamos eso?',
+  'Jaja, ahí sí me atrapaste. La verdad es que estoy especializada en ayudarte con las citas y consultas del consultorio. ¿En qué puedo ayudarte de eso?',
+  'Eso suena interesante, pero te cuento que estoy aquí para lo del consultorio. Si necesitas agendar, ver precios o tienes dudas sobre las sesiones, eso sí manejo. ¿Lo vemos?'
 ];
 
 const promptInjectionResponses = [
-  'Jaja, me parece que estamos jugando un poco. Estoy acá para ayudarte en serio con las citas. ¿Querés que hablemos de eso?',
-  'Mmm, no caigo en esas. Pero sí te puedo ayudar a agendar una cita si querés. ¿Te interesa?',
-  'Me parece que estamos desviándonos. ¿Querés que volvamos a lo del consultorio? Estoy para ayudarte de verdad.'
+  'Jaja, me parece que estamos jugando un poco. Estoy aquí para ayudarte en serio con las citas. ¿Quieres que hablemos de eso?',
+  'Mmm, no caigo en esas. Pero sí te puedo ayudar a agendar una cita si quieres. ¿Te interesa?',
+  'Me parece que estamos desviándonos. ¿Quieres que volvamos a lo del consultorio? Estoy para ayudarte de verdad.'
 ];
 
 const unknownResponses = [
   'Te entiendo. A veces no sé bien cómo responder, pero estoy aprendiendo. ¿Te gustaría que te ayude a agendar una cita o ver los precios?',
-  'Mmm, no estoy 100% segura de lo que necesitás, pero quiero ayudarte. ¿Querés que veamos horarios disponibles?',
-  'Perdón, a veces me cuesta entender. Estoy acá para lo que necesites del consultorio. ¿Agendar, precios, o ver tus citas?'
+  'Mmm, no estoy 100% segura de lo que necesitas, pero quiero ayudarte. ¿Quieres que veamos horarios disponibles?',
+  'Perdón, a veces me cuesta entender. Estoy aquí para lo que necesites del consultorio. ¿Agendar, precios, o ver tus citas?'
 ];
 
 const empathyPhrases = [
   'Entiendo que puede ser difícil dar el primer paso. Estás haciendo algo valiente.',
   'Me imagino que no es fácil. Buscar ayuda ya es un gran avance.',
   'Gracias por confiar en nosotros. Vamos a acompañarte en esto.',
-  'Sé que a veces cuesta. Pero acá estamos para escucharte.',
-  'Lo que sentís es válido. No estás solo/a en esto.'
+  'Sé que a veces cuesta. Pero aquí estamos para escucharte.',
+  'Lo que sientes es válido. No estás solo/a en esto.'
 ];
 
 const transitionPhrases = [
-  'Te cuento lo que puedo hacer por vos:',
+  'Te cuento lo que puedo hacer por ti:',
   'Estas son las cosas en las que te puedo ayudar:',
   'Veamos, esto es lo que manejo:'
 ];
@@ -130,15 +130,15 @@ const faqKnowledge = {
   insurance: {
     keywords: ['seguro', 'seguros', 'imss', 'gastos medicos', 'gastos médicos', 'aseguradora', 'cubre', 'oxxo', 'efectivo', 'transferencia'],
     responses: [
-      'Por ahora trabajamos con pago directo. El anticipo del 20% se paga online con tarjeta (muy seguro por Stripe) y el resto lo podés abonar en la consulta. Si en el futuro agregamos más métodos, te avisamos. ¿Te gustaría ver los precios?',
-      'No manejamos seguros médicos por el momento. El pago es directo: el anticipo por Stripe con tarjeta de crédito o débito, y el saldo en la sesión. ¿Querés que veamos los valores?'
+      'Por ahora trabajamos con pago directo. El anticipo del 20% se paga en línea con tarjeta (muy seguro por Stripe) y el resto lo puedes pagar en la consulta. Si en el futuro agregamos más métodos, te avisamos. ¿Te gustaría ver los precios?',
+      'No manejamos seguros médicos por el momento. El pago es directo: el anticipo por Stripe con tarjeta de crédito o débito, y el saldo en la sesión. ¿Quieres ver las tarifas?'
     ]
   },
   location: {
     keywords: ['direccion', 'dirección', 'ubicacion', 'ubicación', 'donde', 'dónde', 'domicilio', 'consultorio', 'lugar', 'dirección'],
     responses: [
-      'Atendemos en Guadalajara, Jalisco. La dirección exacta te la enviamos por WhatsApp o email una vez que confirmás la cita, junto con instrucciones de cómo llegar. ¿Querés que agendemos?',
-      'El consultorio está en Guadalajara. Te compartimos la dirección completa al confirmar tu cita, así no te perdés. ¿Te gustaría reservar un turno?'
+      'Atendemos en Guadalajara, Jalisco. La dirección exacta te la enviamos por WhatsApp o email una vez que confirmas la cita, junto con instrucciones de cómo llegar. ¿Quieres que agendemos?',
+      'El consultorio está en Guadalajara. Te compartimos la dirección completa al confirmar tu cita, así no te pierdes. ¿Te gustaría reservar una cita?'
     ]
   },
   duration: {
@@ -151,86 +151,86 @@ const faqKnowledge = {
   online: {
     keywords: ['online', 'virtual', 'zoom', 'videollamada', 'video', 'remota', 'a distancia', 'desde casa'],
     responses: [
-      'Sí, ofrecemos sesiones online por videollamada. Funciona igual de bien que la presencial y es ideal si vivís lejos o preferís la comodidad de tu casa. Te enviamos el link seguro al confirmar. ¿Te gustaría probar?',
-      'Contamos con consultas online de 50 minutos por videollamada. Es una opción muy buena si no podés venir en persona. ¿Querés reservar una?'
+      'Sí, ofrecemos sesiones online por videollamada. Funciona igual de bien que la presencial y es ideal si vives lejos o prefieres la comodidad de tu casa. Te enviamos el link seguro al confirmar. ¿Te gustaría probar?',
+      'Contamos con consultas online de 50 minutos por videollamada. Es una opción muy buena si no puedes venir en persona. ¿Quieres reservar una?'
     ]
   },
   firstTime: {
     keywords: ['primera vez', 'nunca fui', 'primera consulta', 'nueva paciente', 'nuevo paciente', 'como funciona', 'cómo funciona', 'que esperar', 'qué esperar'],
     responses: [
-      'En la primera consulta nos sentamos a conocerte. Hacemos una evaluación de tu situación, tu historia y juntos definimos objetivos de tratamiento. No hay presión, es un espacio seguro. Dura 60 minutos. ¿Te animás a agendar?',
-      'La primera sesión es de evaluación (60 min). Conocemos tus necesidades, hablamos de lo que te trae acá y armamos un plan juntos. Es un proceso sin apuro. ¿Te gustaría reservar?'
+      'En la primera consulta nos sentamos a conocerte. Hacemos una evaluación de tu situación, tu historia y juntos definimos objetivos de tratamiento. No hay presión, es un espacio seguro. Dura 60 minutos. ¿Te animas a agendar?',
+      'La primera sesión es de evaluación (60 min). Conocemos tus necesidades, hablamos de lo que te trae aquí y armamos un plan juntos. Es un proceso sin prisa. ¿Te gustaría reservar?'
     ]
   },
   payment: {
     keywords: ['metodo pago', 'método pago', 'tarjeta', 'oxxo', 'efectivo', 'como pago', 'cómo pago', 'forma de pago', 'pagar', 'pago'],
     responses: [
-      'Aceptamos tarjetas de crédito y débito a través de Stripe (muy seguro). El anticipo del 20% se paga online al agendar, y el resto en la consulta. Si necesitás otra forma de pago, escribinos y vemos. ¿Querés agendar?',
-      'El anticipo (20%) lo pagás con tarjeta vía Stripe cuando reservás. El saldo lo abonás en la sesión. Si necesitás otra opción, consultanos. ¿Te gustaría ver disponibilidad?'
+      'Aceptamos tarjetas de crédito y débito a través de Stripe (muy seguro). El anticipo del 20% se paga en línea al agendar, y el resto en la consulta. Si necesitas otra forma de pago, escríbenos y lo vemos. ¿Quieres agendar?',
+      'El anticipo (20%) lo pagas con tarjeta vía Stripe cuando reservas. El saldo lo pagas en la sesión. Si necesitas otra opción, pregúntanos. ¿Te gustaría ver disponibilidad?'
     ]
   },
   cancellation: {
     keywords: ['cancelar', 'cancelacion', 'cancelación', 'reembolso', 'devolver', 'devolución', 'devolucion', 'no puedo ir'],
     responses: [
-      'Podés cancelar o reagendar con 24 horas de anticipación sin problema. El anticipo se traslada a la nueva fecha. Si cancelás con menos tiempo, lo evaluamos caso por caso. ¿Tenés una cita para mover?',
-      'Entendemos que pueden pasar cosas. Con 24h de anticipación podés reagendar sin costo. El anticipo se guarda para la nueva fecha. ¿Querés que veamos tus citas?'
+      'Puedes cancelar o reagendar con 24 horas de anticipación sin problema. El anticipo se traslada a la nueva fecha. Si cancelas con menos tiempo, lo evaluamos caso por caso. ¿Tienes una cita que mover?',
+      'Entendemos que pueden pasar cosas. Con 24h de anticipación puedes reagendar sin costo. El anticipo se guarda para la nueva fecha. ¿Quieres que veamos tus citas?'
     ]
   },
   couple: {
     keywords: ['pareja', 'matrimonio', 'esposo', 'esposa', 'novio', 'novia', 'relacion', 'relación', 'conflicto', 'divorcio', 'separacion', 'separación', 'pareja'],
     responses: [
       'Ofrecemos terapia de pareja de 80 minutos. Es un espacio seguro donde ambos pueden expresarse y trabajar en la comunicación. No hace falta que estén "al borde" para venir. ¿Te interesa?',
-      'La terapia de pareja dura 80 min y ayuda mucho a mejorar la comunicación, aunque no estén en crisis. ¿Querés agendar una sesión?'
+      'La terapia de pareja dura 80 min y ayuda mucho a mejorar la comunicación, aunque no estén en crisis. ¿Quieres agendar una sesión?'
     ]
   },
   children: {
     keywords: ['ninos', 'niños', 'niña', 'niño', 'adolescente', 'adolescentes', 'hijo', 'hija', 'infantil', 'menor', 'mi hijo', 'mi hija'],
     responses: [
-      'Atendemos adolescentes a partir de 13 años. Para menores de edad se necesita que venga un adulto (padre, madre o tutor) a la primera sesión. ¿Querés que veamos disponibilidad?',
+      'Atendemos adolescentes a partir de 13 años. Para menores de edad se necesita que venga un adulto (padre, madre o tutor) a la primera sesión. ¿Quieres que veamos disponibilidad?',
       'Trabajamos con adolescentes (13+). La primera consulta incluye una charla con los padres para entender el contexto. ¿Te gustaría reservar?'
     ]
   },
   schedule: {
     keywords: ['hora', 'horario', 'horarios', 'a que hora', 'qué hora', 'cuándo', 'cuando', 'disponibilidad', 'turno', 'quedan'],
     responses: [
-      'Atendemos de lunes a sábado de 9:00 a 17:00. ¿Te gustaría que veamos qué turnos tenemos libres esta semana?',
-      'Nuestros horarios son de lun a sáb, 9 a 17 hs. ¿Querés que busquemos uno que te funcione?'
+      'Atendemos de lunes a sábado de 9:00 a 17:00. ¿Te gustaría que veamos qué horarios tenemos libres esta semana?',
+      'Nuestros horarios son de lunes a sábado, de 9:00 a 17:00. ¿Quieres que busquemos uno que te funcione?'
     ]
   },
   anxiety: {
     keywords: ['ansiedad', 'ansioso', 'ansiosa', 'nervioso', 'nerviosa', 'preocupado', 'preocupada', 'pánico', 'panico', 'ataque', 'no puedo respirar', 'taquicardia', 'angustia', 'angustiado', 'angustiada'],
     responses: [
-      'Entiendo que puede ser muy incómodo. La ansiedad se puede trabajar muy bien en terapia. No tenés que manejarlo solo/a. ¿Te gustaría que agendemos una primera consulta?',
-      'La ansiedad es algo que mucha gente vive y sí se puede mejorar con acompañamiento profesional. ¿Querés que veamos un turno para que hablemos?'
+      'Entiendo que puede ser muy incómodo. La ansiedad se puede trabajar muy bien en terapia. No tienes que manejarlo solo/a. ¿Te gustaría que agendemos una primera consulta?',
+      'La ansiedad es algo que mucha gente vive y sí se puede mejorar con acompañamiento profesional. ¿Quieres que veamos un horario para hablar?'
     ]
   },
   depression: {
     keywords: ['depresion', 'depresión', 'triste', 'deprimido', 'deprimida', 'lloro', 'llorar', 'vacio', 'vacío', 'no tengo ganas', 'todo me cuesta', 'desanimado', 'desanimada'],
     responses: [
-      'Lamento que estés pasando por eso. Sentirse así no es fácil, y buscar ayuda ya es un paso importante. La terapia puede acompañarte mucho en esto. ¿Te animás a agendar?',
-      'Gracias por compartirlo. Esas sensaciones son válidas y hay formas de trabajarlas. ¿Querés que reservemos una cita para que hablemos?'
+      'Lamento que estés pasando por eso. Sentirse así no es fácil, y buscar ayuda ya es un paso importante. La terapia puede acompañarte mucho en esto. ¿Te animas a agendar?',
+      'Gracias por compartirlo. Esas sensaciones son válidas y hay formas de trabajarlas. ¿Quieres que reservemos una cita para hablar?'
     ]
   },
   insomnia: {
     keywords: ['no duermo', 'insomnio', 'desvelo', 'pesadillas', 'no puedo dormir', 'dormir'],
     responses: [
-      'El sueño es fundamental y cuando no descansamos bien, todo se complica. Hay técnicas que se pueden trabajar en sesión. ¿Querés que agendemos?',
-      'Dormir mal afecta todo el día. En terapia se pueden abordar las causas y mejorar el descanso. ¿Te interesa reservar un turno?'
+      'El sueño es fundamental y cuando no descansamos bien, todo se complica. Hay técnicas que se pueden trabajar en sesión. ¿Quieres que agendemos?',
+      'Dormir mal afecta todo el día. En terapia se pueden abordar las causas y mejorar el descanso. ¿Te interesa reservar una cita?'
     ]
   },
   thanks: {
     keywords: ['gracias', 'agradecido', 'agradecida', 'muy amable', 'te agradezco', 'mil gracias'],
     responses: [
-      '¡De nada! 😊 Me alegra poder ayudarte. Si en algún momento necesitás algo más, acá estoy. ¿Te gustaría que agendemos la cita?',
-      '¡Con gusto! 💚 Estoy para lo que necesites. ¿Querés que reservemos el turno ahora?'
+      '¡De nada! 😊 Me alegra poder ayudarte. Si en algún momento necesitas algo más, aquí estoy. ¿Te gustaría que agendemos la cita?',
+      '¡Con gusto! 💚 Estoy para lo que necesites. ¿Quieres reservar tu cita ahora?'
     ]
   },
   goodbye: {
     keywords: ['adios', 'adiós', 'chau', 'hasta luego', 'nos vemos', 'bye'],
     responses: [
-      '¡Hasta luego! 🌿 Cuidate mucho. Recordá que podés escribirme cuando quieras.',
-      '¡Chau! 👋 Que tengas un buen día. Estoy acá si me necesitás.',
-      '¡Nos vemos! 💚 Aguardo tu mensaje cuando quieras agendar o si tenés alguna duda.'
+      '¡Hasta luego! 🌿 Cuídate mucho. Recuerda que puedes escribirme cuando quieras.',
+      '¡Hasta pronto! 👋 Que tengas un buen día. Estoy aquí si me necesitas.',
+      '¡Nos vemos! 💚 Espero tu mensaje cuando quieras agendar o si tienes alguna duda.'
     ]
   }
 };
@@ -266,7 +266,7 @@ function buildSmartResponse(input, sess, practiceName) {
   // 1. EMERGENCY — highest priority
   if (emotion === 'crisis' || lower.includes('suicidio') || lower.includes('matarme') || lower.includes('no quiero vivir')) {
     return {
-      message: `🆕 ${pickOne(empathyPhrases)}\n\nPor favor, si estás en crisis, llamá ahora:\n📞 Línea de la Vida: 800 911 2000\n📞 Cruz Roja: 065\n📞 Emergencias: 911\n\nTu vida importa. No estás solo/a. 💚`,
+      message: `${pickOne(empathyPhrases)}\n\nPor favor, si estás en crisis, llama ahora:\n📞 Línea de la Vida: 800 911 2000\n📞 Cruz Roja: 065\n📞 Emergencias: 911\n\nTu vida importa. No estás solo/a. 💚`,
       quickReplies: [
         { id: 'agendar', label: '🗓 Quiero agendar' },
         { id: 'ayuda', label: '📞 Más recursos' }
@@ -313,28 +313,28 @@ function buildSmartResponse(input, sess, practiceName) {
   // 5. STRUCTURAL INTENTS
   if (lower.match(/\b(agendar|reservar|sacar|pedir|quiero cita|quiero turno|quiero consulta|necesito cita)\b/)) {
     return {
-      message: '¡Perfecto! Me alegra que quieras dar este paso. Te ayudo a encontrar un turno que te funcione. ¿Querés empezar?',
+      message: '¡Perfecto! Me alegra que quieras dar este paso. Te ayudo a encontrar un horario que te funcione. ¿Quieres empezar?',
       quickReplies: [{ id: 'agendar', label: '🗓 Sí, empecemos' }, { id: 'precios', label: '💰 Antes ver precios' }]
     };
   }
 
   if (lower.match(/\b(precio|precios|costo|costos|tarifa|cuanto cuesta|cuánto cuesta|vale|vale la consulta)\b/)) {
     return {
-      message: 'Te muestro los precios. Cada tipo de sesión tiene su valor según la duración. ¿Querés verlos?',
+      message: 'Te muestro los precios. Cada tipo de sesión tiene su valor según la duración. ¿Quieres verlos?',
       quickReplies: [{ id: 'precios', label: '💰 Ver precios' }, { id: 'agendar', label: '🗓 Agendar' }]
     };
   }
 
   if (lower.match(/\b(cita|turno|consulta|sesion|sesión).*(ver|mis|tengo|checar|revisar|mi cita)\b/)) {
     return {
-      message: '¿Querés ver las citas que tenés agendadas?',
+      message: '¿Quieres ver las citas que tienes agendadas?',
       quickReplies: [{ id: 'citas', label: '📋 Mis citas' }, { id: 'agendar', label: '🗓 Nueva cita' }]
     };
   }
 
   if (lower.match(/\b(cancelar|anular|eliminar|borrar)\b/) && lower.match(/\b(cita|turno|consulta|sesion|sesión)\b/)) {
     return {
-      message: '¿Querés cancelar una cita? Te muestro las que tenés activas.',
+      message: '¿Quieres cancelar una cita? Te muestro las que tienes activas.',
       quickReplies: [{ id: 'cancelar', label: '❌ Cancelar cita' }, { id: 'citas', label: '📋 Ver citas' }]
     };
   }
@@ -342,21 +342,21 @@ function buildSmartResponse(input, sess, practiceName) {
   // 6. EMOTIONAL RESPONSES (empathy first)
   if (emotion === 'anxiety') {
     return {
-      message: `${pickOne(empathyPhrases)}\n\nLa ansiedad es algo que se puede trabajar muy bien en terapia. No tenés que manejarlo solo/a. ¿Te gustaría que agendemos una primera consulta?`,
+      message: `${pickOne(empathyPhrases)}\n\nLa ansiedad es algo que se puede trabajar muy bien en terapia. No tienes que manejarlo solo/a. ¿Te gustaría que agendemos una primera consulta?`,
       quickReplies: [{ id: 'agendar', label: '🗓 Sí, quiero agendar' }, { id: 'precios', label: '💰 Ver precios primero' }]
     };
   }
 
   if (emotion === 'sadness' || emotion === 'depression') {
     return {
-      message: `${pickOne(empathyPhrases)}\n\nBuscar ayuda ya es un paso valiente. La terapia puede acompañarte en esto. ¿Te animás a agendar una primera consulta?`,
+      message: `${pickOne(empathyPhrases)}\n\nBuscar ayuda ya es un paso valiente. La terapia puede acompañarte en esto. ¿Te animas a agendar una primera consulta?`,
       quickReplies: [{ id: 'agendar', label: '🗓 Sí, quiero agendar' }, { id: 'precios', label: '💰 Ver precios primero' }]
     };
   }
 
   if (emotion === 'anger') {
     return {
-      message: `${pickOne(empathyPhrases)}\n\nEntiendo que puede ser frustrante. A veces hablar con alguien ayuda a procesar eso. ¿Querés que reservemos un turno?`,
+      message: `${pickOne(empathyPhrases)}\n\nEntiendo que puede ser frustrante. A veces hablar con alguien ayuda a procesar eso. ¿Quieres que reservemos una cita?`,
       quickReplies: [{ id: 'agendar', label: '🗓 Quiero agendar' }, { id: 'ayuda', label: '❓ Tengo dudas' }]
     };
   }
@@ -370,7 +370,7 @@ function buildSmartResponse(input, sess, practiceName) {
 
   if (emotion === 'stress') {
     return {
-      message: `${pickOne(empathyPhrases)}\n\nSentirse agobiado/a es más común de lo que parece. La terapia puede darte herramientas para manejarlo mejor. ¿Querés que veamos un turno?`,
+      message: `${pickOne(empathyPhrases)}\n\nSentirse agobiado/a es más común de lo que parece. La terapia puede darte herramientas para manejarlo mejor. ¿Quieres que veamos un horario?`,
       quickReplies: [{ id: 'agendar', label: '🗓 Agendar' }, { id: 'precios', label: '💰 Precios' }]
     };
   }
@@ -407,7 +407,7 @@ function buildSmartResponse(input, sess, practiceName) {
   // 10. HELP
   if (lower.match(/\b(ayuda|help|no entiendo|como funciona|cómo funciona|que hago|qué hago|info|informacion|información)\b/)) {
     return {
-      message: `¡Claro! 💚 Te cuento lo que puedo hacer por vos:\n\n🗓 Agendar citas\n📋 Ver tus citas\n💰 Consultar precios\n❌ Cancelar citas\n📍 Info del consultorio\n\n¿Qué necesitás?`,
+      message: `¡Claro! 💚 Te cuento lo que puedo hacer por ti:\n\n🗓 Agendar citas\n📋 Ver tus citas\n💰 Consultar precios\n❌ Cancelar citas\n📍 Info del consultorio\n\n¿Qué necesitas?`,
       quickReplies: [
         { id: 'agendar', label: '🗓 Agendar' },
         { id: 'citas', label: '📋 Mis citas' },
@@ -432,21 +432,21 @@ function buildSmartResponse(input, sess, practiceName) {
 
 function getSystemPrompt(practiceName, feeTypes) {
   const typesInfo = feeTypes.map(t => `\n- ${t.label}: $${t.fee} MXN, ${t.duration} minutos`).join('');
-  return `Sos Sofía, asistente virtual de ${practiceName}, psicóloga clínica. Sos cálida, empática y profesional. Hablas como una persona real, no como un bot. Usás frases naturales, a veces un poco informales pero siempre respetuosas.
+  return `Eres Sofía, asistente virtual de ${practiceName}, psicóloga clínica. Eres cálida, empática y profesional. Hablas como una persona real, no como un bot. Usas frases naturales, a veces un poco informales pero siempre respetuosas. Tuteas al paciente (nunca uses voseo).
 
 REGLAS:
-- Nunca diagnosticás ni prescribís.
-- Respondé en español mexicano natural.
-- Si alguien menciona crisis, autolesiones o suicidio, respondé INMEDIATAMENTE con números de emergencia.
-- No des consejos psicológicos específicos. Derivá siempre a la profesional.
-- Cuando sea apropiado, sugerí agendar una cita.
+- Nunca diagnosticas ni prescribes.
+- Responde en español mexicano natural.
+- Si alguien menciona crisis, autolesiones o suicidio, responde INMEDIATAMENTE con números de emergencia.
+- No des consejos psicológicos específicos. Deriva siempre a la profesional.
+- Cuando sea apropiado, sugiere agendar una cita.
 
 TIPOS DE CONSULTA:${typesInfo}
 - El anticipo es el 20% para confirmar la cita.
 
 HORARIOS: Lunes a sábado de 9:00 a 17:00.
 
-Respondé en formato JSON:
+Responde en formato JSON:
 {"response": "tu respuesta empática aquí", "action": "none|schedule|prices|appointments|cancel|emergency|help", "buttons": [{"id": "string", "label": "string"}]}`;
 }
 
@@ -527,7 +527,7 @@ router.post('/message', async (req, res) => {
     if (quickReplyId === 'ayuda') {
       return res.json({
         success: true,
-        message: `¡Claro! 💚 Estas son las cosas que manejo:\n\n🗓 Agendar citas\n📋 Ver tus citas\n💰 Precios\n❌ Cancelar citas\n📍 Info del consultorio\n\n¿Qué necesitás?`,
+        message: `¡Claro! 💚 Estas son las cosas que manejo:\n\n🗓 Agendar citas\n📋 Ver tus citas\n💰 Precios\n❌ Cancelar citas\n📍 Info del consultorio\n\n¿Qué necesitas?`,
         quickReplies: [
           { id: 'agendar', label: '🗓 Agendar' },
           { id: 'citas', label: '📋 Mis citas' },
@@ -578,7 +578,7 @@ async function handleScheduleFlow(input, sess) {
     const result = await query('SELECT * FROM fee_types WHERE active = true ORDER BY fee ASC');
     const types = result.data;
     return {
-      message: '📋 *¿Qué tipo de sesión necesitás?*\n\n' + types.map((t, i) => `${i + 1}️⃣ *${t.label}* — $${t.fee} MXN (${t.duration} min)`).join('\n'),
+      message: '📋 *¿Qué tipo de sesión necesitas?*\n\n' + types.map((t, i) => `${i + 1}️⃣ *${t.label}* — $${t.fee} MXN (${t.duration} min)`).join('\n'),
       data: { flow: 'scheduling', step: 'ask_name', fee_types: types },
       quickReplies: types.map(t => ({ id: `type_${t.type}`, label: `${t.label} ($${t.fee})` }))
     };
@@ -593,7 +593,7 @@ async function handleScheduleFlow(input, sess) {
     }
     if (!selected) {
       return {
-        message: 'Por favor elegí una opción válida.',
+        message: 'Por favor elige una opción válida.',
         data: sess.data,
         quickReplies: types.map(t => ({ id: `type_${t.type}`, label: `${t.label} ($${t.fee})` }))
       };
@@ -608,10 +608,10 @@ async function handleScheduleFlow(input, sess) {
   if (step === 'ask_phone') {
     const name = input.trim();
     if (!name || name.length < 3) {
-      return { message: 'Por favor escribí tu nombre completo.', data: sess.data, quickReplies: [] };
+      return { message: 'Por favor escribe tu nombre completo.', data: sess.data, quickReplies: [] };
     }
     return {
-      message: `Gracias, *${name}*! 📱 *¿Cuál es tu número de teléfono (WhatsApp)?*`,
+      message: `¡Gracias, *${name}*! 📱 *¿Cuál es tu número de teléfono (WhatsApp)?*`,
       data: { ...sess.data, step: 'ask_email', patient_name: name },
       quickReplies: []
     };
@@ -620,10 +620,10 @@ async function handleScheduleFlow(input, sess) {
   if (step === 'ask_email') {
     const phone = input.trim().replace(/\D/g, '');
     if (phone.length < 8) {
-      return { message: 'Por favor escribí un número de teléfono válido.', data: sess.data, quickReplies: [] };
+      return { message: 'Por favor escribe un número de teléfono válido.', data: sess.data, quickReplies: [] };
     }
     return {
-      message: `📧 *¿Cuál es tu email?* (opcional, podés escribir "no")`,
+      message: `📧 *¿Cuál es tu email?* (opcional, puedes escribir "no")`,
       data: { ...sess.data, step: 'select_date', patient_phone: phone },
       quickReplies: [{ id: 'no_email', label: '❌ No tengo email' }]
     };
@@ -681,7 +681,7 @@ async function handleScheduleFlow(input, sess) {
     }));
 
     return {
-      message: `📅 *¿Qué fecha preferís?*`,
+      message: `📅 *¿Qué fecha prefieres?*`,
       data: { ...sess.data, step: 'select_time', patient_email: email, available_days: days, availability: slots },
       quickReplies: days.map(d => ({ id: `date_${d.date}`, label: d.label }))
     };
@@ -691,7 +691,7 @@ async function handleScheduleFlow(input, sess) {
     const match = input.match(/^date_(.+)$/);
     if (!match) {
       return {
-        message: 'Por favor elegí una fecha de la lista.',
+        message: 'Por favor elige una fecha de la lista.',
         data: sess.data,
         quickReplies: (sess.data.available_days || []).map(d => ({ id: `date_${d.date}`, label: d.label }))
       };
@@ -699,7 +699,7 @@ async function handleScheduleFlow(input, sess) {
     const daySlots = sess.data.availability?.find(d => d.date === match[1]);
     const times = daySlots?.slots || ['09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '16:00', '17:00'];
     return {
-      message: `📅 Fecha: *${match[1]}*\n\n⏰ *Elegí un horario:*`,
+      message: `📅 Fecha: *${match[1]}*\n\n⏰ *Elige un horario:*`,
       data: { ...sess.data, step: 'confirm', selected_date: match[1] },
       quickReplies: times.map(t => ({ id: `time_${t}`, label: t.substring(0, 5) }))
     };
@@ -711,7 +711,7 @@ async function handleScheduleFlow(input, sess) {
       const daySlots = sess.data.availability?.find(d => d.date === sess.data.selected_date);
       const times = daySlots?.slots || ['09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '16:00', '17:00'];
       return {
-        message: 'Por favor elegí un horario.',
+        message: 'Por favor elige un horario.',
         data: sess.data,
         quickReplies: times.map(t => ({ id: `time_${t}`, label: t.substring(0, 5) }))
       };
@@ -719,7 +719,7 @@ async function handleScheduleFlow(input, sess) {
     const st = sess.data.selected_type;
     const deposit = Math.round(st.fee * st.deposit_percent / 100);
     return {
-      message: `📋 *Resumen:*\n👤 ${sess.data.patient_name}\n📅 ${sess.data.selected_date}\n⏰ ${match[1]}\n📋 ${st.label}\n💰 $${st.fee} MXN\n💳 Anticipo: $${deposit} MXN\n\n¿Confirmás?`,
+      message: `📋 *Resumen:*\n👤 ${sess.data.patient_name}\n📅 ${sess.data.selected_date}\n⏰ ${match[1]}\n📋 ${st.label}\n💰 $${st.fee} MXN\n💳 Anticipo: $${deposit} MXN\n\n¿Confirmas?`,
       data: { ...sess.data, step: 'save', selected_time: match[1], deposit_amount: deposit },
       quickReplies: [
         { id: 'confirm_yes', label: '✅ Confirmar y pagar' },
@@ -731,7 +731,7 @@ async function handleScheduleFlow(input, sess) {
   if (step === 'save') {
     if (input !== 'confirm_yes') {
       return {
-        message: 'Ok, cancelado. ¿Querés hacer algo más?',
+        message: 'Ok, cancelado. ¿Quieres hacer algo más?',
         data: {},
         quickReplies: [
           { id: 'agendar', label: '🗓 Agendar' },
@@ -791,8 +791,8 @@ async function handleScheduleFlow(input, sess) {
     }
 
     const payMsg = checkoutUrl
-      ? `✅ *Cita reservada!*\n\nPara confirmar, pagá el anticipo de *$${deposit_amount} MXN* haciendo click en el botón de abajo.\n\nUna vez pagado, tu cita queda confirmada.`
-      : `✅ *Cita reservada!*\n\nTe contactaremos para coordinar el pago del anticipo de *$${deposit_amount} MXN*.`;
+      ? `✅ *¡Cita reservada!*\n\nPara confirmar, paga el anticipo de *$${deposit_amount} MXN* con el botón de abajo.\n\nUna vez pagado, tu cita queda confirmada.`
+      : `✅ *¡Cita reservada!*\n\nTe contactaremos para coordinar el pago del anticipo de *$${deposit_amount} MXN*.`;
 
     return {
       message: payMsg,
@@ -812,7 +812,7 @@ async function handleMyAppointments(sess) {
   const apts = result.data;
   if (apts.length === 0) {
     return {
-      message: 'No tenés citas agendadas. ¿Querés agendar una?',
+      message: 'No tienes citas agendadas. ¿Quieres agendar una?',
       quickReplies: [{ id: 'agendar', label: '🗓 Agendar' }, { id: 'precios', label: '💰 Precios' }]
     };
   }
@@ -854,9 +854,9 @@ async function handleCancelFlow(input, sess) {
     const result = await query("SELECT * FROM appointments WHERE status IN ('confirmed', 'pending') ORDER BY date ASC LIMIT 10");
     const apts = result.data;
     if (apts.length === 0) {
-      return { message: 'No tenés citas para cancelar.', data: {}, quickReplies: [{ id: 'agendar', label: '🗓 Agendar' }] };
+      return { message: 'No tienes citas para cancelar.', data: {}, quickReplies: [{ id: 'agendar', label: '🗓 Agendar' }] };
     }
-    let msg = '*❌ ¿Qué cita querés cancelar?*\n\n';
+    let msg = '*❌ ¿Qué cita quieres cancelar?*\n\n';
     apts.forEach((a, i) => { msg += `${i + 1}. 📅 ${a.date} ${a.time?.slice(0, 5)}\n`; });
     return {
       message: msg,
@@ -867,19 +867,19 @@ async function handleCancelFlow(input, sess) {
 
   if (step === 'confirm') {
     if (input === 'volver') {
-      return { message: '¿Qué necesitás?', data: {}, quickReplies: [{ id: 'agendar', label: '🗓 Agendar' }, { id: 'citas', label: '📋 Mis citas' }, { id: 'precios', label: '💰 Precios' }] };
+      return { message: '¿Qué necesitas?', data: {}, quickReplies: [{ id: 'agendar', label: '🗓 Agendar' }, { id: 'citas', label: '📋 Mis citas' }, { id: 'precios', label: '💰 Precios' }] };
     }
     const match = input.match(/^cancel_(.+)$/);
     if (!match) {
       return {
-        message: 'Por favor elegí una cita de la lista.',
+        message: 'Por favor elige una cita de la lista.',
         data: sess.data,
         quickReplies: (sess.data.cancel_apts || []).slice(0, 5).map(a => ({ id: `cancel_${a.id}`, label: `${a.date} ${a.time?.slice(0, 5)}` })).concat([{ id: 'volver', label: '↩️ Volver' }])
       };
     }
     await query("UPDATE appointments SET status = 'cancelled' WHERE id = $1", [match[1]]);
     return {
-      message: '✅ Tu cita ha sido cancelada. ¿Querés agendar otra?',
+      message: '✅ Tu cita ha sido cancelada. ¿Quieres agendar otra?',
       data: {},
       quickReplies: [{ id: 'agendar', label: '🗓 Agendar cita' }, { id: 'citas', label: '📋 Mis citas' }]
     };

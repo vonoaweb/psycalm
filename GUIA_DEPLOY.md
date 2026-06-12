@@ -62,10 +62,10 @@ FRONTEND_URL=https://psycalm.onrender.com
 
 ## PASO 7: Probar
 
-1. Abrí el link
+1. Abre el link
 2. El dashboard debe mostrar datos (citas, pacientes)
-3. Tocá el botón naranja 💬 para probar el chatbot
-4. Intentá agendar una cita
+3. Toca el botón naranja 💬 para probar el chatbot
+4. Intenta agendar una cita
 
 ---
 

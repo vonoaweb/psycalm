@@ -22,7 +22,7 @@ class BotHandlers {
     const feeTypes = conv.data?.fee_types || [];
     const selected = this.parseSelection(message, feeTypes);
     if (!selected) {
-      await notification.sendText(phone, 'Por favor elegí una opción válida.');
+      await notification.sendText(phone, 'Por favor elige una opción válida.');
       return { state: 'selecting_type', data: conv.data };
     }
 
@@ -30,7 +30,7 @@ class BotHandlers {
     const availability = await this.getAvailability(selected.duration);
     const sections = this.formatAvailabilityList(availability);
 
-    await notification.sendList(phone, 'Elegí una fecha y hora:', 'Ver horarios', sections);
+    await notification.sendList(phone, 'Elige una fecha y hora:', 'Ver horarios', sections);
     return { state: 'selecting_date', data: { ...conv.data, selected_type: selected } };
   }
 
@@ -52,7 +52,7 @@ class BotHandlers {
     };
 
     await notification.sendText(phone, flows.appointmentSummary(summaryData));
-    await notification.sendButtons(phone, '¿Confirmás?', [
+    await notification.sendButtons(phone, '¿Confirmas?', [
       { id: 'confirm_yes', title: '✅ Sí' },
       { id: 'confirm_no', title: '❌ No' }
     ]);
@@ -63,7 +63,7 @@ class BotHandlers {
   // Handle confirmation
   async handleConfirmation(phone, confirmed, conv) {
     if (!confirmed) {
-      await notification.sendText(phone, 'Ok, cancelado. Escribí *!agendar* para empezar de nuevo.');
+      await notification.sendText(phone, 'Ok, cancelado. Escribe *!agendar* para empezar de nuevo.');
       return { state: 'idle', data: {} };
     }
 
@@ -121,7 +121,7 @@ class BotHandlers {
       .order('date', { ascending: true });
 
     if (!appointments || appointments.length === 0) {
-      await notification.sendText(phone, 'No tenés citas pendientes para cancelar.');
+      await notification.sendText(phone, 'No tienes citas pendientes para cancelar.');
       return null;
     }
 
@@ -134,7 +134,7 @@ class BotHandlers {
       }))
     }];
 
-    await notification.sendList(phone, '¿Qué cita querés cancelar?', 'Ver citas', sections);
+    await notification.sendList(phone, '¿Qué cita quieres cancelar?', 'Ver citas', sections);
     return { state: 'cancelling', data: { cancel_appointments: appointments } };
   }
 
